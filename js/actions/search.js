@@ -1,6 +1,6 @@
 import * as Types from './types';
 
-export function searchRepo (text) {
+export function searchRepo(text) {
     return {
         type: Types.SEARCH_REPO,
         payload: {
@@ -10,11 +10,16 @@ export function searchRepo (text) {
     }
 }
 
-export function searchRepoResult (repos) {
+export function searchRepoResult(repos) {
     return {
         type: Types.SEARCH_REPO_RESULT,
-        payload: {
-            repos
-        }
+        payload: {repos}
+    }
+}
+
+export function saveHistory(history) {
+    return {
+        type: Types.SEARCH_HISTORY,
+        payload: {history}
     }
 }

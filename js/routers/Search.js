@@ -1,9 +1,13 @@
 import React, {PureComponent, Component} from 'react'
-import {View, Text, TextInput, TouchableOpacity, StyleSheet} from 'react-native'
 import {connect} from 'react-redux'
+import {View, Text, TextInput, TouchableOpacity, StyleSheet} from 'react-native'
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {bindActions} from '../actions'
+import {searchRepo, saveHistory} from '../actions/search'
 
-const SearchHeader = connect(state => ({}))(
+
+const SearchHeader = connect(() => ({}), bindActions({searchRepo, saveHistory}))(
     class SearchHeader extends Component {
         state = {searchText: ''}
 
@@ -15,6 +19,13 @@ const SearchHeader = connect(state => ({}))(
             this.setState({searchText: text})
         }
 
+        searchSubmit = (searchText) => {
+            const {searchRepo, saveHistory} = this.props
+
+            // saveHistory(searchText)
+            return searchRepo(searchText)
+        }
+
         render() {
             const {searchText} = this.state
             const {navigation} = this.props
@@ -23,8 +34,7 @@ const SearchHeader = connect(state => ({}))(
                 <View style={searchStyles.wrap}>
                     <View style={searchStyles.searchWrap}>
                         <TouchableOpacity
-                            onPress={() => {
-                            }}>
+                            onPress={() => this.searchSubmit(searchText)}>
                             <EvilIcons name={'search'} size={24} style={searchStyles.searchIcon}/>
                         </TouchableOpacity>
                         <TextInput
@@ -35,8 +45,14 @@ const SearchHeader = connect(state => ({}))(
                             onChangeText={this.changeText}
                             style={searchStyles.textInput}
                             underlineColorAndroid={'transparent'}
-                            onSubmitEditing={() => {
-                            }}/>
+                            onSubmitEditing={() => this.searchSubmit(searchText)}/>
+                        {
+                            searchText ? (<TouchableOpacity
+                                onPress={() => this.setState({searchText: ''})}>
+                                <Ionicons size={20} name={'ios-close-circle-outline'} style={{marginRight: 8}}/>
+                            </TouchableOpacity>) : null
+                        }
+
                     </View>
                     <TouchableOpacity
                         style={{width: 54, alignItems: 'center', justifyContent: 'center'}}
@@ -79,19 +95,24 @@ const searchStyles = StyleSheet.create({
 })
 
 class Search extends PureComponent {
-    static navigationOptions = ({navigation}) => {
-        return {
-            header: <SearchHeader navigation={navigation}/>,
-        }
-    }
+    static navigationOptions = ({navigation}) => ({header: <SearchHeader navigation={navigation}/>})
 
     render() {
+        const {repos, history} = this.props
         return (
             <View style={{backgroundColor: '#fff', flex: 1, paddingHorizontal: 8,}}>
-                <Text>sousuo</Text>
+                {
+                    history.map((item, index) => {
+                        return (
+                            <Text key={index}>{item}</Text>
+                        )
+                    })
+                }
             </View>
         )
     }
 }
 
-export default Search
+const bindState = state => ({repos: state.reposInfo.repos, history: state.reposInfo.history})
+
+export default connect(bindState)(Search)

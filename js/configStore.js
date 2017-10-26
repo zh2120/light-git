@@ -38,7 +38,7 @@ const configureStore = (initialState) => {
         blacklist: ['commons']
     })
 
-    // purgeStoredState({storage: AsyncStorage}, ['userSignInfo', 'userInfo']).then((res) => {
+    // purgeStoredState({storage: AsyncStorage}, ['reposInfo']).then((res) => {
     //     console.log(res)
     // })
 

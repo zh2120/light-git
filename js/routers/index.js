@@ -2,7 +2,6 @@ import React from 'react'
 import {StackNavigator, NavigationActions} from 'react-navigation';
 import {Easing, Animated} from 'react-native'
 
-import Drawer from './Drawer'
 import Main from './Main'
 import Search from './Search'
 import SignIn from './SignIn'

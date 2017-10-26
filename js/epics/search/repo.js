@@ -19,9 +19,8 @@ export function searchRepoByQuery(action$, store, {get}) {
             }
             const params = {
                 q: query,
-                sort: 'updated'
+                sort: 'star'
             }
-            console.log('----- ',get)
             const apiUrl = url + getParams(params)
             return get(apiUrl)
         })
