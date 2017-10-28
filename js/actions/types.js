@@ -9,12 +9,12 @@ export const CHECKED_ADMIN_ACCESS = 'CHECKED_ADMIN_ACCESS'
 export const ACCESS_DENIED = 'ACCESS_DENIED'
 
 // 通用
-export const OPEN_TOAST = 'OPEN_TOAST'
+export const OPEN_TOAST = 'OPEN_TOAST' // 打开提示
 export const CLOSE_TOAST = 'CLOSE_TOAST'
-export const PUT_ERROR = 'PUT_ERROR'
+export const PUT_ERROR = 'PUT_ERROR' // 提示错误
 
 // 登陆
-export const USER_SIGNIN = 'USER_SIGNIN' //  登录
+export const USER_SIGNIN = 'USER_SIGNIN' //  授权登录
 export const USER_SIGNIN_INFO = 'USER_SIGNIN_INFO' // 登录输入
 export const USER_SIGNIN_ACCEPT = 'USER_SIGNIN_ACCEPT' //  登录接受
 export const USER_SIGNIN_DENIED = 'USER_SIGNIN_DENIED'  // 登录被拒绝
@@ -35,3 +35,8 @@ export const SEARCH_REPO = 'SEARCH_REPO'
 export const SEARCH_REPO_RESULT = 'SEARCH_REPO_RESULT'
 export const SEARCH_REPO_RESET = 'SEARCH_REPO_RESET'
 export const SEARCH_HISTORY = 'SEARCH_HISTORY' // 搜索历史
+
+// 仓库内容相关
+export const REPO_HOME = 'REPO_HOME' // 默认请求
+export const REPO_HOME_CONTENTS = 'REPO_HOME_CONTENTS' // 仓库内容，默认成功，取得目录或者文件
+export const REPO_HOME_CONTENTS_DENIED = 'REPO_HOME_CONTENTS_DENIED' // 请求内容失败，被拒绝，重置状态

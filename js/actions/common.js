@@ -12,12 +12,21 @@ export function openToast (text) {
     }
 }
 
+/**
+ * 关闭通知
+ * @returns {{type}}
+ */
 export function closeToast () {
     return {
         type: Types.CLOSE_TOAST
     }
 }
 
+/**
+ * 通知错误信息
+ * @param message
+ * @returns {{type, payload: {message: *, error: boolean}}}
+ */
 export function putError(message) {
     return {
         type: Types.PUT_ERROR,

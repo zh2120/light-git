@@ -3,7 +3,7 @@ import {userSignAccept, getUserInfo, userSignDenied, deleteAuth, exit} from '../
 import {openToast, putError} from '../../actions/common';
 import {Observable} from 'rxjs/Rx'
 
-export function userSignIn(action$, {dispatch}, {put}) {
+export function userSignInEpic(action$, {dispatch}, {put}) {
     // 创建或者获取指定应用的授权
     return action$.ofType(Types.USER_SIGNIN)
         .mergeMap(action => {
@@ -42,7 +42,7 @@ export function userSignIn(action$, {dispatch}, {put}) {
 }
 
 
-export function userInfo(action$, {dispatch}, {get}) {
+export function userInfoEpic(action$, {dispatch}, {get}) {
     return action$.ofType(Types.USER_SIGNIN_ACCEPT)
         .mergeMap(action => {
             const {token, id} = action.payload.auth
@@ -66,7 +66,7 @@ export function userInfo(action$, {dispatch}, {get}) {
         })
 }
 
-export function clearUserInfo(action$, {dispatch, getState}, ajax) {
+export function clearUserInfoEpic(action$, {dispatch, getState}, ajax) {
     return action$.ofType(Types.DELETE_AUTH)
         .mergeMap(() => {
             const {id} = getState().userSignInfo.auth

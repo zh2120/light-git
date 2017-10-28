@@ -13,6 +13,14 @@ import {userSignIn, userSignAccept} from '../actions/users'
 import {openToast} from '../actions/common'
 
 class SignIn extends PureComponent {
+    static navigationOptions = ({navigation}) => ({
+        headerRight: <Button content={<Text>Sign Up</Text>} onPress={() => {
+            if (navigation.state.params) {
+                return navigation.state.params.goSignUp()
+            }
+        }}/>
+    })
+
     constructor(props) {
         super(props)
 
@@ -23,14 +31,15 @@ class SignIn extends PureComponent {
     }
 
     componentDidMount() {
-
+        const {setParams, navigate} = this.props.navigation
+        setParams({goSignUp: () => navigate('SignUp')})
     }
 
     componentWillReceiveProps(nextProps) {
-        const {userSignAccept, auth} = this.props
+        const {signed} = this.props
 
         // userSignAccept(auth)
-        if (this.props.signed !== nextProps.signed) {
+        if (signed !== nextProps.signed) {
             this.setState(() => {
                 nextProps.navigation.goBack()
                 return {
@@ -57,7 +66,6 @@ class SignIn extends PureComponent {
             const auth = btoa(`${account}:${password}`)
 
             userSignIn(auth)
-
         } else {
             openToast('Check Account or Password')
         }
@@ -116,7 +124,7 @@ const styles = StyleSheet.create({
     btnContent: {
         width: 200,
         height: 36,
-        borderRadius:2,
+        borderRadius: 2,
         borderWidth: 0.5,
         borderColor: '#888',
         marginTop: 28,

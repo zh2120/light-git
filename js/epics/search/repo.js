@@ -12,7 +12,7 @@ const getParams = (params) => {
 }
 
 // todo 清空搜索结果
-export function searchRepoByQuery(action$, {getState, dispatch}, {get}) {
+export function searchRepoByQueryEpic(action$, {getState, dispatch}, {get}) {
     return action$.ofType(Types.SEARCH_REPO)
         .switchMap(action => {
             const {url, query} = action.payload

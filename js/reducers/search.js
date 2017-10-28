@@ -1,4 +1,4 @@
-import * as Types from '../../actions/types';
+import * as Types from '../actions/types';
 
 export function reposInfo (state = {repos: [], history: [], searching: false}, action) {
     switch (action.type) {

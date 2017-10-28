@@ -1,4 +1,4 @@
-import * as Types from '../../actions/types';
+import * as Types from '../actions/types';
 
 export const commons = (state = {toastOpened: false, text: '', success: false}, action) => {
     switch (action.type) {

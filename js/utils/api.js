@@ -5,7 +5,6 @@ const requestConfig = {
     // timeout: 300,
     body: null,
     method: "GET",
-    user: 'light-git',
     url: "https://api.github.com",
     headers: {
         "Content-Type": "application/json"

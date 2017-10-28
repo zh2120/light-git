@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     },
     touchItemLeft: {flexDirection: 'row', alignItems: 'center'},
     touchItemRight: {backgroundColor: 'red', width: 100, paddingRight: 6},
-    touchItemText: {fontSize: 16, paddingLeft: 6},
+    touchItemText: {color: '#0366d6', fontSize: 16, paddingLeft: 6},
     repoItem: {
         paddingVertical: 16,
         paddingHorizontal: 6,
@@ -158,7 +158,7 @@ class Search extends Component {
                                     onPress={() => this.props.searchRepo(item)} key={`h-${index}`}>
                     <View style={styles.touchItem}>
                         <View style={styles.touchItemLeft}>
-                            <EvilIcons name={'search'} size={22}/>
+                            <EvilIcons name={'search'} size={22} style={{color: '#0366d6'}}/>
                             <Text style={styles.touchItemText}>{item}</Text>
                         </View>
                         <EvilIcons name={'redo'} size={24} style={{marginRight: 2}}/>
@@ -188,11 +188,12 @@ class Search extends Component {
                 description,
                 stargazers_count,
             } = item;
+            const {navigation} = this.props
 
             return (
                 <TouchableHighlight key={`r-${index}`}
-                                    underlayColor={'rgba(100,100,100 ,0.1)'} onPress={() => {
-                }}>
+                                    underlayColor={'rgba(100,100,100 ,0.1)'}
+                                    onPress={() => navigation.navigate('RepoHome', {fullName: full_name})}>
                     <View style={styles.repoItem}>
                         <View style={[styles.touchItemLeft, {justifyContent: 'space-between'}]}>
                             <View style={styles.touchItemLeft}>
@@ -209,8 +210,12 @@ class Search extends Component {
                         <View style={[styles.touchItemLeft, {justifyContent: 'space-between'}]}>
                             {
                                 language ? (
-                                    <Text style={{backgroundColor: '#e7f3ff', padding: 4, color: '#0366d6'}}>{language}</Text>
-                                ) : <View />
+                                    <Text style={{
+                                        backgroundColor: '#e7f3ff',
+                                        padding: 4,
+                                        color: '#0366d6'
+                                    }}>{language}</Text>
+                                ) : <View/>
                             }
                             <Text>Updated {updated_at}</Text>
                         </View>

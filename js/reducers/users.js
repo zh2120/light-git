@@ -1,4 +1,4 @@
-import * as Types from '../../actions/types';
+import * as Types from '../actions/types';
 
 export function userInfo(state = {user: null}, action) {
     switch (action.type) {

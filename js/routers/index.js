@@ -5,8 +5,10 @@ import {Easing, Animated} from 'react-native'
 import Main from './Main'
 import Search from './Search'
 import SignIn from './SignIn'
+import SignUp from './SignUp'
 import Home from './Home'
 import Test from './Test'
+import RepoHome from './repos/'
 
 
 const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
@@ -26,6 +28,12 @@ const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
 export const MainRouters = {
     Home: {
         screen: Home,
+        navigationOptions: {
+            header: null
+        }
+    },
+    RepoHome: {
+        screen: RepoHome,
         navigationOptions: {
             header: null
         }
@@ -50,24 +58,13 @@ export const MainRouters = {
         screen: SignIn,
         title: '登录',
         navigationOptions: navigationEnhancer,
+    },
+    SignUp: {
+        screen: SignUp,
+        navigationOptions: navigationEnhancer,
     }
 }
 
-/**
- * 避免多次跳转
- * @param getStateForAction
- * @returns {function(*=, *=)}
- */
-const navigateOnce = function (getStateForAction) {
-    return (action, state) => {
-        const {type, routeName} = action
-        return (
-            state &&
-            type === NavigationActions.NAVIGATE &&
-            routeName === state.routes[state.routes.length - 1].routeName // 路由刚刚压入栈，不触发操作
-        ) ? null : getStateForAction(action, state)
-    }
-}
 
 /**
  * 页面切换动画配置
@@ -99,13 +96,30 @@ const transitions = {
 }
 
 const Navigator = StackNavigator(MainRouters, {
-    initialRouteName: 'Search', // 默认页面组件
+    // 默认页面组件
+    initialRouteName: 'Search',
     headerMode: 'screen',
     navigationOptions: {
         gesturesEnabled: false,
     },
     ...transitions
 });
+
+/**
+ * 避免多次跳转
+ * @param getStateForAction
+ * @returns {function(*=, *=)}
+ */
+const navigateOnce = function (getStateForAction) {
+    return (action, state) => {
+        const {type, routeName} = action
+        return (
+            state &&
+            type === NavigationActions.NAVIGATE &&
+            routeName === state.routes[state.routes.length - 1].routeName // 路由刚刚压入栈，不触发操作
+        ) ? null : getStateForAction(action, state)
+    }
+}
 Navigator.router.getStateForAction = navigateOnce(Navigator.router.getStateForAction)
 
 

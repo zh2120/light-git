@@ -1,11 +1,12 @@
-import { combineReducers } from 'redux';
-import {userInfo, userSignInfo} from './user/users';
+import {userInfo, userSignInfo} from './users';
 import {reposInfo} from './search'
 import {commons} from './common'
+import {repoContent} from './repo'
 
-export default combineReducers({
+export default {
     userInfo,
     userSignInfo,
     reposInfo,
-    commons
-})
+    commons,
+    repoContent
+}
