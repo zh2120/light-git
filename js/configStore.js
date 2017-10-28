@@ -5,16 +5,10 @@ import {AsyncStorage} from 'react-native'
 import {createLogger} from 'redux-logger'
 import rootReducer from './reducers'
 import rootEpic from './epics'
-import {enhancerGet, enhancerDelete, enhancerPatch, enhancerPost, enhancerPut} from './utils/api'
+import {put, get, Delete, post, patch} from './utils/api'
 
 const epicMiddleware = createEpicMiddleware(rootEpic, {
-    dependencies: {
-        get: enhancerGet,
-        put: enhancerPut,
-        post: enhancerPost,
-        delete: enhancerDelete,
-        patch: enhancerPatch
-    }
+    dependencies: {get, put, post, patch, delete: Delete}
 });
 
 const configureStore = (initialState) => {
@@ -38,7 +32,7 @@ const configureStore = (initialState) => {
         blacklist: ['commons']
     })
 
-    // purgeStoredState({storage: AsyncStorage}, ['reposInfo']).then((res) => {
+    // purgeStoredState({storage: AsyncStorage}, ['reposInfo', 'userInfo', 'userSignInfo']).then((res) => {
     //     console.log(res)
     // })
 

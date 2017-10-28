@@ -33,8 +33,10 @@ export function userSignIn(action$, {dispatch}, {put}) {
                         dispatch(userSignDenied()) // 验证账户或者密码有误，被拒绝 -> 重置状态
                         return Observable.of(putError('Invalid Username or password')) // 发起UI错误提示
                     }
-                    // todo 其他错误
-                    return Observable.of(putError('Invalid Username or password'))
+                    // 其他错误
+                    dispatch(userSignDenied())
+                    return Observable.of(putError('网络超时'))
+                        .takeUntil(action$.ofType(Types.USER_SIGNIN_DENIED)) // 取消上一个action流
                 })
         })
 }
@@ -51,10 +53,10 @@ export function userInfo(action$, {dispatch}, {get}) {
             return get(url, headers)
                 .map(res => res.response || res)
                 .map(user => {
+                    dispatch(openToast('授权登录成功！'))
                     return getUserInfo(user)
                 })
                 .catch(err => {
-                    console.log(err)
                     // if (err.status === 401) {
                     //     dispatch(deleteAuth(id))
                     // }
@@ -80,7 +82,7 @@ export function clearUserInfo(action$, {dispatch, getState}, ajax) {
                     return exit()
                 })
                 .catch(err => {
-                    console.log('-===> ',err)
+                    console.log('-===> ', err)
                     return Observable.of(putError('清除用户数据失败'))
                 })
         })

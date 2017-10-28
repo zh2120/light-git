@@ -1,19 +1,19 @@
 import * as Types from '../../actions/types';
 
-export function reposInfo (state = {repos: [], history: []}, action) {
+export function reposInfo (state = {repos: [], history: [], searching: false}, action) {
     switch (action.type) {
         case Types.SEARCH_REPO: {
             const arr = new Set([...state.history, action.payload.query])
-            return Object.assign({}, state, {history: [...arr]})
+            return Object.assign({}, state, {history: [...arr], searching: true})
         }
         case Types.SEARCH_REPO_RESULT: {
             // console.log('action.payload -> ',action.payload)
 
             // return [...action.payload]
-            return Object.assign({}, state, {repos: action.payload.repos})
+            return Object.assign({}, state, {repos: action.payload.repos, searching: false})
         }
-        case Types.SEARCH_HISTORY: {
-            return Object.assign({}, state, {history: [...state.history, action.payload.history]})
+        case Types.SEARCH_REPO_RESET: {
+            return Object.assign({}, state, {searching: false})
         }
         default:
             return state

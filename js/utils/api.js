@@ -1,21 +1,70 @@
 import {ajax} from 'rxjs/observable/dom/ajax';
 
-const api = 'https://api.github.com'
-const defaultHeaders = {
-    "Content-Type": "application/vnd.github.mercy-preview+json"
-}
+const requestConfig = {
+    timeout: 10000,
+    // timeout: 300,
+    body: null,
+    method: "GET",
+    user: 'light-git',
+    url: "https://api.github.com",
+    headers: {
+        "Content-Type": "application/json"
+    }
+};
 
-export const enhancerGet = (url = '', headers = {}) =>
-    ajax.get((api + url), {...defaultHeaders, ...headers})
+export const get = (url, headers) => {
+    return new ajax(Object.assign({}, requestConfig, {
+        url: requestConfig.url + url,
+        headers: {
+            "Content-Type": "application/vnd.github.mercy-preview+json",
+            ...headers
+        }
+    }))
+};
 
-export const enhancerPost = (url = '', body = {}, headers = {}) =>
-    ajax.post((api + url), JSON.stringify(body), {...defaultHeaders, ...headers})
+export const put = (url, body, headers) => {
+    return new ajax(Object.assign({}, requestConfig, {
+        body: JSON.stringify(body),
+        method: "PUT",
+        url: requestConfig.url + url,
+        headers: {
+            "Content-Type": "application/vnd.github.mercy-preview+json",
+            ...headers
+        }
+    }))
+};
 
-export const enhancerPut = (url = '', body = {}, headers = {}) =>
-    ajax.put((api + url), JSON.stringify(body), {...defaultHeaders, ...headers})
+export const Delete = (url, headers) => {
+    return new ajax(Object.assign({}, requestConfig, {
+        method: "DELETE",
+        url: requestConfig.url + url,
+        headers: {
+            "Content-Type": "application/vnd.github.mercy-preview+json",
+            ...headers
+        }
+    }))
+};
 
-export const enhancerPatch = (url = '', body = {}, headers = {}) =>
-    ajax.patch((api + url), JSON.stringify(body), {...defaultHeaders, ...headers})
+export const post = (url, body, headers) => {
+    return new ajax(Object.assign({}, requestConfig, {
+        body: JSON.stringify(body),
+        method: "POST",
+        url: requestConfig.url + url,
+        headers: {
+            "Content-Type": "application/vnd.github.mercy-preview+json",
+            ...headers
+        }
+    }))
+};
 
-export const enhancerDelete = (url = '', headers = {}) =>
-    ajax.delete((api + url), {...defaultHeaders, ...headers})
+export const patch = (url, body, headers) => {
+    return new ajax(Object.assign({}, requestConfig, {
+        body: JSON.stringify(body),
+        method: "PATCH",
+        url: requestConfig.url + url,
+        headers: {
+            "Content-Type": "application/vnd.github.mercy-preview+json",
+            ...headers
+        }
+    }))
+};

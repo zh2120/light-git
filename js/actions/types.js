@@ -33,4 +33,5 @@ export const EXIT = 'EXIT'
 // 搜索
 export const SEARCH_REPO = 'SEARCH_REPO'
 export const SEARCH_REPO_RESULT = 'SEARCH_REPO_RESULT'
+export const SEARCH_REPO_RESET = 'SEARCH_REPO_RESET'
 export const SEARCH_HISTORY = 'SEARCH_HISTORY' // 搜索历史

@@ -31,7 +31,7 @@ class ToastCommon extends PureComponent {
         if (nextProps.commons.toastOpened) {
             this.animationOpen.start(() => {
                 this.timer && clearTimeout(this.timer)
-                this.timer = setTimeout(() => this.props.closeToast(), 3000) // 1.5s 后触发关闭toast
+                this.timer = setTimeout(() => this.props.closeToast(), 3000) // 3s 后触发关闭toast
             })
         } else {
             this.animationClose.start(() => this.timer && clearTimeout(this.timer)) // 关闭toast，清除定时器
@@ -43,7 +43,7 @@ class ToastCommon extends PureComponent {
     }
 
     render() {
-        const {toastOpened, text} = this.props.commons
+        const {toastOpened, text, success} = this.props.commons
 
         if (!toastOpened) return null
 
@@ -52,8 +52,8 @@ class ToastCommon extends PureComponent {
             <Animated.View style={[styles.common, {opacity: opacity}]}
                            pointerEvents="none">
                 <Text style={styles.toastText}>{text}</Text>
-                <MaterialCommunityIcons style={{color: toastOpened ? 'red' : '#fff', marginLeft: 8}} size={20}
-                                        name={'sword-cross'}/>
+                <MaterialCommunityIcons style={{color: success ? '#fff' : 'red', marginLeft: 10}} size={20}
+                                        name={success ? 'checkbox-marked-circle-outline' : 'sword-cross'}/>
             </Animated.View>
         )
     }
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     common: {
         top: ios ? 64 : 44,
         right: 0,
-        height: 36,
+        height: 40,
         position: 'absolute',
         overflow: 'hidden',
         alignItems: 'center',
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     },
     toastText: {
         color: '#fff',
-        fontSize: 16
+        fontSize: 14
     }
 })
 

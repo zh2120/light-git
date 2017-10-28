@@ -23,3 +23,9 @@ export function saveHistory(history) {
         payload: {history}
     }
 }
+
+export function resetSearch() {
+    return {
+        type: Types.SEARCH_REPO_RESET
+    }
+}

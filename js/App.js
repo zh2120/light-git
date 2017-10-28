@@ -21,7 +21,7 @@ export default props => (
                 translucent={true}
                 animated={true}
                 backgroundColor="rgba(11, 11, 11, 0.4)"
-                barStyle="light-content"/>
+                barStyle="default"/>
             <StacksInDrawer screenProps={{themeColor: 'red'}}/>
             <Toast/>
         </View>

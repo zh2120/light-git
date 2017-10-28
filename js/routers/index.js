@@ -99,7 +99,7 @@ const transitions = {
 }
 
 const Navigator = StackNavigator(MainRouters, {
-    initialRouteName: 'Home', // 默认页面组件
+    initialRouteName: 'Search', // 默认页面组件
     headerMode: 'screen',
     navigationOptions: {
         gesturesEnabled: false,
