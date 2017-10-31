@@ -25,11 +25,21 @@ global.getParams = (params) => {
     if (typeof params === 'object') {
         const paramsArray = []
         Object.keys(params).map(key => paramsArray.push(key + '=' + params[key]))
-        return '?'+paramsArray.join('&')
+        return '?' + paramsArray.join('&')
+    }
+}
+
+global.isEmpty = (o) => {
+    if (o instanceof Object) {
+        for (let i in o) {
+            return false
+        }
+        return true
     }
 }
 
 const base64hash = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
 // btoa method
 function btoa(s) {
     if (/([^\u0000-\u00ff])/.test(s)) {

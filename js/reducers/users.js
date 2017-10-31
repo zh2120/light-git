@@ -11,20 +11,20 @@ export function userInfo(state = {user: null}, action) {
     }
 }
 
-export function userSignInfo (state = {signInPending: false, signed: false, auth: null}, action) {
+export function userSignInfo(state = {signInPending: false, signed: false, auth: null}, action) {
     switch (action.type) {
-        case Types.USER_SIGNIN: {
+        case Types.USER_SIGNIN:
             return Object.assign({}, state, {signInPending: true, basic: action.payload.auth})
-        }
-        case Types.USER_SIGNIN_ACCEPT: {
+
+        case Types.USER_SIGNIN_ACCEPT:
             return Object.assign({}, state, {signInPending: false, signed: true, ...action.payload})
-        }
-        case Types.USER_SIGNIN_DENIED: {
+
+        case Types.USER_SIGNIN_DENIED:
             return Object.assign({}, state, {signInPending: false, signed: false, ...action.payload})
-        }
-        case Types.EXIT: {
+
+        case Types.EXIT:
             return Object.assign({}, state, {signInPending: false, signed: false, auth: null})
-        }
+
         default:
             return state
     }

@@ -71,7 +71,7 @@ class Home extends Component {
             avatar = <Image source={{uri: user.avatar_url}} style={{width: 36, height: 36}}/>
             onPress = () => navigation.navigate('SignIn')
         } else {
-            // onPress = () => navigation.navigate('SignIn')
+            onPress = () => navigation.navigate('SignIn')
             avatar = <EvilIcons name={'user'} size={36} style={{color: '#fff', padding: 2}}/>
         }
 

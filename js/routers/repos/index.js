@@ -15,13 +15,20 @@ import Octicons from 'react-native-vector-icons/Octicons'
 import {Button, marked, html} from '../../components'
 import {bindActions} from '../../actions/'
 import {openToast} from '../../actions/common'
-import {repoContent} from '../../actions/repo'
+import {repoContent, fileContent, popDir} from '../../actions/repo'
 
 class RepoHome extends Component {
     static navigationOptions = ({navigation}) => {
-        const params = navigation.state.params
+        const params = navigation.state.params;
         return {
-            headerTitle: params && params.name || 'light-git'
+            headerTitle: params && params.name
+        }
+    }
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            fullName: ''
         }
     }
 
@@ -29,13 +36,27 @@ class RepoHome extends Component {
     }
 
     componentDidMount() {
-        const {repoContent, navigation} = this.props
-        // console.log(navigation)
+        const {repoContent, navigation} = this.props;
+
+        console.log('navigation',navigation)
+
         if (navigation.state.params) {
-            // repoContent(navigation.state.params.fullName)
+            const {fullName} = navigation.state.params
+            this.setState(pre => {
+                repoContent({fullName})
+                return {fullName}
+            })
+
         }
-        // console.log(this.scroll)
-        // repoContent({fullName: 'facebook/react'})
+        // repoContent({fullName: 'zh2120/light-git'})
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const {dirs} = this.props;
+
+        if (dirs.length < nextProps.dirs.length) { // 目录栈增加
+            this.viewScrollTo(nextProps.dirs.length) // 执行滚动
+        }
     }
 
     componentWillUnmount() {
@@ -48,14 +69,19 @@ class RepoHome extends Component {
      */
     keyExtractor = (item, index) => 'dirORFile' + index;
 
-    viewScrollTo = () => {
-        console.log('index-> ', this.index)
-        const {dirs} = this.props
-        this.index ++ // 点击目录请求数据，加载新的子目录
-        if (this.index > 2) return null
-        const nextX = this.layoutWidth * this.index
-        return this.scroll.scrollTo({x: nextX, y: 0, animated: true})
-    }
+    /**
+     * 横向滚动
+     * @param dirsLen
+     * @returns {*}
+     */
+    viewScrollTo = (dirsLen) => {
+        if (this.index < dirsLen) { // 滚动距离不能超过目录栈的长度
+            ++this.index;
+            return this.scroll.scrollTo({x: this.layoutWidth * this.index, y: 0, animated: true})
+        } else {
+            console.log('没有滚动')
+        }
+    };
 
     /**
      * 渲染目录或者文件
@@ -64,12 +90,17 @@ class RepoHome extends Component {
      */
     renderDirOrFile = ({item}) => {
         const {type, sha, path, name} = item
-        const {openToast, navigation} = this.props
+        const {openToast, navigation, fileContent} = this.props
         const isDir = type === 'dir' // 是否是目录
+
+        // todo 添加分支的请求
 
         return (
             <TouchableOpacity
-                onPress={() => isDir ? this.viewScrollTo() : navigation.navigate('RepoFile', {path, name})}>
+                onPress={() => isDir
+                    ? fileContent({fullName: this.state.fullName, path})
+                    : navigation.navigate('RepoFile', {fullName: this.state.fullName, path})}>
+
                 <View style={styles.contentRow}>
                     <Octicons name={isDir ? 'file-directory' : 'file'} size={24} style={{color: '#888'}}/>
                     <Text style={styles.contentName}>
@@ -79,15 +110,15 @@ class RepoHome extends Component {
             </TouchableOpacity>
 
         )
-    }
+    };
 
     /**
      * 行分隔线
      */
-    separator = () => <View style={styles.separator}/>
+    separator = () => <View style={styles.separator}/>;
 
     /**
-     * 库头的多按钮
+     * 列表头
      */
     repoHeader = () =>
         <View style={styles.starWrap}>
@@ -97,11 +128,17 @@ class RepoHome extends Component {
             <Button icon={<Octicons name={'star'} size={18}/>}
                     content={<Text>Unstar: 232</Text>}
                     style={styles.starButton}/>
-        </View>
+        </View>;
 
+    /**
+     * 列表尾部，展示仓库的markdown说明
+     */
     repoFooter = () => {
-        const {file} = this.props
-        const h5 = html(marked(atob(file.content))) // markdown 转 html
+        const {readme} = this.props;
+
+        if (isEmpty(readme)) return null;
+
+        const h5 = html(marked(atob(readme.content))) // markdown 转 html
 
         return (
             <View style={{width: vw, height: vh, borderTopWidth: 1}}>
@@ -111,79 +148,81 @@ class RepoHome extends Component {
                     source={{html: h5}}/>
             </View>
         )
-    }
+    };
 
-    scrollEnd = ({nativeEvent}) => {
+    /**
+     * 返回上一级目录相关
+     * @param nativeEvent
+     */
+    onMomentumScrollEnd = ({nativeEvent}) => {
+        const {popDir, dirs} = this.props;
+        const {x} = nativeEvent.contentOffset;
 
-        const {x} = nativeEvent.contentOffset
         if (this.moment > x) { // 上次的偏移量大于当前，返回
-            this.index--
+            --this.index
+            dirs.pop(); // 抛弃最后一个目录的内容
+            popDir(dirs) // 删除最后状态，返回新的目录栈
         }
-        this.moment = x
-        console.log(this.index, nativeEvent)
-        console.log('end')
-    }
 
+        this.moment = x // 保留当前偏移量
+    };
+
+    /**
+     * 布局
+     * @param nativeEvent
+     */
     onLayout = ({nativeEvent}) => {
-        this.index = 0
-        this.moment = 0 // 滚动速度，
-        this.layoutWidth = nativeEvent.layout.width
+        this.index = 0;  // 当前索引
+        this.moment = 0; // 滚动速度，
+        this.layoutWidth = nativeEvent.layout.width // 横向滚动宽度
+    };
+
+    renderDirStack = () => {
+        const {dirs} = this.props;
+
+        return dirs.map((item, index) =>
+            <FlatList key={index}
+                      data={item}
+                      horizontal={false}
+                      style={{width: vw, height: vh}}
+                      showsVerticalScrollIndicator={false}
+                      ItemSeparatorComponent={this.separator}
+                      contentContainerStyle={{padding: 14}}
+                      keyExtractor={this.keyExtractor}
+                      renderItem={this.renderDirOrFile}
+            />
+        )
     }
 
     render() {
-
-        const {content} = this.props
-        const dirTree = <FlatList
-            horizontal={false}
-            style={{
-                width: vw,
-                height: vh,
-            }}
-            showsVerticalScrollIndicator={false}
-            ItemSeparatorComponent={this.separator}
-            contentContainerStyle={{padding: 14}}
-            data={content}
-            ListHeaderComponent={this.repoHeader}
-            ListFooterComponent={this.repoFooter}
-            keyExtractor={this.keyExtractor}
-            renderItem={this.renderDirOrFile}/>
-
-        const dirTree1 = <FlatList
-            horizontal={false}
-            style={{
-                width: vw,
-                height: vh,
-            }}
-            showsVerticalScrollIndicator={false}
-            ItemSeparatorComponent={this.separator}
-            contentContainerStyle={{padding: 14}}
-            data={content}
-            keyExtractor={this.keyExtractor}
-            renderItem={this.renderDirOrFile}/>
+        const {content} = this.props;
 
         return (
             <View style={styles.wrap}>
                 <ScrollView
-
-                    onLayout={this.onLayout}
-                    showsHorizontalScrollIndicator={false}
-                    onMomentumScrollEnd={this.scrollEnd}
-                    pagingEnabled={true}
                     ref={view => this.scroll = view}
+                    pagingEnabled={true}
+                    horizontal={true}
                     bounces={false}
                     bouncesZoom={false}
                     directionalLockEnabled={true}
-                    horizontal={true}>
+                    onLayout={this.onLayout}
+                    showsHorizontalScrollIndicator={false}
+                    onMomentumScrollEnd={this.onMomentumScrollEnd}>
+                    <FlatList
+                        horizontal={false}
+                        data={content}
+                        style={{width: vw, height: vh}}
+                        showsVerticalScrollIndicator={false}
+                        ItemSeparatorComponent={this.separator}
+                        contentContainerStyle={{padding: 14}}
+                        ListHeaderComponent={this.repoHeader}
+                        ListFooterComponent={this.repoFooter}
+                        keyExtractor={this.keyExtractor}
+                        renderItem={this.renderDirOrFile}/>
                     {
-                        dirTree
+                        this.renderDirStack()
                     }
-                    {
-                        dirTree1
-                    }
-                    {
-                        dirTree1
-                    }
-
                 </ScrollView>
             </View>
         )
@@ -209,9 +248,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(10,10,10, 0.2)'
     },
     contentName: {marginLeft: 6}
-})
+});
 
 export default connect(state => ({
     content: state.repoContent.content,
-    file: state.repoFile.file
-}), bindActions({repoContent, openToast}))(RepoHome)
+    readme: state.repoFile.readme,
+    dirs: state.repoFile.dirs
+}), bindActions({repoContent, fileContent, openToast, popDir}))(RepoHome)

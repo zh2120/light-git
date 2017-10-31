@@ -1,6 +1,7 @@
 import './utils'
 import React from 'react';
 import {Provider} from 'react-redux'
+import codePush from "react-native-code-push";
 import {View, StyleSheet, StatusBar, Text} from 'react-native'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/catch'
@@ -18,13 +19,14 @@ const {persistor, store} = configureStore()
 const Loading = () => (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}><Text style={{color: 'red'}}>恢复现场中...</Text></View>)
 
+// const codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME };
 
 export default props => (
 
     <Provider store={store}>
         <PersistGate
             persistor={persistor}
-            loading={<Loading />}>
+            loading={<Loading/>}>
             <View style={styles.container}>
                 <StatusBar
                     translucent={true}
@@ -37,6 +39,8 @@ export default props => (
         </PersistGate>
     </Provider>
 )
+
+// export default codePush(codePushOptions)()
 
 const styles = StyleSheet.create({
     container: {

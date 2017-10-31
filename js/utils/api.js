@@ -1,13 +1,13 @@
 import {ajax} from 'rxjs/observable/dom/ajax';
 
 const requestConfig = {
-    timeout: 10000,
-    // timeout: 300,
+    timeout: 30000,
     body: null,
     method: "GET",
     url: "https://api.github.com",
     headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Accept": "application/vnd.github.v3+json"
     }
 };
 

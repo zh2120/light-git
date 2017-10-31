@@ -42,6 +42,9 @@ export const REPO_HOME_CONTENTS = 'REPO_HOME_CONTENTS' // 仓库内容，默认�
 export const REPO_HOME_CONTENTS_DENIED = 'REPO_HOME_CONTENTS_DENIED' // 请求内容失败，被拒绝，重置状态
 
 export const FILE = 'FILE' // 请求文件内容
+export const README = 'README' // 获取readme
 export const FILE_CONTENT = 'FILE_CONTENT' // 仓库内容文件
-export const FILE_CONTENT_DENIED = 'FILE_CONTENT_DENIED' // 请求文件内容失败，被拒绝，重置
+export const FILE_CONTENT_DENIED = 'FILE_CONTENT_DENIED' // 请求文件内容或者失败，被拒绝，重置
 export const DIR_CONTENT = 'DIR_CONTENT' // 目录
+
+export const DIR_POP = 'DIR_POP' // 删除目录栈最后一个元素

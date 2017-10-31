@@ -103,7 +103,7 @@ const transitions = {
 
 const Navigator = StackNavigator(MainRouters, {
     // 默认页面组件
-    initialRouteName: 'RepoHome',
+    initialRouteName: 'Home',
     headerMode: 'screen',
     navigationOptions: {
         gesturesEnabled: false,

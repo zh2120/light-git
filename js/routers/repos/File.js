@@ -1,44 +1,49 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {View, Text, WebView, FlatList, StyleSheet, TouchableOpacity} from 'react-native'
-import Octicons from 'react-native-vector-icons/Octicons'
-import {Button} from '../../components'
+import {View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity} from 'react-native'
 import {bindActions} from '../../actions/'
 import {openToast} from '../../actions/common'
-import {repoContent} from '../../actions/repo'
+import {fileContent} from '../../actions/repo'
 
 class File extends Component {
     static navigationOptions = ({navigation}) => {
         const params = navigation.state.params
         return {
-            headerTitle: params && params.name,
+            headerTitle: params && params.path,
             headerBackTitle: null
         }
     }
 
     componentDidMount() {
-        const {repoContent, navigation} = this.props
-        // console.log(navigation)
+        const {navigation, fileContent} = this.props
+
         if (navigation.state.params) {
-            // repoContent(navigation.state.params.fullName)
+            const {fullName, path} = navigation.state.params
+
+            fileContent({fullName, path})
         }
-        // repoContent({fullName: 'zh2120/light-git'})
     }
 
     componentWillUnmount() {
     }
 
     render() {
-        const {content} = this.props
+        const {file} = this.props
+
+        if (isEmpty(file)) return null
+
+        const text = atob(file.content)
 
         return (
-            <WebView style={styles.wrap}/>
+            <ScrollView contentContainerStyle={styles.wrap}>
+                <TextInput editable={false} value={text} multiline={true} style={{fontSize: 16}}/>
+            </ScrollView>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    wrap: {flex: 1, backgroundColor: '#fff'},
+    wrap: {width:vw, height: vh, padding: 14, backgroundColor: '#fff'},
 })
 
-export default connect(state => ({content: state.repoContent.content}), bindActions({repoContent, openToast}))(File)
+export default connect(state => ({file: state.repoFile.file}), bindActions({fileContent, openToast}))(File)

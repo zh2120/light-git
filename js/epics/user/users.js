@@ -6,7 +6,7 @@ import {Observable} from 'rxjs/Rx'
 export function userSignInEpic(action$, {dispatch}, {put}) {
     // 创建或者获取指定应用的授权
     return action$.ofType(Types.USER_SIGNIN)
-        .mergeMap(action => {
+        .switchMap(action => {
             const {auth} = action.payload
             const config = require('../../../config.json')
             const url = '/authorizations/clients/' + config.client_id
@@ -44,7 +44,7 @@ export function userSignInEpic(action$, {dispatch}, {put}) {
 
 export function userInfoEpic(action$, {dispatch}, {get}) {
     return action$.ofType(Types.USER_SIGNIN_ACCEPT)
-        .mergeMap(action => {
+        .switchMap(action => {
             const {token, id} = action.payload.auth
             const url = '/user'
             const headers = {
