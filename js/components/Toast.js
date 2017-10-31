@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
-import {Animated, Text, StyleSheet, Easing} from 'react-native'
+import {Animated, Text, StyleSheet, Easing, TouchableWithoutFeedback} from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import {bindActions} from '../actions'
 import {closeToast} from '../actions/common'
@@ -48,13 +48,16 @@ class ToastCommon extends PureComponent {
         if (!toastOpened) return null
 
         const {opacity} = this.state
+
         return (
-            <Animated.View style={[styles.common, {opacity: opacity}]}
-                           pointerEvents="none">
-                <Text style={styles.toastText}>{text}</Text>
-                <MaterialCommunityIcons style={{color: success ? '#fff' : 'red', marginLeft: 10}} size={20}
-                                        name={success ? 'checkbox-marked-circle-outline' : 'sword-cross'}/>
-            </Animated.View>
+            <TouchableWithoutFeedback onPress={this.props.closeToast}>
+                <Animated.View style={[styles.common, {opacity: opacity}]}>
+                    <Text style={styles.toastText}>{text}</Text>
+                    <MaterialCommunityIcons style={{color: success ? '#fff' : 'red', marginLeft: 10}} size={20}
+                                            name={success ? 'checkbox-marked-circle-outline' : 'sword-cross'}/>
+                </Animated.View>
+            </TouchableWithoutFeedback>
+
         )
     }
 }
@@ -72,9 +75,9 @@ const styles = StyleSheet.create({
         paddingLeft: 16,
         paddingRight: 10,
         paddingVertical: 4,
-        borderTopLeftRadius: 18,
+        borderTopLeftRadius: 20,
         flexDirection: 'row',
-        borderBottomLeftRadius: 18
+        borderBottomLeftRadius: 20
     },
     toastText: {
         color: '#fff',

@@ -3,14 +3,6 @@ import {searchRepoResult, resetSearch} from '../../actions';
 import {openToast, putError} from '../../actions/common';
 import {Observable} from 'rxjs/Rx'
 
-const getParams = (params) => {
-    if (params) {
-        const paramsArray = []
-        Object.keys(params).map(key => paramsArray.push(key + '=' + params[key]))
-        return paramsArray.join('&')
-    }
-}
-
 // todo 清空搜索结果
 export function searchRepoByQueryEpic(action$, {getState, dispatch}, {get}) {
     return action$.ofType(Types.SEARCH_REPO)

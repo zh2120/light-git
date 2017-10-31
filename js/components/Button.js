@@ -65,7 +65,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     icon: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     disable: {
         backgroundColor: '#dcdcdc'

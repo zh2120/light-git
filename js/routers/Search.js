@@ -193,7 +193,7 @@ class Search extends Component {
             return (
                 <TouchableHighlight key={`r-${index}`}
                                     underlayColor={'rgba(100,100,100 ,0.1)'}
-                                    onPress={() => navigation.navigate('RepoHome', {fullName: full_name})}>
+                                    onPress={() => navigation.navigate('RepoHome', {fullName: full_name, name: name})}>
                     <View style={styles.repoItem}>
                         <View style={[styles.touchItemLeft, {justifyContent: 'space-between'}]}>
                             <View style={styles.touchItemLeft}>

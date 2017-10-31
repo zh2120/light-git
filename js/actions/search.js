@@ -4,7 +4,7 @@ export function searchRepo(text) {
     return {
         type: Types.SEARCH_REPO,
         payload: {
-            url: '/search/repositories?',
+            url: '/search/repositories',
             query: text
         }
     }

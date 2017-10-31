@@ -12,6 +12,8 @@ const {width, height} = Dimensions.get('window')
 global.dp = function (px, useHeight = false) {
     return px * (useHeight ? height / 667 : width / 375)
 }
+global.vw = width
+global.vh = height
 
 global.ios = Platform.OS === 'ios'
 
@@ -23,7 +25,7 @@ global.getParams = (params) => {
     if (typeof params === 'object') {
         const paramsArray = []
         Object.keys(params).map(key => paramsArray.push(key + '=' + params[key]))
-        return paramsArray.join('&')
+        return '?'+paramsArray.join('&')
     }
 }
 

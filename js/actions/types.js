@@ -40,3 +40,8 @@ export const SEARCH_HISTORY = 'SEARCH_HISTORY' // 搜索历史
 export const REPO_HOME = 'REPO_HOME' // 默认请求
 export const REPO_HOME_CONTENTS = 'REPO_HOME_CONTENTS' // 仓库内容，默认成功，取得目录或者文件
 export const REPO_HOME_CONTENTS_DENIED = 'REPO_HOME_CONTENTS_DENIED' // 请求内容失败，被拒绝，重置状态
+
+export const FILE = 'FILE' // 请求文件内容
+export const FILE_CONTENT = 'FILE_CONTENT' // 仓库内容文件
+export const FILE_CONTENT_DENIED = 'FILE_CONTENT_DENIED' // 请求文件内容失败，被拒绝，重置
+export const DIR_CONTENT = 'DIR_CONTENT' // 目录

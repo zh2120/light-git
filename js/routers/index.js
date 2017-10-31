@@ -9,7 +9,7 @@ import SignUp from './SignUp'
 import Home from './Home'
 import Test from './Test'
 import RepoHome from './repos/'
-
+import RepoFile from './repos/File'
 
 const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
     const defaultHeaderStyle = {
@@ -35,7 +35,13 @@ export const MainRouters = {
     RepoHome: {
         screen: RepoHome,
         navigationOptions: {
-            header: null
+            // header: null
+        }
+    },
+    RepoFile: {
+        screen: RepoFile,
+        navigationOptions: {
+            // header: null
         }
     },
     Test: {
@@ -97,7 +103,7 @@ const transitions = {
 
 const Navigator = StackNavigator(MainRouters, {
     // 默认页面组件
-    initialRouteName: 'Search',
+    initialRouteName: 'RepoHome',
     headerMode: 'screen',
     navigationOptions: {
         gesturesEnabled: false,
