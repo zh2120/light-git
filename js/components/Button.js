@@ -26,7 +26,7 @@ class Button extends PureComponent {
 
     render() {
         const {content, style, onPress, disabled, icon} = this.props
-        const finalStyle = [styles.wrap, disabled && styles.disable, style]
+        const finalStyle = [styles.wrap, icon && styles.icon, disabled && styles.disable, style]
         if (ios) {
             return (
                 <TouchableHighlight

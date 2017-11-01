@@ -27,6 +27,10 @@ const Icon = Animated.createAnimatedComponent(MaterialCommunityIcons);
 const underlayColor = 'rgba(100,100,100 ,0.1)';
 
 class Home extends Component {
+    static navigationOptions = {
+        header: null
+    }
+
     constructor(props) {
         super(props);
         this.state = {

@@ -22,33 +22,22 @@ const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
         borderBottomWidth: 0
     }
     const tmpStyle = Object.assign({}, defaultHeaderStyle, navigationOptions.headerStyle)
+
     return Object.assign({}, navigationOptions, {headerStyle: tmpStyle, gesturesEnabled: true})
 };
 
 export const MainRouters = {
     Home: {
         screen: Home,
-        navigationOptions: {
-            header: null
-        }
     },
     RepoHome: {
         screen: RepoHome,
-        navigationOptions: {
-            // header: null
-        }
     },
     RepoFile: {
         screen: RepoFile,
-        navigationOptions: {
-            // header: null
-        }
     },
     Test: {
         screen: Test,
-        navigationOptions: {
-            header: null
-        }
     },
     Main: {
         screen: Main,
@@ -58,17 +47,18 @@ export const MainRouters = {
     Search: {
         screen: Search,
         title: '搜索',
-        navigationOptions: navigationEnhancer,
     },
     SignIn: {
         screen: SignIn,
         title: '登录',
-        navigationOptions: navigationEnhancer,
     },
     SignUp: {
         screen: SignUp,
-        navigationOptions: navigationEnhancer,
     }
+}
+
+for (const key in MainRouters) {
+    MainRouters[key].navigationOptions = navigationEnhancer
 }
 
 
@@ -103,7 +93,7 @@ const transitions = {
 
 const Navigator = StackNavigator(MainRouters, {
     // 默认页面组件
-    initialRouteName: 'Home',
+    initialRouteName: 'Search',
     headerMode: 'screen',
     navigationOptions: {
         gesturesEnabled: false,

@@ -25,9 +25,9 @@ export const getRepoContentDenied = () => ({type: Types.REPO_HOME_CONTENTS_DENIE
  * @param fullName 仓库全名
  * @param path 文件路径
  */
-export const fileContent = ({fullName = '', path = '', ref = 'master'}) => ({
+export const fileContent = ({fullName = '', path = '', ref = 'master', type = 'file'}) => ({
     type: Types.FILE,
-    payload: {fullName, path, ref}
+    payload: {fullName, path, ref, type}
 })
 
 /**

@@ -1,7 +1,7 @@
-import {userInfo, userSignInfo} from './users';
-import {reposInfo} from './search'
-import {commons} from './common'
-import {repoContent, repoFile} from './repo'
+import {userInfo, userSignInfo} from './userReducer';
+import {reposInfo} from './searchReducer'
+import {commons} from './comReducer'
+import {repoContent, repoFile} from './repoReducer'
 
 export default {
     userInfo,

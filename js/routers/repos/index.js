@@ -98,8 +98,8 @@ class RepoHome extends Component {
         return (
             <TouchableOpacity
                 onPress={() => isDir
-                    ? fileContent({fullName: this.state.fullName, path})
-                    : navigation.navigate('RepoFile', {fullName: this.state.fullName, path})}>
+                    ? fileContent({fullName: this.state.fullName, path, type})
+                    : navigation.navigate('RepoFile', {fullName: this.state.fullName, path, type})}>
 
                 <View style={styles.contentRow}>
                     <Octicons name={isDir ? 'file-directory' : 'file'} size={24} style={{color: '#888'}}/>
@@ -138,7 +138,7 @@ class RepoHome extends Component {
 
         if (isEmpty(readme)) return null;
 
-        const h5 = html(marked(atob(readme.content))) // markdown 转 html
+        const h5 = html(marked(readme)) // markdown 转 html
 
         return (
             <View style={{width: vw, height: vh, borderTopWidth: 1}}>

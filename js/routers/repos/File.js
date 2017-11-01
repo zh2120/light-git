@@ -32,18 +32,22 @@ class File extends Component {
 
         if (isEmpty(file)) return null
 
-        const text = atob(file.content)
-
         return (
-            <ScrollView contentContainerStyle={styles.wrap}>
-                <TextInput editable={false} value={text} multiline={true} style={{fontSize: 16}}/>
-            </ScrollView>
+            <View style={styles.wrap}>
+                <ScrollView  showsVerticalScrollIndicator={false}>
+                    <Text style={{color: '#111', fontSize: 12}}>
+                        {file}
+                    </Text>
+                </ScrollView>
+
+            </View>
+
         )
     }
 }
 
 const styles = StyleSheet.create({
-    wrap: {width:vw, height: vh, padding: 14, backgroundColor: '#fff'},
+    wrap: {padding: 14, backgroundColor: '#fff', flex: 1},
 })
 
 export default connect(state => ({file: state.repoFile.file}), bindActions({fileContent, openToast}))(File)
