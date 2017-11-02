@@ -38,7 +38,7 @@ const searchStyles = StyleSheet.create({
     searchIcon: {color: '#000', marginHorizontal: 5, alignItems: 'center'}
 });
 
-const SearchHeader = connect(state => ({}), bindActions({searchRepo, saveHistory}))(
+const SearchHeader = connect(state => ({}), bindActions({searchRepo}))(
     class SearchHeader extends Component {
         constructor(props) {
             super(props);
@@ -51,19 +51,22 @@ const SearchHeader = connect(state => ({}), bindActions({searchRepo, saveHistory
             if (navigation.state.params) {
                 this.setState({searchText: navigation.state.params.searchText});
 
-                searchRepo(navigation.state.params.searchText)
+                // searchRepo(navigation.state.params.searchText)
             }
         }
 
         changeText = (text) => this.setState({searchText: text});
 
         searchSubmit = () => {
+            const {searchRepo} = this.props
+            const {searchText} = this.state
             const params = {
-                q: this.state.searchText,
+                q: searchText,
                 sort: 'star'
             }
             const url = '/search/repositories' + getParams(params)
-            this.props.searchRepo(url);
+
+            return searchRepo({name: searchText, url});
         } // 当前页面递交搜索内容
 
         render() {
@@ -85,7 +88,7 @@ const SearchHeader = connect(state => ({}), bindActions({searchRepo, saveHistory
                             onChangeText={this.changeText}
                             style={searchStyles.textInput}
                             underlineColorAndroid={'transparent'}
-                            onSubmitEditing={() => this.searchSubmit(searchText)}/>
+                            onSubmitEditing={() => this.searchSubmit()}/>
                         {
                             searchText ? (
                                 <TouchableOpacity
@@ -111,6 +114,7 @@ const styles = StyleSheet.create({
     sectionWrap: {
         paddingTop: 10,
         paddingBottom: 14,
+        paddingHorizontal: 12,
         marginBottom: 8,
         backgroundColor: '#fff',
         justifyContent: 'space-between',
@@ -123,6 +127,7 @@ const styles = StyleSheet.create({
     },
     touchItem: {
         paddingVertical: 12,
+        paddingHorizontal: 12,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
@@ -132,7 +137,7 @@ const styles = StyleSheet.create({
     touchItemText: {color: '#0366d6', fontSize: 16, paddingLeft: 6},
     repoItem: {
         paddingVertical: 16,
-        paddingHorizontal: 6,
+        paddingHorizontal: 16,
         marginVertical: 4,
     },
     repoName: {color: '#0366d6', fontSize: 18},
@@ -166,32 +171,23 @@ class Search extends Component {
                     <View style={styles.touchItem}>
                         <View style={styles.touchItemLeft}>
                             <EvilIcons name={'search'} size={22} style={{color: '#0366d6'}}/>
-                            <Text style={styles.touchItemText}>{item}</Text>
+                            <Text style={styles.touchItemText}>{item.name}</Text>
                         </View>
                         <EvilIcons name={'redo'} size={24} style={{marginRight: 2}}/>
                     </View>
                 </TouchableHighlight>
             )
         }
+        return null
     }
 
     renderReposItem = ({item, index}) => {
         if (item) {
             const {
-                id,
                 name,
-                score,
-                owner,
-                forks,
-                git_url,
                 full_name,
                 language,
-                homepage,
-                html_url,
-                open_issues,
-                watchers,
                 updated_at,
-                clone_url,
                 description,
                 stargazers_count,
             } = item;
@@ -230,7 +226,7 @@ class Search extends Component {
                 </TouchableHighlight>
             )
         }
-
+        return null
     };
 
     renderSectionHeader = ({section}) => { // 分段头
@@ -241,8 +237,9 @@ class Search extends Component {
             title = 'History';
             leftIconName = 'tag';
             rightIconName = recordOpen ? 'chevron-double-up' : 'chevron-double-down';
-            clear = () => this.setState(pre => ({recordOpen: !pre.recordOpen}))
-        } else if (section.type === 'repos') {
+            clear = () => this.setState({recordOpen: !recordOpen})
+        }
+        if (section.type === 'repos') {
             title = 'Results';
             leftIconName = 'paperclip';
             rightIconName = 'broom';
@@ -279,7 +276,7 @@ class Search extends Component {
         const effectiveHiStory = recordOpen ? history : []; // 可用的历史，隐藏或者展示
 
         return (
-            <View style={{backgroundColor: '#fff', flex: 1, paddingHorizontal: 10,}}>
+            <View style={{backgroundColor: '#fff', flex: 1,}}>
                 <SectionList
                     ItemSeparatorComponent={() => (<View style={styles.separator}/>)}
                     showsVerticalScrollIndicator={false}

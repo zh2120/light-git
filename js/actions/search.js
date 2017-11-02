@@ -1,9 +1,9 @@
 import * as Types from './types';
 
-export function searchRepo(url) {
+export function searchRepo({name, url}) {
     return {
         type: Types.SEARCH_REPO,
-        payload: {url}
+        payload: {name, url}
     }
 }
 

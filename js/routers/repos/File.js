@@ -5,7 +5,6 @@ import {bindActions} from '../../actions/'
 import {openToast} from '../../actions/common'
 import {fileContent} from '../../actions/repo'
 import {html} from  '../../components'
-import marked from 'marked'
 
 class File extends Component {
     static navigationOptions = ({navigation}) => {
@@ -34,7 +33,7 @@ class File extends Component {
 
         if (isEmpty(file)) return null
 
-        const tmp = "<pre><code>" + file.replace(/\n/g, '<br>') +"</code></pre>"
+        const tmp = "<pre><code>" + file.replace(/\n/g, '<br/>') +"</code></pre>"
 
         return (
             <View style={styles.wrap}>
@@ -45,7 +44,7 @@ class File extends Component {
 }
 
 const styles = StyleSheet.create({
-    wrap: {backgroundColor: '#fff', flex: 1},
+    wrap: {backgroundColor: 'red', flex: 1},
 })
 
 export default connect(state => ({file: state.repoFile.file}), bindActions({fileContent, openToast}))(File)
