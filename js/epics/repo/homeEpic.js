@@ -38,6 +38,9 @@ export function repoContentEpic(action$, {getState, dispatch}, {get}) {
                 }) // 返回正确结果
                 .catch(e => {
                     console.log('repoContentEpic', e)
+                    if (e.status === 404) {
+                        console.log('仓库获取失败')
+                    }
                     dispatch(getRepoContentDenied()) // 重置搜索状态
                     return Observable.of(putError('获取仓库内容，失败。网络状况不佳，请稍后在试'))
                         .takeUntil(action$.ofType(Types.REPO_HOME_CONTENTS_DENIED))
@@ -76,8 +79,12 @@ export function repoFileEpic(action$, {getState, dispatch}, {get}) {
                 }) // 返回正确结果
                 .catch(e => {
                     console.log('repoFileEpic', e)
+                    let message = '获取文件，失败。网络状况不佳，请稍后在试'
+                    if(e.status === 404) {
+                        message = '作者有点懒，仓库没有找到README...'
+                    }
                     dispatch(getFileDenied()) // 重置搜索状态
-                    return Observable.of(putError('获取文件，失败。网络状况不佳，请稍后在试'))
+                    return Observable.of(putError(message))
                         .takeUntil(action$.ofType(Types.FILE_CONTENT_DENIED))
                 })
         })

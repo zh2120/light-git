@@ -42,24 +42,22 @@ const SearchHeader = connect(state => ({}), bindActions({searchRepo}))(
     class SearchHeader extends Component {
         constructor(props) {
             super(props);
-            this.state = {searchText: ''}
+            const {params} = props.navigation.state
+            this.state = {searchText: params ?  params.searchText : ''}
         }
 
         componentDidMount() {
-            const {navigation, searchRepo} = this.props;
+            const {searchText} = this.state;
 
-            if (navigation.state.params) {
-                this.setState({searchText: navigation.state.params.searchText});
-
-                // searchRepo(navigation.state.params.searchText)
+            if (searchText) {
+                this.searchSubmit(searchText)
             }
         }
 
         changeText = (text) => this.setState({searchText: text});
 
-        searchSubmit = () => {
+        searchSubmit = (searchText) => {
             const {searchRepo} = this.props
-            const {searchText} = this.state
             const params = {
                 q: searchText,
                 sort: 'star'
@@ -77,7 +75,7 @@ const SearchHeader = connect(state => ({}), bindActions({searchRepo}))(
                 <View style={searchStyles.wrap}>
                     <View style={searchStyles.searchWrap}>
                         <TouchableOpacity
-                            onPress={() => this.searchSubmit()}>
+                            onPress={() => this.searchSubmit(searchText)}>
                             <EvilIcons name={'search'} size={24} style={searchStyles.searchIcon}/>
                         </TouchableOpacity>
                         <TextInput
@@ -88,7 +86,7 @@ const SearchHeader = connect(state => ({}), bindActions({searchRepo}))(
                             onChangeText={this.changeText}
                             style={searchStyles.textInput}
                             underlineColorAndroid={'transparent'}
-                            onSubmitEditing={() => this.searchSubmit()}/>
+                            onSubmitEditing={() => this.searchSubmit(searchText)}/>
                         {
                             searchText ? (
                                 <TouchableOpacity
@@ -163,11 +161,17 @@ class Search extends Component {
         }
     }
 
+    reSearch = (item) => this.setState(pre => {
+        this.props.searchRepo(item)
+
+        return {recordOpen: !pre}
+    })
+
     renderHistoryItem = ({item, index}) => { // 历史记录单项
         if (item) {
             return (
                 <TouchableHighlight underlayColor={'rgba(100,100,100 ,0.1)'}
-                                    onPress={() => this.props.searchRepo(item)} key={`h-${index}`}>
+                                    onPress={() => this.reSearch(item)} key={`h-${index}`}>
                     <View style={styles.touchItem}>
                         <View style={styles.touchItemLeft}>
                             <EvilIcons name={'search'} size={22} style={{color: '#0366d6'}}/>
@@ -178,7 +182,11 @@ class Search extends Component {
                 </TouchableHighlight>
             )
         }
-        return null
+        return (
+            <View style={styles.touchItem}>
+                <Text style={styles.touchItemText}>暂时还么有历史呢</Text>
+            </View>
+        )
     }
 
     renderReposItem = ({item, index}) => {
@@ -256,12 +264,12 @@ class Search extends Component {
                     <Text style={{marginRight: 12}}>{title}</Text>
                     {
                         section.type === 'repos' ? (
-                            <ActivityIndicator animating={this.props.searching} color={'rgb(30,144,255)'}/>) : null
+                            <ActivityIndicator animating={this.props.searching} color={'#0366d6'}/>) : null
                     }
                 </View>
                 <TouchableOpacity onPress={clear}>
                     <View style={styles.sectionBase}>
-                        <MaterialCommunityIcons name={rightIconName} size={24}/>
+                        <MaterialCommunityIcons name={rightIconName} size={24} />
                     </View>
                 </TouchableOpacity>
             </View>
@@ -296,9 +304,9 @@ class Search extends Component {
 }
 
 const bindState = state => ({
-    repos: state.reposInfo.repos,
-    history: state.reposInfo.history,
-    searching: state.reposInfo.searching
+    repos: state.searchInfo.repos,
+    history: state.searchInfo.history,
+    searching: state.searchInfo.searching
 });
 
 export default connect(bindState, bindActions({searchRepo}))(Search)

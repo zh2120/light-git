@@ -29,7 +29,7 @@ export default (initialState) => {
     )
     const persistor = persistStore(store)
 
-    // purgeStoredState({storage: storage}, ['reposInfo']).then((res) => { // 清空指定的存储
+    // purgeStoredState({storage: storage}, ['searchInfo']).then((res) => { // 清空指定的存储
     //     console.log(res)
     // })
 

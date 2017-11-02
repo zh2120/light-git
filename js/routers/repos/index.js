@@ -15,7 +15,7 @@ import Octicons from 'react-native-vector-icons/Octicons'
 import {Button, marked, html} from '../../components'
 import {bindActions} from '../../actions/'
 import {openToast} from '../../actions/common'
-import {repoContent, fileContent, popDir} from '../../actions/repo'
+import {repoContent, fileContent, popDir, clearDir} from '../../actions/repo'
 
 class RepoHome extends Component {
     static navigationOptions = ({navigation}) => {
@@ -27,8 +27,9 @@ class RepoHome extends Component {
 
     constructor(props) {
         super(props);
+        const {params} = props.navigation.state
         this.state = {
-            fullName: ''
+            fullName: params ? params.fullName : ''
         }
     }
 
@@ -36,17 +37,11 @@ class RepoHome extends Component {
     }
 
     componentDidMount() {
-        const {repoContent, navigation} = this.props;
+        const {fullName} = this.state
+        const {repoContent} = this.props;
 
-        console.log('navigation',navigation)
-
-        if (navigation.state.params) {
-            const {fullName} = navigation.state.params
-            this.setState(pre => {
-                repoContent({fullName})
-                return {fullName}
-            })
-
+        if (fullName) {
+            repoContent({fullName})
         }
         // repoContent({fullName: 'zh2120/light-git'})
     }
@@ -60,6 +55,7 @@ class RepoHome extends Component {
     }
 
     componentWillUnmount() {
+        this.props.clearDir()
     }
 
     /**
@@ -254,4 +250,4 @@ export default connect(state => ({
     content: state.repoContent.content,
     readme: state.repoFile.readme,
     dirs: state.repoFile.dirs
-}), bindActions({repoContent, fileContent, openToast, popDir}))(RepoHome)
+}), bindActions({repoContent, fileContent, openToast, popDir, clearDir}))(RepoHome)

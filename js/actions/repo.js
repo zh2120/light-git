@@ -58,3 +58,5 @@ export const getDir = (dirs) => ({type: Types.DIR_CONTENT, payload: {dirs}})
  * @param dirs 目录栈最后一个元素没删除，返回新的目录栈
  */
 export const popDir = (dirs) => ({type: Types.DIR_POP, payload: {dirs}})
+
+export const clearDir = () => ({type: Types.CLEAR_DIR})

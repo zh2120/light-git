@@ -15,6 +15,14 @@ class File extends Component {
         }
     }
 
+    constructor(props) {
+        super(props)
+        this.state ={
+            fullName: props.navigation.state.params.fullName || '',
+            path: props.navigation.state.params.path || ''
+        }
+    }
+
     componentDidMount() {
         const {navigation, fileContent} = this.props
 

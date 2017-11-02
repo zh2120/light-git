@@ -2,7 +2,7 @@ import * as Types from '../actions/types';
 
 export function repoContent(state = {getting: false, content: []}, action) {
     switch (action.type) {
-        case Types.REPO_HOME:
+        case Types.REPO_HOME: // 请求库主内容，文件或者目录
             return {...state, getting: true}
 
         case Types.REPO_HOME_CONTENTS:
@@ -29,6 +29,9 @@ export function repoFile(state = {getting: false, file: {}, readme: {}, dirs: []
 
         case Types.DIR_CONTENT:  // 存储仓库目录
             return {...state, getting: false, dirs: [...state.dirs, action.payload.dirs]}
+
+        case Types.CLEAR_DIR:  // 清空库内的子目录所以内容
+            return {getting: false, file: {}, readme: {}, dirs: []}
 
         case Types.DIR_POP:  // 接受
             return {...state, dirs: [...action.payload.dirs]}

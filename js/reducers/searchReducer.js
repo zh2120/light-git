@@ -1,6 +1,6 @@
 import * as Types from '../actions/types';
 
-export function reposInfo(state = {repos: [], history: [], searching: false}, action) {
+export function searchInfo(state = {repos: [], history: [], searching: false}, action) {
     switch (action.type) {
         case Types.SEARCH_REPO:
             const arr = state.history.filter(item => item && item.name !== action.payload.name)
