@@ -34,15 +34,12 @@ class File extends Component {
 
         if (isEmpty(file)) return null
 
-        // let tmp = marked.parse(file)
-        let tmp = "<pre><code>" + file.replace(/\n/g, '<br>') +"</code></pre>"
+        const tmp = "<pre><code>" + file.replace(/\n/g, '<br>') +"</code></pre>"
 
         return (
             <View style={styles.wrap}>
-                <WebView scalesPageToFit={true} style={{width: 400, height: 600}} source={{html: html(tmp)}}/>
+                <WebView scalesPageToFit={true} style={{flex: 1}} source={{html: html(tmp)}}/>
             </View>
-
-
         )
     }
 }
