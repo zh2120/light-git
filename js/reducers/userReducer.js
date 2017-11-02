@@ -5,7 +5,7 @@ export function userInfo(state = {user: null}, action) {
         case Types.USER_ACCEPT:
             return {...state, ...action.payload};
         case Types.CLEAR_USER:
-            return {user: null};
+            return {...state, user: null};
         default:
             return state;
     }

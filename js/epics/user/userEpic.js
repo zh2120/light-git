@@ -1,5 +1,5 @@
 import * as Types from '../../actions/types';
-import {userSignAccept, getUserInfo, userSignDenied, deleteAuth, exit} from '../../actions/users';
+import {userSignAccept, getUserInfo, userSignDenied, deleteAuth, exit, clearUser} from '../../actions/users';
 import {openToast, putError} from '../../actions/common';
 import {Observable} from 'rxjs/Rx'
 
@@ -26,16 +26,22 @@ export function userSignInEpic(action$, {dispatch}, {put}) {
             return put(url, body, headers)
                 .map(res => res.response || res)
                 .map(auth => {
-                    if(auth.token) {
+                    const {id} = auth
+                    if (auth.token) {
+                        console.log(auth.token)
                         return userSignAccept(auth)
+                    } else {
+                        console.log(' 没有token')
+                        return deleteAuth({id, type: 'reset'}) // 没有token，删除授权
                     }
-                    return deleteAuth() // 没有token，删除授权
+
                 })
                 .catch(err => {
-                    if (err.status === 401) {
-                        dispatch(userSignDenied()) // 验证账户或者密码有误，被拒绝 -> 重置状态
-                        return Observable.of(putError('Invalid Username or password')) // 发起UI错误提示
-                    }
+                    console.log('err--> ', err)
+                    // if (err.status === 401) {
+                    //     dispatch(userSignDenied()) // 验证账户或者密码有误，被拒绝 -> 重置状态
+                    //     return Observable.of(putError('Invalid Username or password')) // 发起UI错误提示
+                    // }
                     // 其他错误
                     dispatch(userSignDenied())
                     return Observable.of(putError('网络超时'))
@@ -63,7 +69,7 @@ export function userInfoEpic(action$, {dispatch}, {get}) {
                     // if (err.status === 401) {
                     //     dispatch(deleteAuth(id))
                     // }
-                    return Observable.of(deleteAuth())
+                    return Observable.of(deleteAuth({id, type: 'clear'}))
                 })
             // return Observable.of() // 发起UI错误提示
         })
@@ -71,8 +77,8 @@ export function userInfoEpic(action$, {dispatch}, {get}) {
 
 export function clearUserInfoEpic(action$, {dispatch, getState}, ajax) {
     return action$.ofType(Types.DELETE_AUTH)
-        .mergeMap(() => {
-            const {id} = getState().userSignInfo.auth
+        .mergeMap(action => {
+            const {id, type} = action.payload
             const url = `/authorizations/${id}`
             const auth = getState().userSignInfo.basic
             const headers = {
@@ -81,11 +87,17 @@ export function clearUserInfoEpic(action$, {dispatch, getState}, ajax) {
 
             return ajax.delete(url, headers)
                 .map(res => {
-                    console.log('--> ', res)
-                    return exit()
+                    if (type === 'reset ') { // 重置授权
+                        // todo 清除各类持久化存储的信息
+                        console.log('-type:  ', type)
+                        dispatch(openToast('已退出其他设备的授权，重新登录'))
+
+                    }
+                    dispatch(exit()) // 清空用户信息
+                    return Observable.of(clearUser())
                 })
                 .catch(err => {
-                    console.log('-===> ', err)
+                    console.log('err', err)
                     return Observable.of(putError('清除用户数据失败'))
                 })
         })

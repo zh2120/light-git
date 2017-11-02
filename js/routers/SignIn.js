@@ -78,7 +78,7 @@ class SignIn extends PureComponent {
 
         return (
             <View style={styles.container}>
-                <Octicons name={'mark-github'} size={72} style={{marginVertical: 36}}/>
+                <Octicons name={'mark-github'} size={60} style={{marginVertical: 32}}/>
                 <TextInput
                     value={account}
                     editable={!disabled}

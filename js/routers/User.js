@@ -7,7 +7,6 @@
 import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
 import {View, Text, Button, TextInput} from 'react-native'
-import * as ActionTypes from '../actions/types'
 import {bindActions} from '../actions'
 
 class User extends PureComponent {

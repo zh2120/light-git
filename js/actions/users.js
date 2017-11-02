@@ -1,13 +1,5 @@
 import * as Types from './types';
 
-export function searchUsers(query) {
-    return {
-        type: Types.SEARCHED_USERS,
-        payload: {
-            query
-        }
-    };
-}
 
 export function receiveUsers(users) {
     return {
@@ -55,9 +47,10 @@ export function getUserInfo(user) {
     }
 }
 
-export function deleteAuth() {
+export function deleteAuth({id, type}) {
     return {
-        type: Types.DELETE_AUTH
+        type: Types.DELETE_AUTH,
+        payload: {id, type}
     }
 }
 

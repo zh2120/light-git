@@ -6,7 +6,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import {searchRepo, bindActions} from '../actions'
 import {openToast} from '../actions/common'
-import {userSignAccept} from '../actions/users'
+import {userSignAccept, exit} from '../actions/users'
 
 import {
     View,
@@ -101,13 +101,13 @@ class Home extends Component {
 
     render() {
         const {searchText} = this.state;
-        const {navigation} = this.props;
+        const {navigation, auth, exit} = this.props;
         const r = this.rotate.interpolate({
-            inputRange: [0,1],
+            inputRange: [0, 1],
             outputRange: ['0deg', '720deg']
         });
         const o = this.rotate.interpolate({
-            inputRange: [0,1],
+            inputRange: [0, 1],
             outputRange: [0.3, 1]
         });
 
@@ -153,8 +153,8 @@ class Home extends Component {
                             </View>
                         </TouchableHighlight>
 
-                        <TouchableHighlight underlayColor={underlayColor} onPress={() => {
-                        }}>
+                        <TouchableHighlight underlayColor={underlayColor}
+                                            onPress={() => exit({id: auth.id, type: 'clear'})}>
                             <View style={styles.iconWrap}>
                                 <Ionicons name={'md-star-outline'} size={24} style={styles.icon}/>
                                 <Text style={styles.icon}>Stars</Text>
@@ -174,15 +174,15 @@ class Home extends Component {
 
                 <View style={{flexDirection: 'row'}}>
                     <Icon name={'yin-yang'} size={42}
-                                  style={{
-                                      backgroundColor: 'red',
-                                      padding: 0,
-                                      margin: 0,
-                                      transform: [{
-                                          rotate: r
-                                      }],
-                                      color: '#fff'
-                                  }}/>
+                          style={{
+                              backgroundColor: 'red',
+                              padding: 0,
+                              margin: 0,
+                              transform: [{
+                                  rotate: r
+                              }],
+                              color: '#fff'
+                          }}/>
                     <ActivityIndicator
                         color="white"
                         size="large"
@@ -243,7 +243,8 @@ const styles = StyleSheet.create({
 });
 
 const bindMainState = state => ({
-    user: state.userInfo.user
+    user: state.userInfo.user,
+    auth: state.userSignInfo.auth
 });
 
-export default connect(bindMainState, bindActions({searchRepo, userSignAccept, openToast}))(Home)
+export default connect(bindMainState, bindActions({searchRepo, userSignAccept, openToast, exit}))(Home)

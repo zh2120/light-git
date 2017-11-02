@@ -1,7 +1,8 @@
 import {createStore, applyMiddleware, compose} from 'redux'
-import {persistStore, persistCombineReducers, purgeStoredState} from 'redux-persist'
+import {persistStore, persistCombineReducers, createMigrate, purgeStoredState} from 'redux-persist'
 import {createEpicMiddleware} from 'redux-observable';
 import storage from 'redux-persist/lib/storage'
+import {AsyncStorage} from 'react-native'
 import rootReducer from './reducers'
 import rootEpic from './epics'
 import {put, get, Delete, post, patch} from './utils/api'
@@ -9,10 +10,11 @@ import {put, get, Delete, post, patch} from './utils/api'
 const epicMiddleware = createEpicMiddleware(rootEpic, {
     dependencies: {get, put, post, patch, delete: Delete}
 });
+
 const reducer = persistCombineReducers({
     key: 'light-git-root',
     storage,
-    blacklist: ['commons']
+    blacklist: ['commons'],
 }, rootReducer)
 
 export default (initialState) => {
@@ -29,9 +31,14 @@ export default (initialState) => {
     )
     const persistor = persistStore(store)
 
-    // purgeStoredState({storage: storage}, ['searchInfo']).then((res) => { // 清空指定的存储
+
+    // purgeStoredState({storage: AsyncStorage}, ['reposInfo']).then((res) => { // 清空指定的存储
     //     console.log(res)
     // })
+
+    // console.log(persistor)
+    //
+    // persistor.purge()
 
     return {persistor, store}
 
