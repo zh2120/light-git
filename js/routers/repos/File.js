@@ -1,9 +1,11 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity} from 'react-native'
+import {View, Text, ScrollView, TextInput, StyleSheet, WebView} from 'react-native'
 import {bindActions} from '../../actions/'
 import {openToast} from '../../actions/common'
 import {fileContent} from '../../actions/repo'
+import {html} from  '../../components'
+import marked from 'marked'
 
 class File extends Component {
     static navigationOptions = ({navigation}) => {
@@ -32,22 +34,21 @@ class File extends Component {
 
         if (isEmpty(file)) return null
 
+        // let tmp = marked.parse(file)
+        let tmp = "<pre><code>" + file.replace(/\n/g, '<br>') +"</code></pre>"
+
         return (
             <View style={styles.wrap}>
-                <ScrollView  showsVerticalScrollIndicator={false}>
-                    <Text style={{color: '#111', fontSize: 12}}>
-                        {file}
-                    </Text>
-                </ScrollView>
-
+                <WebView scalesPageToFit={true} style={{width: 400, height: 600}} source={{html: html(tmp)}}/>
             </View>
+
 
         )
     }
 }
 
 const styles = StyleSheet.create({
-    wrap: {padding: 14, backgroundColor: '#fff', flex: 1},
+    wrap: {backgroundColor: '#fff', flex: 1},
 })
 
 export default connect(state => ({file: state.repoFile.file}), bindActions({fileContent, openToast}))(File)

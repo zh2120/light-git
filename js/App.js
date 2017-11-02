@@ -17,7 +17,7 @@ import {Toast} from './components'
 const {persistor, store} = configureStore()
 
 const Loading = () => (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}><Text style={{color: 'red'}}>恢复现场中...</Text></View>)
+    <View style={styles.loadWrap}><Text style={{color: 'red'}}>恢复现场中...</Text></View>)
 
 // const codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME };
 
@@ -47,5 +47,6 @@ const styles = StyleSheet.create({
         flex: 1,
         position: 'relative',
         backgroundColor: 'transparent'
-    }
+    },
+    loadWrap: {flex: 1, justifyContent: 'center', alignItems: 'center'}
 })

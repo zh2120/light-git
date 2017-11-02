@@ -57,7 +57,14 @@ const SearchHeader = connect(state => ({}), bindActions({searchRepo, saveHistory
 
         changeText = (text) => this.setState({searchText: text});
 
-        searchSubmit = (searchText) => this.props.searchRepo(searchText); // 当前页面递交搜索内容
+        searchSubmit = () => {
+            const params = {
+                q: this.state.searchText,
+                sort: 'star'
+            }
+            const url = '/search/repositories' + getParams(params)
+            this.props.searchRepo(url);
+        } // 当前页面递交搜索内容
 
         render() {
             const {searchText} = this.state;
@@ -67,7 +74,7 @@ const SearchHeader = connect(state => ({}), bindActions({searchRepo, saveHistory
                 <View style={searchStyles.wrap}>
                     <View style={searchStyles.searchWrap}>
                         <TouchableOpacity
-                            onPress={() => this.searchSubmit(searchText)}>
+                            onPress={() => this.searchSubmit()}>
                             <EvilIcons name={'search'} size={24} style={searchStyles.searchIcon}/>
                         </TouchableOpacity>
                         <TextInput

@@ -26,7 +26,10 @@ export function userSignInEpic(action$, {dispatch}, {put}) {
             return put(url, body, headers)
                 .map(res => res.response || res)
                 .map(auth => {
-                    return userSignAccept(auth)
+                    if(auth.token) {
+                        return userSignAccept(auth)
+                    }
+                    return deleteAuth() // 没有token，删除授权
                 })
                 .catch(err => {
                     if (err.status === 401) {

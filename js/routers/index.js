@@ -16,8 +16,8 @@ const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
         backgroundColor: '#fff',
         elevation: 0,
         shadowOpacity: 0,
-        height: 64,
-        paddingTop: 24,
+        height: 56,
+        // paddingTop: 24,
         borderBottomColor: null,
         borderBottomWidth: 0
     }
@@ -93,7 +93,7 @@ const transitions = {
 
 const Navigator = StackNavigator(MainRouters, {
     // 默认页面组件
-    initialRouteName: 'Search',
+    initialRouteName: 'RepoFile',
     headerMode: 'screen',
     navigationOptions: {
         gesturesEnabled: false,

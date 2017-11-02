@@ -14,6 +14,7 @@ import {openToast} from '../actions/common'
 
 class SignIn extends PureComponent {
     static navigationOptions = ({navigation}) => ({
+        headerTitle: 'SignIn',
         headerRight: <Button content={<Text>Sign Up</Text>} onPress={() => {
             if (navigation.state.params) {
                 return navigation.state.params.goSignUp()

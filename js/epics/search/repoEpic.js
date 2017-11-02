@@ -7,16 +7,11 @@ import {Observable} from 'rxjs/Rx'
 export function searchRepoByQueryEpic(action$, {getState, dispatch}, {get}) {
     return action$.ofType(Types.SEARCH_REPO)
         .switchMap(action => {
-            const {url, query} = action.payload
+            const {url} = action.payload
             const headers = {
                 "Authorization": `token ${getState().userSignInfo.auth.token}`
             }
-            const params = {
-                q: query,
-                sort: 'star'
-            }
-            const apiUrl = url + getParams(params)
-            return get(apiUrl, headers)
+            return get(url, headers)
                 .map(res => res.response || res)
                 .map(repos => searchRepoResult(repos.items || [])) // 返回正确结果
                 .catch(e => {
