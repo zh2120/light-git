@@ -25,6 +25,8 @@ class ToastCommon extends PureComponent {
             duration: 700,
             easing: Easing.out(Easing.poly(4))
         })
+        // console.log('-> ',this.props.persistor)
+
     }
 
     componentWillReceiveProps(nextProps) {
@@ -40,6 +42,12 @@ class ToastCommon extends PureComponent {
 
     componentDidMount() {
         // this.animationOpen.start()
+        const {signed, persistor} = this.props
+        console.log('signed', signed)
+        if (!signed) {
+            console.log('persistor.purge')
+            // persistor.purge() // 持久化存储的
+        }
     }
 
     render() {

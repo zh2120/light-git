@@ -47,16 +47,10 @@ export function getUserInfo(user) {
     }
 }
 
-export function deleteAuth({id, type}) {
+export function deleteAuth({id}) {
     return {
         type: Types.DELETE_AUTH,
-        payload: {id, type}
-    }
-}
-
-export function exit() {
-    return {
-        type: Types.EXIT
+        payload: {id}
     }
 }
 

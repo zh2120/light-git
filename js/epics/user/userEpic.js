@@ -24,28 +24,34 @@ export function userSignInEpic(action$, {dispatch}, {put}) {
             如果让错误到达 action$.ofType()，epic 会终止并且不会监听任何 actions。
              */
             return put(url, body, headers)
-                .map(res => res.response || res)
-                .map(auth => {
-                    const {id} = auth
-                    if (auth.token) {
-                        console.log(auth.token)
-                        return userSignAccept(auth)
-                    } else {
-                        console.log(' 没有token')
-                        return deleteAuth({id, type: 'reset'}) // 没有token，删除授权
+                .map(res => {
+                    switch (res.status) {
+                        case 201:
+                            return res.response
+                        case 200:
+                            throw {status: 200, desc: 'Signature invalid', id: res.response.id} // 已存在其他token，当前签名失效
+                        default:
+                            return res.response || res
                     }
-
-                })
+                }) // todo 重构登录逻辑 对201做正常处理，对200 抛出异常
+                .map(auth => userSignAccept(auth)) // 进入授权登录流程Å)
                 .catch(err => {
-                    console.log('err--> ', err)
-                    // if (err.status === 401) {
-                    //     dispatch(userSignDenied()) // 验证账户或者密码有误，被拒绝 -> 重置状态
-                    //     return Observable.of(putError('Invalid Username or password')) // 发起UI错误提示
-                    // }
-                    // 其他错误
-                    dispatch(userSignDenied())
-                    return Observable.of(putError('网络超时'))
-                        .takeUntil(action$.ofType(Types.USER_SIGNIN_DENIED)) // 取消上一个action流
+                    switch (err.status) {
+                        case 401: // 验证账户或者密码有误，被拒绝 -> 重置状态
+                            dispatch(putError('Invalid Username or password')) // 发起UI错误提示
+                            break
+                        case 200: // 已在其他设备登录过了，
+                            // 1、发起签名失效错误提示,
+                            console.log('发起签名失效错误提示')
+                            // dispatch(putError(err.desc))
+                            // 2、清除之前用户的所有信息，退出操作
+                            dispatch(deleteAuth({id: err.id}))
+                            break
+                        default:
+                            console.log('--> 超时', err)
+                            dispatch(putError('Network timeout')) // 超时处理
+                    }
+                    return Observable.of(userSignDenied())
                 })
         })
 }
@@ -69,7 +75,7 @@ export function userInfoEpic(action$, {dispatch}, {get}) {
                     // if (err.status === 401) {
                     //     dispatch(deleteAuth(id))
                     // }
-                    return Observable.of(deleteAuth({id, type: 'clear'}))
+                    return Observable.of(deleteAuth({id}))
                 })
             // return Observable.of() // 发起UI错误提示
         })
@@ -78,7 +84,7 @@ export function userInfoEpic(action$, {dispatch}, {get}) {
 export function clearUserInfoEpic(action$, {dispatch, getState}, ajax) {
     return action$.ofType(Types.DELETE_AUTH)
         .mergeMap(action => {
-            const {id, type} = action.payload
+            const {id} = action.payload
             const url = `/authorizations/${id}`
             const auth = getState().userSignInfo.basic
             const headers = {
@@ -87,14 +93,13 @@ export function clearUserInfoEpic(action$, {dispatch, getState}, ajax) {
 
             return ajax.delete(url, headers)
                 .map(res => {
-                    if (type === 'reset ') { // 重置授权
-                        // todo 清除各类持久化存储的信息
-                        console.log('-type:  ', type)
-                        dispatch(openToast('已退出其他设备的授权，重新登录'))
-
+                    switch (res.status) {
+                        case 204:
+                            dispatch(openToast('已退出其他设备的授权，重新登录'))
+                        default:
+                            dispatch(userSignDenied())
                     }
-                    dispatch(exit()) // 清空用户信息
-                    return Observable.of(clearUser())
+                    return clearUser() // 清理用户信息
                 })
                 .catch(err => {
                     console.log('err', err)

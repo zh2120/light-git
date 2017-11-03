@@ -34,7 +34,7 @@ export default props => (
                     backgroundColor="rgba(11, 11, 11, 0.4)"
                     barStyle="default"/>
                 <StacksInDrawer screenProps={{themeColor: 'red'}}/>
-                <Toast/>
+                <Toast persistor={persistor}/>
             </View>
         </PersistGate>
     </Provider>
