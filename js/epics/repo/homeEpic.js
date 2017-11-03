@@ -16,10 +16,11 @@ export function repoContentEpic(action$, {getState, dispatch}, {get}) {
         .switchMap(action => {
             const {fullName, ref} = action.payload
             const auth = getState().userSignInfo.auth
-            const headers = {"Authorization": `token ${auth && auth.token}`}
+            // const headers = {"Authorization": `token ${auth && auth.token}`}
             const url = '/repos/' + fullName + '/contents' + getParams({ref})
 
-            return get(url, headers)
+            // return get(url, headers)
+            return get(url, null)
                 .map(res => res.response || res)
                 .map(content => {
                     if (content instanceof Array) {
@@ -54,12 +55,13 @@ export function repoFileEpic(action$, {getState, dispatch}, {get}) {
             const {fullName, path, ref, type} = action.payload
             const auth = getState().userSignInfo.auth
             const headers = {
-                "Authorization": `token ${auth && auth.token}`,
+                // "Authorization": `token ${auth && auth.token}`,
                 "Accept": "application/vnd.github.v3.raw+json"
             }
             const url = '/repos/' + fullName + '/contents/' + path + getParams({ref})
             const apiConfig = type === 'dir' ? {} :{responseType: 'text'} // 不是目录，请求文件内容
 
+            // return get(url, headers, apiConfig)
             return get(url, headers, apiConfig)
                 .map(res => res.response || res)
                 .map(file => {

@@ -77,7 +77,6 @@ export function userInfoEpic(action$, {dispatch}, {get}) {
                     // }
                     return Observable.of(deleteAuth({id}))
                 })
-            // return Observable.of() // 发起UI错误提示
         })
 }
 

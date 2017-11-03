@@ -45,7 +45,7 @@ class ToastCommon extends PureComponent {
         const {signed, persistor} = this.props
         console.log('signed', signed)
         if (!signed) {
-            console.log('persistor.purge')
+            // console.log('persistor.purge')
             // persistor.purge() // 持久化存储的
         }
     }

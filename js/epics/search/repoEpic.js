@@ -8,10 +8,11 @@ export function searchRepoByQueryEpic(action$, {getState, dispatch}, {get}) {
     return action$.ofType(Types.SEARCH_REPO)
         .switchMap(action => {
             const {url} = action.payload
-            const headers = {
-                "Authorization": `token ${getState().userSignInfo.auth.token}`
-            }
-            return get(url, headers)
+            // const headers = {
+            //     "Authorization": `token ${getState().userSignInfo.auth.token}`
+            // }
+            // return get(url, headers)
+            return get(url, null)
                 .map(res => res.response || res)
                 .map(repos => searchRepoResult(repos.items || [])) // 返回正确结果
                 .catch(e => {
