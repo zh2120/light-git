@@ -39,11 +39,11 @@ const searchStyles = StyleSheet.create({
 });
 
 const SearchHeader = connect(state => ({}), bindActions({searchRepo}))(
-    class SearchHeader extends Component {
+    class extends Component {
         constructor(props) {
             super(props);
             const {params} = props.navigation.state
-            this.state = {searchText: params ?  params.searchText : ''}
+            this.state = {searchText: params ? params.searchText : ''}
         }
 
         componentDidMount() {
@@ -107,6 +107,174 @@ const SearchHeader = connect(state => ({}), bindActions({searchRepo}))(
     }
 );
 
+
+export default connect(state => ({
+    repos: state.searchInfo.repos,
+    history: state.searchInfo.history,
+    searching: state.searchInfo.searching
+}), bindActions({searchRepo}))(
+    class extends Component {
+        static navigationOptions = ({navigation}) => ({header: <SearchHeader navigation={navigation}/>});
+
+        constructor(props) {
+            super(props);
+            this.state = {
+                recordOpen: false
+            }
+        }
+
+        componentWillReceiveProps(nextProps) {
+            const {searching} = this.props;
+
+            if (searching !== nextProps.searching) {
+
+            }
+        }
+
+        reSearch = (item) => this.setState(pre => {
+            this.props.searchRepo(item)
+
+            return {recordOpen: !pre}
+        })
+
+        renderHistoryItem = ({item, index}) => { // 历史记录单项
+            if (item) {
+                return (
+                    <TouchableHighlight underlayColor={'rgba(100,100,100 ,0.1)'}
+                                        onPress={() => this.reSearch(item)} key={`h-${index}`}>
+                        <View style={styles.touchItem}>
+                            <View style={styles.touchItemLeft}>
+                                <EvilIcons name={'search'} size={22} style={{color: '#0366d6'}}/>
+                                <Text style={styles.touchItemText}>{item.name}</Text>
+                            </View>
+                            <EvilIcons name={'redo'} size={24} style={{marginRight: 2}}/>
+                        </View>
+                    </TouchableHighlight>
+                )
+            }
+            return (
+                <View style={styles.touchItem}>
+                    <Text style={styles.touchItemText}>暂时还么有历史呢</Text>
+                </View>
+            )
+        }
+
+        renderReposItem = ({item, index}) => {
+            if (item) {
+                const {
+                    name,
+                    full_name,
+                    language,
+                    updated_at,
+                    description,
+                    stargazers_count,
+                } = item;
+                const {navigation} = this.props
+
+                return (
+                    <TouchableHighlight key={`r-${index}`}
+                                        underlayColor={'rgba(100,100,100 ,0.1)'}
+                                        onPress={() => navigation.navigate('RepoHome', {
+                                            fullName: full_name,
+                                            name: name
+                                        })}>
+                        <View style={styles.repoItem}>
+                            <View style={[styles.touchItemLeft, {justifyContent: 'space-between'}]}>
+                                <View style={styles.touchItemLeft}>
+                                    <Ionicons name={'ios-browsers-outline'} size={22}
+                                              style={{color: '#0366d6', marginRight: 10}}/>
+                                    <Text style={styles.repoName}>{full_name}</Text>
+                                </View>
+                                <View style={styles.touchItemLeft}>
+                                    <Text>{stargazers_count}</Text>
+                                    <Octicons name={'star'} size={18} style={{marginLeft: 6}}/>
+                                </View>
+                            </View>
+                            <View style={styles.repoDesc}><Text style={styles.repoDescText}>{description}</Text></View>
+                            <View style={[styles.touchItemLeft, {justifyContent: 'space-between'}]}>
+                                {
+                                    language ? (
+                                        <Text style={{
+                                            backgroundColor: '#e7f3ff',
+                                            padding: 4,
+                                            color: '#0366d6'
+                                        }}>{language}</Text>
+                                    ) : <View/>
+                                }
+                                <Text>Updated {updated_at}</Text>
+                            </View>
+                        </View>
+                    </TouchableHighlight>
+                )
+            }
+            return null
+        };
+
+        renderSectionHeader = ({section}) => { // 分段头
+            let title, leftIconName, rightIconName, clear;
+            const {recordOpen} = this.state;
+
+            if (section.type === 'history') {
+                title = 'History';
+                leftIconName = 'tag';
+                rightIconName = recordOpen ? 'chevron-double-up' : 'chevron-double-down';
+                clear = () => this.setState({recordOpen: !recordOpen})
+            }
+            if (section.type === 'repos') {
+                title = 'Results';
+                leftIconName = 'paperclip';
+                rightIconName = 'broom';
+                clear = () => {
+                }
+            }
+
+            return (
+                <View style={[styles.sectionBase, styles.sectionWrap]}>
+                    <View style={styles.sectionBase}>
+                        <EvilIcons name={leftIconName} size={28}/>
+                        <Text style={{marginRight: 12}}>{title}</Text>
+                        {
+                            section.type === 'repos' ? (
+                                <ActivityIndicator animating={this.props.searching} color={'#0366d6'}/>) : null
+                        }
+                    </View>
+                    <TouchableOpacity onPress={clear}>
+                        <View style={styles.sectionBase}>
+                            <MaterialCommunityIcons name={rightIconName} size={24}/>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            )
+        };
+
+        keyExtractor = (item, index) => 'key-' + index;
+
+        render() {
+            const {recordOpen} = this.state;
+            const {repos, history} = this.props;
+            const effectiveHiStory = recordOpen ? history : []; // 可用的历史，隐藏或者展示
+
+            return (
+                <View style={{backgroundColor: '#fff', flex: 1,}}>
+                    <SectionList
+                        ItemSeparatorComponent={() => (<View style={styles.separator}/>)}
+                        showsVerticalScrollIndicator={false}
+                        style={{marginTop: 16}}
+                        stickySectionHeadersEnabled={true}
+                        renderSectionHeader={this.renderSectionHeader}
+                        keyExtractor={this.keyExtractor}
+                        ListEmptyComponent={<View><Text>暂无数据</Text></View>}
+                        sections={[ // 不同section渲染不同类型的子组件
+                            {data: effectiveHiStory, renderItem: this.renderHistoryItem, type: 'history'},
+                            {data: repos, renderItem: this.renderReposItem, type: 'repos'},
+                        ]}
+                    />
+                </View>
+            )
+        }
+    }
+)
+
 const styles = StyleSheet.create({
     sectionBase: {height: 36, flexDirection: 'row', alignItems: 'center'},
     sectionWrap: {
@@ -142,169 +310,3 @@ const styles = StyleSheet.create({
     repoDesc: {marginVertical: 8, marginLeft: 24, paddingVertical: 12},
     repoDescText: {fontSize: 16}
 });
-
-class Search extends Component {
-    static navigationOptions = ({navigation}) => ({header: <SearchHeader navigation={navigation}/>});
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            recordOpen: false
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        const {searching} = this.props;
-
-        if (searching !== nextProps.searching) {
-
-        }
-    }
-
-    reSearch = (item) => this.setState(pre => {
-        this.props.searchRepo(item)
-
-        return {recordOpen: !pre}
-    })
-
-    renderHistoryItem = ({item, index}) => { // 历史记录单项
-        if (item) {
-            return (
-                <TouchableHighlight underlayColor={'rgba(100,100,100 ,0.1)'}
-                                    onPress={() => this.reSearch(item)} key={`h-${index}`}>
-                    <View style={styles.touchItem}>
-                        <View style={styles.touchItemLeft}>
-                            <EvilIcons name={'search'} size={22} style={{color: '#0366d6'}}/>
-                            <Text style={styles.touchItemText}>{item.name}</Text>
-                        </View>
-                        <EvilIcons name={'redo'} size={24} style={{marginRight: 2}}/>
-                    </View>
-                </TouchableHighlight>
-            )
-        }
-        return (
-            <View style={styles.touchItem}>
-                <Text style={styles.touchItemText}>暂时还么有历史呢</Text>
-            </View>
-        )
-    }
-
-    renderReposItem = ({item, index}) => {
-        if (item) {
-            const {
-                name,
-                full_name,
-                language,
-                updated_at,
-                description,
-                stargazers_count,
-            } = item;
-            const {navigation} = this.props
-
-            return (
-                <TouchableHighlight key={`r-${index}`}
-                                    underlayColor={'rgba(100,100,100 ,0.1)'}
-                                    onPress={() => navigation.navigate('RepoHome', {fullName: full_name, name: name})}>
-                    <View style={styles.repoItem}>
-                        <View style={[styles.touchItemLeft, {justifyContent: 'space-between'}]}>
-                            <View style={styles.touchItemLeft}>
-                                <Ionicons name={'ios-browsers-outline'} size={22}
-                                          style={{color: '#0366d6', marginRight: 10}}/>
-                                <Text style={styles.repoName}>{full_name}</Text>
-                            </View>
-                            <View style={styles.touchItemLeft}>
-                                <Text>{stargazers_count}</Text>
-                                <Octicons name={'star'} size={18} style={{marginLeft: 6}}/>
-                            </View>
-                        </View>
-                        <View style={styles.repoDesc}><Text style={styles.repoDescText}>{description}</Text></View>
-                        <View style={[styles.touchItemLeft, {justifyContent: 'space-between'}]}>
-                            {
-                                language ? (
-                                    <Text style={{
-                                        backgroundColor: '#e7f3ff',
-                                        padding: 4,
-                                        color: '#0366d6'
-                                    }}>{language}</Text>
-                                ) : <View/>
-                            }
-                            <Text>Updated {updated_at}</Text>
-                        </View>
-                    </View>
-                </TouchableHighlight>
-            )
-        }
-        return null
-    };
-
-    renderSectionHeader = ({section}) => { // 分段头
-        let title, leftIconName, rightIconName, clear;
-        const {recordOpen} = this.state;
-
-        if (section.type === 'history') {
-            title = 'History';
-            leftIconName = 'tag';
-            rightIconName = recordOpen ? 'chevron-double-up' : 'chevron-double-down';
-            clear = () => this.setState({recordOpen: !recordOpen})
-        }
-        if (section.type === 'repos') {
-            title = 'Results';
-            leftIconName = 'paperclip';
-            rightIconName = 'broom';
-            clear = () => {
-            }
-        }
-
-        return (
-            <View style={[styles.sectionBase, styles.sectionWrap]}>
-                <View style={styles.sectionBase}>
-                    <EvilIcons name={leftIconName} size={28}/>
-                    <Text style={{marginRight: 12}}>{title}</Text>
-                    {
-                        section.type === 'repos' ? (
-                            <ActivityIndicator animating={this.props.searching} color={'#0366d6'}/>) : null
-                    }
-                </View>
-                <TouchableOpacity onPress={clear}>
-                    <View style={styles.sectionBase}>
-                        <MaterialCommunityIcons name={rightIconName} size={24} />
-                    </View>
-                </TouchableOpacity>
-            </View>
-        )
-    };
-
-    keyExtractor = (item, index) => 'key-' + index;
-
-    render() {
-        const {recordOpen} = this.state;
-        const {repos, history} = this.props;
-        const effectiveHiStory = recordOpen ? history : []; // 可用的历史，隐藏或者展示
-
-        return (
-            <View style={{backgroundColor: '#fff', flex: 1,}}>
-                <SectionList
-                    ItemSeparatorComponent={() => (<View style={styles.separator}/>)}
-                    showsVerticalScrollIndicator={false}
-                    style={{marginTop: 16}}
-                    stickySectionHeadersEnabled={true}
-                    renderSectionHeader={this.renderSectionHeader}
-                    keyExtractor={this.keyExtractor}
-                    ListEmptyComponent={<View><Text>暂无数据</Text></View>}
-                    sections={[ // 不同section渲染不同类型的子组件
-                        {data: effectiveHiStory, renderItem: this.renderHistoryItem, type: 'history'},
-                        {data: repos, renderItem: this.renderReposItem, type: 'repos'},
-                    ]}
-                />
-            </View>
-        )
-    }
-}
-
-const bindState = state => ({
-    repos: state.searchInfo.repos,
-    history: state.searchInfo.history,
-    searching: state.searchInfo.searching
-});
-
-export default connect(bindState, bindActions({searchRepo}))(Search)

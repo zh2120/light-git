@@ -7,7 +7,7 @@ import {fileContent, getFileDenied} from '../../actions/repo'
 import {html} from '../../components'
 
 export default connect(state => ({file: state.repoFile.file}), bindActions({fileContent, openToast, getFileDenied}))(
-    class File extends Component {
+    class extends Component {
         static navigationOptions = ({navigation}) => {
             const params = navigation.state.params
             return {

@@ -5,73 +5,79 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {bindActions} from '../actions'
 import {closeToast} from '../actions/common'
 
-class ToastCommon extends PureComponent {
-    constructor(props) {
-        super(props)
-        this.state = {
-            opacity: new Animated.Value(0)
+
+export default connect(state => ({
+    signed: state.userSignInfo.signed,
+    commons: state.commons
+}), bindActions({closeToast}))(
+    class extends PureComponent {
+        constructor(props) {
+            super(props)
+            this.state = {
+                opacity: new Animated.Value(0)
+            }
         }
-    }
 
-    componentWillMount() {
-        const {opacity} = this.state
-        this.animationOpen = Animated.timing(opacity, {
-            toValue: 1,
-            duration: 300,
-            easing: Easing.out(Easing.poly(4))
-        })
-        this.animationClose = Animated.timing(opacity, {
-            toValue: 0,
-            duration: 700,
-            easing: Easing.out(Easing.poly(4))
-        })
-        // console.log('-> ',this.props.persistor)
-
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.commons.toastOpened) {
-            this.animationOpen.start(() => {
-                this.timer && clearTimeout(this.timer)
-                this.timer = setTimeout(() => this.close(), 3000) // 3s 后触发关闭toast
+        componentWillMount() {
+            const {opacity} = this.state
+            this.animationOpen = Animated.timing(opacity, {
+                toValue: 1,
+                duration: 300,
+                easing: Easing.out(Easing.poly(4))
             })
+            this.animationClose = Animated.timing(opacity, {
+                toValue: 0,
+                duration: 700,
+                easing: Easing.out(Easing.poly(4))
+            })
+            // console.log('-> ',this.props.persistor)
+
+        }
+
+        componentWillReceiveProps(nextProps) {
+            if (nextProps.commons.toastOpened) {
+                this.animationOpen.start(() => {
+                    this.timer && clearTimeout(this.timer)
+                    this.timer = setTimeout(() => this.close(), 3000) // 3s 后触发关闭toast
+                })
+            }
+        }
+
+        componentDidMount() {
+            const {signed, persistor} = this.props
+
+            if (!signed) {
+                // console.log('persistor.purge')
+                // persistor.purge() // 持久化存储的
+            }
+        }
+
+        close = () => { // 延时关闭toast
+            this.animationClose.start(() => {
+                this.timer && clearTimeout(this.timer)
+                this.props.closeToast()
+            }) // 关闭toast，清除定时器
+        }
+
+        render() {
+            const {toastOpened, text, success} = this.props.commons
+
+            if (!toastOpened) return null
+
+            const {opacity} = this.state
+
+            return (
+                <TouchableWithoutFeedback onPress={this.props.closeToast}>
+                    <Animated.View style={[styles.common, {opacity: opacity}]}>
+                        <Text style={styles.toastText}>{text}</Text>
+                        <MaterialCommunityIcons style={{color: success ? '#fff' : 'red', marginLeft: 10}} size={20}
+                                                name={success ? 'checkbox-marked-circle-outline' : 'sword-cross'}/>
+                    </Animated.View>
+                </TouchableWithoutFeedback>
+            )
         }
     }
-
-    componentDidMount() {
-        const {signed, persistor} = this.props
-
-        if (!signed) {
-            // console.log('persistor.purge')
-            // persistor.purge() // 持久化存储的
-        }
-    }
-
-    close = () => { // 延时关闭toast
-        this.animationClose.start(() => {
-            this.timer && clearTimeout(this.timer)
-            this.props.closeToast()
-        }) // 关闭toast，清除定时器
-    }
-
-    render() {
-        const {toastOpened, text, success} = this.props.commons
-
-        if (!toastOpened) return null
-
-        const {opacity} = this.state
-
-        return (
-            <TouchableWithoutFeedback onPress={this.props.closeToast}>
-                <Animated.View style={[styles.common, {opacity: opacity}]}>
-                    <Text style={styles.toastText}>{text}</Text>
-                    <MaterialCommunityIcons style={{color: success ? '#fff' : 'red', marginLeft: 10}} size={20}
-                                            name={success ? 'checkbox-marked-circle-outline' : 'sword-cross'}/>
-                </Animated.View>
-            </TouchableWithoutFeedback>
-        )
-    }
-}
+)
 
 const styles = StyleSheet.create({
     common: {
@@ -95,10 +101,3 @@ const styles = StyleSheet.create({
         fontSize: 14
     }
 })
-
-const bindState = state => ({
-    signed: state.userSignInfo.signed,
-    commons: state.commons
-})
-
-export default Toast = connect(bindState, bindActions({closeToast}))(ToastCommon)
