@@ -37,7 +37,7 @@ export function repoFile(state = {getting: false, file: {}, readme: {}, dirs: []
             return {...state, dirs: [...action.payload.dirs]}
 
         case Types.FILE_CONTENT_DENIED:  // 获取文件失败，重置到上一个状态
-            return {...state, getting: false}
+            return {...state, getting: false, file: {}}
 
         default:
             return state

@@ -43,7 +43,7 @@ class ToastCommon extends PureComponent {
     componentDidMount() {
         // this.animationOpen.start()
         const {signed, persistor} = this.props
-        console.log('signed', signed)
+
         if (!signed) {
             // console.log('persistor.purge')
             // persistor.purge() // 持久化存储的
@@ -65,7 +65,6 @@ class ToastCommon extends PureComponent {
                                             name={success ? 'checkbox-marked-circle-outline' : 'sword-cross'}/>
                 </Animated.View>
             </TouchableWithoutFeedback>
-
         )
     }
 }

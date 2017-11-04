@@ -255,8 +255,6 @@ class Search extends Component {
             }
         }
 
-        if (section.data.length === 0 && section.type === 'repos') return null; // 仓库为空，隐藏
-
         return (
             <View style={[styles.sectionBase, styles.sectionWrap]}>
                 <View style={styles.sectionBase}>

@@ -46,7 +46,6 @@ export default connect(state => ({
         componentDidMount() {
             const {navigation} = this.props
             // navigation.navigate('Search')
-            console.log('this.props', this.props)
         }
 
         changeText = (text) => this.setState({searchText: text})
@@ -59,16 +58,6 @@ export default connect(state => ({
                     <Text>1234</Text>
                 </View>
             )
-        };
-
-        startAnimate = () => {
-            Animated.timing(this.rotate, {
-                toValue: 1,
-                duration: 6000,
-                useNativeDriver: true
-            }).start(() => {
-                this.rotate.setValue(0)
-            })
         };
 
         renderUserInfo = () => {

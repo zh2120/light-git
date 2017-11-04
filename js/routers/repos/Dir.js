@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {
     View,
     Text,
-    WebView,
+
     FlatList,
     StyleSheet,
     TouchableOpacity,
@@ -15,7 +15,6 @@ import {openToast} from '../../actions/common'
 import {repoContent, fileContent, popDir, clearDir} from '../../actions/repo'
 
 export default connect(state => ({
-    content: state.repoContent.content,
     readme: state.repoFile.readme,
     dirs: state.repoFile.dirs,
     nav: state.nav
@@ -32,7 +31,7 @@ export default connect(state => ({
             super(props);
             const {params} = props.navigation.state
             this.state = {
-                fullName: params ? params.fullName : ''
+                fullName: params ? params.fullName : '',
             }
         }
 
@@ -40,25 +39,28 @@ export default connect(state => ({
         }
 
         componentDidMount() {
-            const {fullName} = this.state
-            const {repoContent} = this.props;
+            const {fullName, path, type} = this.state
+            const {fileContent} = this.props;
 
             if (fullName) {
-                repoContent({fullName})
+                // fileContent({fullName, path, type})
             }
+            // repoContent({fullName: 'zh2120/light-git'})
         }
 
         componentWillReceiveProps(nextProps) {
             const {dirs, navigation} = this.props;
 
-            if (dirs.length === 0 && nextProps.dirs.length === 1) { // 目录栈，刚入栈一个
-                navigation.navigate('RepoDir', {fullName: this.state.fullName, name: this.nextDirName})
+            if (dirs.length < nextProps.dirs.length) { // 目录栈增加
+                console.log('repoDir')
+                navigation.navigate('RepoDir', {fullName: this.state.fullName})
             }
         }
 
         componentWillUnmount() {
-            // todo 清理仓库主页
-            this.props.clearDir()
+            const {dirs} = this.props;
+            dirs.pop()
+            this.props.popDir(dirs)
         }
 
         /**
@@ -66,11 +68,10 @@ export default connect(state => ({
          * @param item 每行元素
          * @param index 每行元素的索引
          */
-        keyExtractor = (item, index) => 'dirORFile' + index;
+        keyExtractor = (item, index) => 'dir' + index;
 
-        getDir = ({fullName, path, name}) => { // 请求目录，获取到目录数据，再进行跳转
+        getDir = ({fullName, path}) => { // 请求目录，获取到目录数据，再进行跳转
             const {fileContent} = this.props
-            this.nextDirName = name
 
             return fileContent({fullName, path, type: 'dir'})
         }
@@ -80,9 +81,9 @@ export default connect(state => ({
          * @param item 每行元素
          * @returns {XML}
          */
-        renderDirOrFile = ({item}) => {
+        renderDir = ({item}) => {
             const {type, sha, path, name} = item
-            const {fileContent, navigation} = this.props
+            const {navigation} = this.props
             const isDir = type === 'dir' // 是否是目录
 
             // todo 添加分支的请求
@@ -90,7 +91,7 @@ export default connect(state => ({
             return (
                 <TouchableOpacity
                     onPress={() => isDir
-                        ? this.getDir({fullName: this.state.fullName, path, name})
+                        ? this.getDir({fullName: this.state.fullName, path})
                         : navigation.navigate('RepoFile', {fullName: this.state.fullName, path, type})}>
 
                     <View style={styles.contentRow}>
@@ -100,7 +101,6 @@ export default connect(state => ({
                         </Text>
                     </View>
                 </TouchableOpacity>
-
             )
         };
 
@@ -109,55 +109,20 @@ export default connect(state => ({
          */
         separator = () => <View style={styles.separator}/>;
 
-        /**
-         * 列表头
-         */
-        repoHeader = () =>
-            <View style={styles.starWrap}>
-                <Button icon={<Octicons name={'triangle-down'} size={18}/>}
-                        content={<Text>Branch: master</Text>}
-                        style={styles.starButton}/>
-                <Button icon={<Octicons name={'star'} size={18}/>}
-                        content={<Text>Unstar: 232</Text>}
-                        style={styles.starButton}/>
-            </View>;
-
-        /**
-         * 列表尾部，展示仓库的markdown说明
-         */
-        repoFooter = () => {
-            const {readme} = this.props;
-
-            if (isEmpty(readme)) return null;
-
-            const h5 = html(marked(readme)) // markdown 转 html
-
-            return (
-                <View style={{width: vw, height: vh, borderTopWidth: 1}}>
-                    <WebView
-                        style={{width: vw, height: vh}}
-                        scalesPageToFit={true}
-                        source={{html: h5}}/>
-                </View>
-            )
-        };
-
         render() {
-            const {content} = this.props;
+            const {dirs} = this.props;
 
             return (
                 <View style={styles.wrap}>
                     <FlatList
                         horizontal={false}
-                        data={content}
+                        data={dirs[dirs.length-1]}
                         style={{width: vw, height: vh}}
                         showsVerticalScrollIndicator={false}
                         ItemSeparatorComponent={this.separator}
                         contentContainerStyle={{padding: 14}}
-                        ListHeaderComponent={this.repoHeader}
-                        ListFooterComponent={this.repoFooter}
                         keyExtractor={this.keyExtractor}
-                        renderItem={this.renderDirOrFile}/>
+                        renderItem={this.renderDir}/>
                 </View>
             )
         }

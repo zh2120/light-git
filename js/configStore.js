@@ -14,7 +14,7 @@ const epicMiddleware = createEpicMiddleware(rootEpic, {
 const reducer = persistCombineReducers({
     key: 'light-git-root',
     storage,
-    blacklist: ['commons'],
+    blacklist: ['commons', 'nav', 'repoFile'],
 }, rootReducer)
 
 export default (initialState) => {
@@ -25,32 +25,11 @@ export default (initialState) => {
     const store = createStore(
         reducer,
         initialState,
-        composeEnhancers(
-            applyMiddleware(...middleWares)
-        )
+        composeEnhancers(applyMiddleware(...middleWares))
     )
     const persistor = persistStore(store)
 
-
-    // purgeStoredState({storage: AsyncStorage}, ['reposInfo']).then((res) => { // 清空指定的存储
-    //     console.log(res)
-    // })
-
-    // console.log(persistor)
-    //
     // persistor.purge()
 
     return {persistor, store}
-
-    // if (module.hot) {
-    //     const acceptCallback = () => {
-    //         const nextRootReducer = require('./reducers/index').default
-    //         const nextRootEpic = require('./epics/index').default;
-    //         store.replaceReducer(nextRootReducer)
-    //         epicMiddleware.replaceEpic(nextRootEpic);
-    //     }
-    //     // Enable Webpack hot module replacement for reducers
-    //     module.hot.accept(['./reducers', './epics'])
-    //     module.hot.acceptCallback = acceptCallback
-    // }
 }

@@ -12,6 +12,7 @@ import Home from './Home'
 import Test from './Test'
 import RepoHome from './repos/'
 import RepoFile from './repos/File'
+import RepoDir from './repos/Dir'
 
 const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
     const defaultHeaderStyle = {
@@ -29,40 +30,20 @@ const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
 };
 
 const MainRouters = {
-    Home: {
-        screen: Home
-    },
-    RepoHome: {
-        screen: RepoHome,
-    },
-    RepoFile: {
-        screen: RepoFile,
-    },
-    Test: {
-        screen: Test,
-    },
-    Main: {
-        screen: Main,
-        title: '主页面',
-        // navigationOptions: navigationEnhancer,
-    },
-    Search: {
-        screen: Search,
-        title: '搜索',
-    },
-    SignIn: {
-        screen: SignIn,
-        title: '登录',
-    },
-    SignUp: {
-        screen: SignUp,
-    }
+    Home: {screen: Home},
+    RepoHome: {screen: RepoHome},
+    RepoFile: {screen: RepoFile},
+    RepoDir: {screen: RepoDir},
+    Search: {screen: Search},
+    SignIn: {screen: SignIn},
+    SignUp: {screen: SignUp},
+    Test: {screen: Test},
+    Main: {screen: Main}
 }
 
 for (const key in MainRouters) {
     MainRouters[key].navigationOptions = navigationEnhancer
 }
-
 
 /**
  * 页面切换动画配置
@@ -94,8 +75,6 @@ const transitions = {
 }
 
 const Navigator = StackNavigator(MainRouters, {
-    // 默认页面组件
-    initialRouteName: 'Home',
     headerMode: 'screen',
     navigationOptions: {
         gesturesEnabled: false,
@@ -103,18 +82,23 @@ const Navigator = StackNavigator(MainRouters, {
     ...transitions
 });
 
-const initialState = Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams('Home'))
+const initialState = Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams('Search'))
 
 export const navReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'Navigation/BACK':
-            if (action.routeName) {
+            if (action.routeName) { // 重置路由
+                // 寻找栈里，已经存在的场景索引
                 const i = state.routes.findIndex(item => item.routeName === action.routeName)
-                const tmp = state.routes.slice(0,i + 1)
-                return {index: i, routes: tmp}
+
+                // 返回从栈底到指定的路由
+                return {index: i, routes: state.routes.slice(0, i + 1)}
             }
+            console.log(state.routes)
+            // state.routes.pop() // 逐层退出的时候，出栈最后一个
+            //
+            // return {index: state.routes.length, routes: [...state.routes]}
         default:
-            console.log('state', state)
             return Navigator.router.getStateForAction(action, state);
 
     }
