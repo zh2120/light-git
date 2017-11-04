@@ -1,7 +1,9 @@
 import React from 'react'
-import {StackNavigator, NavigationActions} from 'react-navigation';
+import {StackNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
 import {Easing, Animated} from 'react-native'
+import PropTypes from 'prop-types'
 
+import {connect} from "react-redux";
 import Main from './Main'
 import Search from './Search'
 import SignIn from './SignIn'
@@ -26,9 +28,9 @@ const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
     return Object.assign({}, navigationOptions, {headerStyle: tmpStyle, gesturesEnabled: true})
 };
 
-export const MainRouters = {
+const MainRouters = {
     Home: {
-        screen: Home,
+        screen: Home
     },
     RepoHome: {
         screen: RepoHome,
@@ -101,25 +103,34 @@ const Navigator = StackNavigator(MainRouters, {
     ...transitions
 });
 
-/**
- * 避免多次跳转
- * @param getStateForAction
- * @returns {function(*=, *=)}
- */
-const navigateOnce = function (getStateForAction) {
-    return (action, state) => {
-        const {type, routeName} = action
-        return (
-            state &&
-            type === NavigationActions.NAVIGATE &&
-            routeName === state.routes[state.routes.length - 1].routeName // 路由刚刚压入栈，不触发操作
-        ) ? null : getStateForAction(action, state)
+const initialState = Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams('Home'))
+
+export const navReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case 'Navigation/BACK':
+            if (action.routeName) {
+                const i = state.routes.findIndex(item => item.routeName === action.routeName)
+                const tmp = state.routes.slice(0,i + 1)
+                return {index: i, routes: tmp}
+            }
+        default:
+            console.log('state', state)
+            return Navigator.router.getStateForAction(action, state);
+
     }
-}
-Navigator.router.getStateForAction = navigateOnce(Navigator.router.getStateForAction)
+};
+
+const AppWithNavigationState = ({dispatch, nav}) => (
+    <Navigator navigation={addNavigationHelpers({dispatch, state: nav})}/>
+);
+
+AppWithNavigationState.propTypes = {
+    dispatch: PropTypes.func.isRequired,
+    nav: PropTypes.object.isRequired,
+};
 
 
-export default Navigator
+export default connect(state => ({nav: state.nav}))(AppWithNavigationState);
 
 
 

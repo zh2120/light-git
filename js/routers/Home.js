@@ -46,7 +46,7 @@ export default connect(state => ({
         componentDidMount() {
             const {navigation} = this.props
             // navigation.navigate('Search')
-            // console.log('this.props22', this.props)
+            console.log('this.props', this.props)
         }
 
         changeText = (text) => this.setState({searchText: text})
