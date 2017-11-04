@@ -82,7 +82,7 @@ const Navigator = StackNavigator(MainRouters, {
     ...transitions
 });
 
-const initialState = Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams('Search'))
+const initialState = Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams('RepoHome'))
 
 export const navReducer = (state = initialState, action) => {
     switch (action.type) {

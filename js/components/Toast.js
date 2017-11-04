@@ -33,21 +33,25 @@ class ToastCommon extends PureComponent {
         if (nextProps.commons.toastOpened) {
             this.animationOpen.start(() => {
                 this.timer && clearTimeout(this.timer)
-                this.timer = setTimeout(() => this.props.closeToast(), 3000) // 3s 后触发关闭toast
+                this.timer = setTimeout(() => this.close(), 3000) // 3s 后触发关闭toast
             })
-        } else {
-            this.animationClose.start(() => this.timer && clearTimeout(this.timer)) // 关闭toast，清除定时器
         }
     }
 
     componentDidMount() {
-        // this.animationOpen.start()
         const {signed, persistor} = this.props
 
         if (!signed) {
             // console.log('persistor.purge')
             // persistor.purge() // 持久化存储的
         }
+    }
+
+    close = () => { // 延时关闭toast
+        this.animationClose.start(() => {
+            this.timer && clearTimeout(this.timer)
+            this.props.closeToast()
+        }) // 关闭toast，清除定时器
     }
 
     render() {

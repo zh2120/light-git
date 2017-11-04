@@ -81,8 +81,8 @@ export default connect(state => ({
          * @returns {XML}
          */
         renderDirOrFile = ({item}) => {
-            const {type, sha, path, name} = item
-            const {fileContent, navigation} = this.props
+            const {type, path, name} = item
+            const {navigation} = this.props
             const isDir = type === 'dir' // 是否是目录
 
             // todo 添加分支的请求
@@ -119,7 +119,7 @@ export default connect(state => ({
                         style={styles.starButton}/>
                 <Button icon={<Octicons name={'star'} size={18}/>}
                         content={<Text>Unstar: 232</Text>}
-                        style={styles.starButton}/>
+                        style={styles.starButton} onPress={() => this.props.openToast('sss')}/>
             </View>;
 
         /**
