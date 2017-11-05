@@ -10,8 +10,12 @@ export const ACCESS_DENIED = 'ACCESS_DENIED'
 
 // 通用
 export const OPEN_TOAST = 'OPEN_TOAST' // 打开提示
-export const CLOSE_TOAST = 'CLOSE_TOAST'
+export const CLOSE_TOAST = 'CLOSE_TOAST' // 关闭提示
 export const PUT_ERROR = 'PUT_ERROR' // 提示错误
+
+// action sheet
+export const OPEN_ACTIONSHEET = 'OPEN_ACTIONSHEET'
+export const CLOESE_ACTIONSHEET = 'CLOESE_ACTIONSHEET'
 
 // 登陆
 export const USER_SIGNIN = 'USER_SIGNIN' //  授权登录

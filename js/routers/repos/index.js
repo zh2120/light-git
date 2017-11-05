@@ -11,7 +11,7 @@ import {
 import Octicons from 'react-native-vector-icons/Octicons'
 import {Button, marked, html} from '../../components'
 import {bindActions, back} from '../../actions/'
-import {openToast} from '../../actions/common'
+import {openToast, openActionSheet} from '../../actions/common'
 import {repoContent, fileContent, popDir, clearDir} from '../../actions/repo'
 
 export default connect(state => ({
@@ -19,7 +19,7 @@ export default connect(state => ({
     readme: state.repoFile.readme,
     dirs: state.repoFile.dirs,
     nav: state.nav
-}), bindActions({repoContent, fileContent, openToast, popDir, clearDir, back}))(
+}), bindActions({repoContent, fileContent, openToast, popDir, clearDir, back, openActionSheet}))(
     class extends Component {
         static navigationOptions = ({navigation}) => {
             const params = navigation.state.params;
@@ -116,7 +116,7 @@ export default connect(state => ({
             <View style={styles.starWrap}>
                 <Button icon={<Octicons name={'triangle-down'} size={18}/>}
                         content={<Text>Branch: master</Text>}
-                        style={styles.starButton}/>
+                        style={styles.starButton} onPress={this.props.openActionSheet}/>
                 <Button icon={<Octicons name={'star'} size={18}/>}
                         content={<Text>Unstar: 232</Text>}
                         style={styles.starButton} onPress={() => this.props.openToast('sss')}/>
