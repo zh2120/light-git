@@ -34,12 +34,10 @@ export default connect(state => ({
             this.state = {
                 fullName: params ? params.fullName : ''
             }
+            this.hasMore = false
         }
 
         componentWillMount() {
-        }
-
-        componentDidMount() {
             const {fullName} = this.state
             const {repoContent} = this.props;
 
@@ -51,7 +49,8 @@ export default connect(state => ({
         componentWillReceiveProps(nextProps) {
             const {dirs, navigation} = this.props;
 
-            if (dirs.length === 0 && nextProps.dirs.length === 1) { // 目录栈，刚入栈一个
+            if (dirs.length === 0 && nextProps.dirs.length === 1 && this.hasMore) { // 目录栈，刚入栈一个
+                this.hasMore = true
                 navigation.navigate('RepoDir', {fullName: this.state.fullName, name: this.nextDirName})
             }
         }
@@ -68,13 +67,6 @@ export default connect(state => ({
          */
         keyExtractor = (item, index) => 'dirORFile' + index;
 
-        getDir = ({fullName, path, name}) => { // 请求目录，获取到目录数据，再进行跳转
-            const {fileContent} = this.props
-            this.nextDirName = name
-
-            return fileContent({fullName, path, type: 'dir'})
-        }
-
         /**
          * 渲染目录或者文件
          * @param item 每行元素
@@ -90,7 +82,8 @@ export default connect(state => ({
             return (
                 <TouchableOpacity
                     onPress={() => isDir
-                        ? this.getDir({fullName: this.state.fullName, path, name})
+                        // ? this.getDir({fullName: this.state.fullName, path, name})
+                        ? navigation.navigate('RepoDir', {fullName: this.state.fullName, name, path})
                         : navigation.navigate('RepoFile', {fullName: this.state.fullName, path, type})}>
 
                     <View style={styles.contentRow}>

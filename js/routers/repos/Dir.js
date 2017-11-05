@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
 import {
     View,
@@ -12,14 +12,14 @@ import Octicons from 'react-native-vector-icons/Octicons'
 import {Button, marked, html} from '../../components'
 import {bindActions, back} from '../../actions/'
 import {openToast} from '../../actions/common'
-import {repoContent, fileContent, popDir, clearDir} from '../../actions/repo'
+import {fileContent, popDir, clearDir} from '../../actions/repo'
 
 export default connect(state => ({
     readme: state.repoFile.readme,
     dirs: state.repoFile.dirs,
     nav: state.nav
-}), bindActions({repoContent, fileContent, openToast, popDir, clearDir, back}))(
-    class extends Component {
+}), bindActions({fileContent, openToast, popDir, clearDir, back}))(
+    class extends PureComponent {
         static navigationOptions = ({navigation}) => {
             const params = navigation.state.params;
             return {
@@ -33,11 +33,15 @@ export default connect(state => ({
             this.state = {
                 fullName: params ? params.fullName : '',
             }
-            this.dirIndex = this.props.dirs.length - 1 // 当前目录在目录栈的深度
+            this.dirIndex = -1 // 栈为空
             this.hasMore = false
         }
 
         componentWillMount() {
+            const {state} = this.props.navigation
+            if (state.params) {
+                this.props.fileContent({fullName: state.params.fullName, path: state.params.path, type: 'dir'})
+            }
         }
 
         componentDidMount() {
@@ -45,11 +49,11 @@ export default connect(state => ({
         }
 
         componentWillReceiveProps(nextProps) {
-            const {dirs, navigation} = this.props;
+            const {dirs} = this.props;
 
             if (dirs.length < nextProps.dirs.length && !this.hasMore) { // 目录栈增加
+                this.dirIndex = nextProps.dirs.length - 1
                 this.hasMore  = true
-                navigation.navigate('RepoDir', {fullName: this.state.fullName})
             }
         }
 
@@ -66,19 +70,13 @@ export default connect(state => ({
          */
         keyExtractor = (item, index) => 'dir' + index;
 
-        getDir = ({fullName, path}) => { // 请求目录，获取到目录数据，再进行跳转
-            const {fileContent} = this.props
-
-            return fileContent({fullName, path, type: 'dir'})
-        }
-
         /**
          * 渲染目录或者文件
          * @param item 每行元素
          * @returns {XML}
          */
         renderDir = ({item}) => {
-            const {type, sha, path, name} = item
+            const {type, path, name} = item
             const {navigation} = this.props
             const isDir = type === 'dir' // 是否是目录
 
@@ -87,7 +85,7 @@ export default connect(state => ({
             return (
                 <TouchableOpacity
                     onPress={() => isDir
-                        ? this.getDir({fullName: this.state.fullName, path})
+                        ? navigation.navigate('RepoDir', {fullName: this.state.fullName, name, path})
                         : navigation.navigate('RepoFile', {fullName: this.state.fullName, path, type})}>
 
                     <View style={styles.contentRow}>
@@ -107,6 +105,8 @@ export default connect(state => ({
 
         render() {
             const {dirs} = this.props;
+
+            if (this.dirIndex < 0) return null
 
             return (
                 <View style={styles.wrap}>

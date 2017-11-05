@@ -22,7 +22,6 @@ const Loading = () => (
 // const codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME };
 
 export default props => (
-
     <Provider store={store}>
         <PersistGate
             persistor={persistor}

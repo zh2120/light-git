@@ -1,6 +1,6 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {StackNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
-import {Easing, Animated} from 'react-native'
+import {Easing, Animated, BackHandler} from 'react-native'
 import PropTypes from 'prop-types'
 
 import {connect} from "react-redux";
@@ -82,7 +82,7 @@ const Navigator = StackNavigator(MainRouters, {
     ...transitions
 });
 
-const initialState = Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams('Search'))
+const initialState = Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams('Home'))
 
 export const navReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -94,10 +94,6 @@ export const navReducer = (state = initialState, action) => {
                 // 返回从栈底到指定的路由
                 return {index: i, routes: state.routes.slice(0, i + 1)}
             }
-            console.log(state.routes)
-            // state.routes.pop() // 逐层退出的时候，出栈最后一个
-            //
-            // return {index: state.routes.length, routes: [...state.routes]}
         default:
             return Navigator.router.getStateForAction(action, state);
 
@@ -114,7 +110,34 @@ AppWithNavigationState.propTypes = {
 };
 
 
-export default connect(state => ({nav: state.nav}))(AppWithNavigationState);
+export default connect(state => ({nav: state.nav}))(
+    class extends Component {
+
+        componentDidMount() {
+            BackHandler.addEventListener("hardwareBackPress", this.onBackPress);
+        }
+
+        componentWillUnmount() {
+            BackHandler.removeEventListener("hardwareBackPress", this.onBackPress);
+        }
+
+        onBackPress = () => {
+            const {dispatch, nav} = this.props;
+
+            if (nav.index === 0) {
+                return false;
+            }
+            dispatch(NavigationActions.back());
+            return true;
+        };
+
+        render() {
+            const {dispatch, nav} = this.props;
+
+            return <Navigator navigation={addNavigationHelpers({dispatch, state: nav})}/>
+        }
+    }
+);
 
 
 

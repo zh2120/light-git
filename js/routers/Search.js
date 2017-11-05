@@ -79,6 +79,7 @@ const SearchHeader = connect(state => ({}), bindActions({searchRepo}))(
                             <EvilIcons name={'search'} size={24} style={searchStyles.searchIcon}/>
                         </TouchableOpacity>
                         <TextInput
+                            autoFocus={true}
                             value={searchText}
                             placeholder="Search Github"
                             selectionColor={'#000'}

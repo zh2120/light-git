@@ -105,8 +105,9 @@ export default connect(state => ({
                             }
                         </View>
 
-                        <View style={styles.searchWrap}>
+                        <TouchableOpacity style={styles.searchWrap} onPress={() => navigation.navigate('Search')}>
                             <TextInput
+                                editable={false}
                                 value={searchText}
                                 placeholder="Search Github"
                                 selectionColor={'#000'}
@@ -118,16 +119,18 @@ export default connect(state => ({
                             {
                                 searchText ? (
                                     <TouchableOpacity
+                                        disabled={true}
                                         onPress={() => this.setState({searchText: ''})}>
                                         <Ionicons size={20} name={'ios-close-circle-outline'} style={{marginRight: 8}}/>
                                     </TouchableOpacity>
                                 ) : null
                             }
                             <TouchableOpacity
+                                disabled={true}
                                 onPress={() => this.goSearch()}>
                                 <EvilIcons name={'search'} size={24} style={styles.searchIcon}/>
                             </TouchableOpacity>
-                        </View>
+                        </TouchableOpacity>
 
                         <View style={[styles.logoRow, {justifyContent: 'space-around',}]}>
                             <TouchableHighlight underlayColor={underlayColor} onPress={() => {
