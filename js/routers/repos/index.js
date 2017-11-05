@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
 import {
     View,
@@ -20,7 +20,7 @@ export default connect(state => ({
     dirs: state.repoFile.dirs,
     nav: state.nav
 }), bindActions({repoContent, fileContent, openToast, popDir, clearDir, back, openActionSheet}))(
-    class extends Component {
+    class extends PureComponent {
         static navigationOptions = ({navigation}) => {
             const params = navigation.state.params;
             return {

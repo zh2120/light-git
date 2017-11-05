@@ -33,26 +33,22 @@ export default connect(state => ({
             this.state = {
                 fullName: params ? params.fullName : '',
             }
+            this.dirIndex = this.props.dirs.length - 1 // 当前目录在目录栈的深度
+            this.hasMore = false
         }
 
         componentWillMount() {
         }
 
         componentDidMount() {
-            const {fullName, path, type} = this.state
-            const {fileContent} = this.props;
 
-            if (fullName) {
-                // fileContent({fullName, path, type})
-            }
-            // repoContent({fullName: 'zh2120/light-git'})
         }
 
         componentWillReceiveProps(nextProps) {
             const {dirs, navigation} = this.props;
 
-            if (dirs.length < nextProps.dirs.length) { // 目录栈增加
-                console.log('repoDir')
+            if (dirs.length < nextProps.dirs.length && !this.hasMore) { // 目录栈增加
+                this.hasMore  = true
                 navigation.navigate('RepoDir', {fullName: this.state.fullName})
             }
         }
@@ -116,7 +112,7 @@ export default connect(state => ({
                 <View style={styles.wrap}>
                     <FlatList
                         horizontal={false}
-                        data={dirs[dirs.length-1]}
+                        data={dirs[this.dirIndex]}
                         style={{width: vw, height: vh}}
                         showsVerticalScrollIndicator={false}
                         ItemSeparatorComponent={this.separator}
