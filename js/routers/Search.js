@@ -14,6 +14,7 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Octicons from 'react-native-vector-icons/Octicons'
+import {Button} from '../components'
 import {bindActions} from '../actions'
 import {searchRepo, saveHistory} from '../actions/search'
 
