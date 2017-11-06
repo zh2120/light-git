@@ -32,8 +32,6 @@ export function repoContentEpic(action$, {getState, dispatch}, {get}) {
                             }
                             return -1
                         })
-
-                        dispatch(fileContent({fullName, path: 'README.md'}))
                         return getRepoContent(content)
                     }
                 }) // 返回正确结果

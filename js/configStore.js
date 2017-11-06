@@ -21,12 +21,7 @@ export default (initialState) => {
 
     const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
     const middleWares = [epicMiddleware]
-
-    const store = createStore(
-        reducer,
-        initialState,
-        composeEnhancers(applyMiddleware(...middleWares))
-    )
+    const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(...middleWares)))
     const persistor = persistStore(store)
 
     // persistor.purge()

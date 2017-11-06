@@ -1,10 +1,9 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {View, Text, ScrollView, TextInput, StyleSheet, WebView} from 'react-native'
+import {View, Text, ScrollView, TextInput, StyleSheet} from 'react-native'
 import {bindActions} from '../../actions/'
 import {openToast} from '../../actions/common'
 import {fileContent, getFileDenied} from '../../actions/repo'
-import {html} from '../../components'
 
 export default connect(state => ({file: state.repoFile.file}), bindActions({fileContent, openToast, getFileDenied}))(
     class extends Component {
@@ -43,18 +42,16 @@ export default connect(state => ({file: state.repoFile.file}), bindActions({file
 
             if (isEmpty(file)) return null
 
-            const tmp = "<pre><code>" + file.replace(/\n/g, '<br/>') + "</code></pre>"
-
             return (
-                <View style={styles.wrap}>
-                    <WebView scalesPageToFit={true} style={{flex: 1}} source={{html: html(tmp)}}/>
-                </View>
+                <ScrollView contentContainerStyle={styles.wrap}>
+                    <Text style={{fontSize: 14, fontFamily: 'Arial', lineHeight: 22}}>{file}</Text>
+                </ScrollView>
             )
         }
     }
 )
 
 const styles = StyleSheet.create({
-    wrap: {backgroundColor: 'red', flex: 1},
+    wrap: {padding: 8},
 })
 

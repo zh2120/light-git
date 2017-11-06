@@ -11,10 +11,13 @@ export default class SignUp extends Component {
 
     render() {
         return (
-            <WebView style={{flex: 1}} scalesPageToFit={true}
-                     onError={() => alert('加载失败')}
-                     renderLoading={() => <ActivityIndicator size={'large'}/>}
-                     source={{uri: 'https://github.com/join'}}/>
+            <WebView
+                style={{maxWidth: vw}}
+                automaticallyAdjustContentInsets={false}
+                userAgent={'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.75 Safari/537.36'}
+                onError={() => alert('加载失败')}
+                renderLoading={() => <ActivityIndicator size={'large'}/>}
+                source={{uri: 'https://github.com/join'}}/>
         )
     }
 }

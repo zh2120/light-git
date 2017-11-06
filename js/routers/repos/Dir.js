@@ -9,7 +9,6 @@ import {
     TouchableOpacity,
 } from 'react-native'
 import Octicons from 'react-native-vector-icons/Octicons'
-import {Button, marked, html} from '../../components'
 import {bindActions, back} from '../../actions/'
 import {openToast} from '../../actions/common'
 import {fileContent, popDir, clearDir} from '../../actions/repo'

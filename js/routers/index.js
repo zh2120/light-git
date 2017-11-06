@@ -13,6 +13,7 @@ import Test from './Test'
 import RepoHome from './repos/'
 import RepoFile from './repos/File'
 import RepoDir from './repos/Dir'
+import Readme from './repos/Readme'
 
 const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
     const defaultHeaderStyle = {
@@ -38,7 +39,8 @@ const MainRouters = {
     SignIn: {screen: SignIn},
     SignUp: {screen: SignUp},
     Test: {screen: Test},
-    Main: {screen: Main}
+    Main: {screen: Main},
+    Readme: {screen: Readme}
 }
 
 for (const key in MainRouters) {
@@ -108,7 +110,6 @@ AppWithNavigationState.propTypes = {
     dispatch: PropTypes.func.isRequired,
     nav: PropTypes.object.isRequired,
 };
-
 
 export default connect(state => ({nav: state.nav}))(
     class extends Component {

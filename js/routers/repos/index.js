@@ -9,7 +9,6 @@ import {
     TouchableOpacity,
 } from 'react-native'
 import Octicons from 'react-native-vector-icons/Octicons'
-import {Button, marked, html} from '../../components'
 import {bindActions, back} from '../../actions/'
 import {openToast, openActionSheet} from '../../actions/common'
 import {repoContent, fileContent, popDir, clearDir} from '../../actions/repo'
@@ -106,34 +105,20 @@ export default connect(state => ({
          * 列表头
          */
         repoHeader = () =>
-            <View style={styles.starWrap}>
-                <Button icon={<Octicons name={'triangle-down'} size={18}/>}
-                        content={<Text>Branch: master</Text>}
-                        style={styles.starButton} onPress={this.props.openActionSheet}/>
-                <Button icon={<Octicons name={'star'} size={18}/>}
-                        content={<Text>Unstar: 232</Text>}
-                        style={styles.starButton} onPress={() => this.props.openToast('sss')}/>
-            </View>;
+            <View>
+                <View style={styles.starWrap}>
+                    <Button icon={<Octicons name={'triangle-down'} size={18}/>}
+                            content={<Text>Branch: master</Text>}
+                            style={styles.starButton} onPress={this.props.openActionSheet}/>
+                    <Button icon={<Octicons name={'star'} size={18}/>}
+                            content={<Text>Unstar: 232</Text>}
+                            style={styles.starButton} onPress={() => this.props.openToast('sss')}/>
 
-        /**
-         * 列表尾部，展示仓库的markdown说明
-         */
-        repoFooter = () => {
-            const {readme} = this.props;
-
-            if (isEmpty(readme)) return null;
-
-            const h5 = html(marked(readme)) // markdown 转 html
-
-            return (
-                <View style={{width: vw, height: vh, borderTopWidth: 1}}>
-                    <WebView
-                        style={{width: vw, height: vh}}
-                        scalesPageToFit={true}
-                        source={{html: h5}}/>
                 </View>
-            )
-        };
+                <Button style={{width: '100%', height: 56}} content={<Text>README</Text>}
+                        onPress={() => this.props.navigation.navigate('Readme',
+                            {fullName: this.state.fullName, path: 'README.md'})}/>
+            </View>
 
         render() {
             const {content} = this.props;
@@ -148,7 +133,6 @@ export default connect(state => ({
                         ItemSeparatorComponent={this.separator}
                         contentContainerStyle={{padding: 14}}
                         ListHeaderComponent={this.repoHeader}
-                        ListFooterComponent={this.repoFooter}
                         keyExtractor={this.keyExtractor}
                         renderItem={this.renderDirOrFile}/>
                 </View>
