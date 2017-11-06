@@ -1,4 +1,4 @@
 <resources>
-    <string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey"></string>
+    <string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">MxggLVdhe0rtC3vyQ8pL8wDs7K0w9cbe1dd2-7083-45fd-8dac-b6cc65d31094</string>
     <string name="app_name">gitapp</string>
 </resources>

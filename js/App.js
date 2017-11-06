@@ -20,9 +20,12 @@ const {persistor, store} = configureStore()
 const Loading = () => (
     <View style={styles.loadWrap}><Text style={{color: 'red'}}>恢复现场中...</Text></View>)
 
-// const codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME };
+const codePushOptions = {
+    checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
+    installMode: codePush.InstallMode.ON_NEXT_RESUME
+};
 
-export default class App extends Component {
+class App extends Component {
     componentDidMount() {
         SplashScreen.hide();
     }
@@ -49,7 +52,7 @@ export default class App extends Component {
     }
 }
 
-// export default codePush(codePushOptions)()
+export default codePush(codePushOptions)(App)
 
 const styles = StyleSheet.create({
     container: {
