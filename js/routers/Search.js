@@ -64,7 +64,10 @@ const SearchHeader = connect(state => ({}), bindActions({searchRepo}))(
             }
             const url = '/search/repositories' + getParams(params)
 
-            return searchRepo({name: searchText, url});
+            return this.setState(pre => {
+                searchRepo({name: searchText, url});
+                return {searchText: ''}
+            })
         } // 当前页面递交搜索内容
 
         render() {
@@ -137,6 +140,43 @@ export default connect(state => ({
 
             return {recordOpen: !pre}
         })
+
+        renderSectionHeader = ({section}) => { // 分段头
+            let title, leftIconName, rightIconName, clear;
+            const {recordOpen} = this.state;
+
+            if (section.type === 'history') {
+                title = 'History';
+                leftIconName = 'tag';
+                rightIconName = recordOpen ? 'chevron-double-up' : 'chevron-double-down';
+                clear = () => this.setState({recordOpen: !recordOpen})
+            }
+            if (section.type === 'repos') {
+                title = 'Results';
+                leftIconName = 'paperclip';
+                rightIconName = 'broom';
+                clear = () => {
+                }
+            }
+
+            return (
+                <View style={[styles.sectionBase, styles.sectionWrap]}>
+                    <View style={styles.sectionBase}>
+                        <EvilIcons name={leftIconName} size={28}/>
+                        <Text style={{marginRight: 12}}>{title}</Text>
+                        {
+                            section.type === 'repos' ? (
+                                <ActivityIndicator animating={this.props.searching} color={'#0366d6'}/>) : null
+                        }
+                    </View>
+                    <TouchableOpacity onPress={clear}>
+                        <View style={styles.sectionBase}>
+                            <MaterialCommunityIcons name={rightIconName} size={24}/>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            )
+        };
 
         renderHistoryItem = ({item, index}) => { // 历史记录单项
             if (item) {
@@ -211,42 +251,6 @@ export default connect(state => ({
             return null
         };
 
-        renderSectionHeader = ({section}) => { // 分段头
-            let title, leftIconName, rightIconName, clear;
-            const {recordOpen} = this.state;
-
-            if (section.type === 'history') {
-                title = 'History';
-                leftIconName = 'tag';
-                rightIconName = recordOpen ? 'chevron-double-up' : 'chevron-double-down';
-                clear = () => this.setState({recordOpen: !recordOpen})
-            }
-            if (section.type === 'repos') {
-                title = 'Results';
-                leftIconName = 'paperclip';
-                rightIconName = 'broom';
-                clear = () => {
-                }
-            }
-
-            return (
-                <View style={[styles.sectionBase, styles.sectionWrap]}>
-                    <View style={styles.sectionBase}>
-                        <EvilIcons name={leftIconName} size={28}/>
-                        <Text style={{marginRight: 12}}>{title}</Text>
-                        {
-                            section.type === 'repos' ? (
-                                <ActivityIndicator animating={this.props.searching} color={'#0366d6'}/>) : null
-                        }
-                    </View>
-                    <TouchableOpacity onPress={clear}>
-                        <View style={styles.sectionBase}>
-                            <MaterialCommunityIcons name={rightIconName} size={24}/>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-            )
-        };
 
         keyExtractor = (item, index) => 'key-' + index;
 

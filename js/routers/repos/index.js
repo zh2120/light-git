@@ -49,10 +49,10 @@ export default connect(state => ({
         componentWillReceiveProps(nextProps) {
             const {dirs, navigation} = this.props;
 
-            if (dirs.length === 0 && nextProps.dirs.length === 1 && this.hasMore) { // 目录栈，刚入栈一个
-                this.hasMore = true
-                navigation.navigate('RepoDir', {fullName: this.state.fullName, name: this.nextDirName})
-            }
+            // if (dirs.length === 0 && nextProps.dirs.length === 1 && this.hasMore) { // 目录栈，刚入栈一个
+            //     this.hasMore = true
+            //     navigation.navigate('RepoDir', {fullName: this.state.fullName, name: this.nextDirName})
+            // }
         }
 
         componentWillUnmount() {
