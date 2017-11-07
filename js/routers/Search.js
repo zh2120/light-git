@@ -136,6 +136,10 @@ export default connect(state => ({
             }
         }
 
+        componentWillUnmount() {
+
+        }
+
         reSearch = (item) => this.setState(pre => {
             this.props.searchRepo(item)
 
@@ -159,6 +163,8 @@ export default connect(state => ({
                 clear = () => {
                 }
             }
+
+            console.log(this.props.searching)
 
             return (
                 <View style={[styles.sectionBase, styles.sectionWrap]}>
@@ -221,16 +227,14 @@ export default connect(state => ({
                                             name: name
                                         })}>
                         <View style={styles.repoItem}>
-                            <View style={[styles.touchItemLeft, {justifyContent: 'space-between'}]}>
-                                <View style={styles.touchItemLeft}>
-                                    <Ionicons name={'ios-browsers-outline'} size={22}
-                                              style={{color: '#0366d6', marginRight: 10}}/>
-                                    <Text style={styles.repoName}>{full_name}</Text>
-                                </View>
-                                <View style={styles.touchItemLeft}>
-                                    <Text>{stargazers_count}</Text>
-                                    <Octicons name={'star'} size={18} style={{marginLeft: 6}}/>
-                                </View>
+                            <View style={styles.touchItemLeft}>
+                                <Ionicons name={'ios-browsers-outline'} size={22}
+                                          style={{color: '#0366d6', marginRight: 10}}/>
+                                <Text style={styles.repoName}>{full_name}</Text>
+                            </View>
+                            <View style={styles.touchItemLeft}>
+                                <Octicons name={'star'} size={18} style={{marginLeft: 6}}/>
+                                <Text>{stargazers_count}</Text>
                             </View>
                             <View style={styles.repoDesc}><Text style={styles.repoDescText}>{description}</Text></View>
                             <View style={[styles.touchItemLeft, {justifyContent: 'space-between'}]}>
@@ -251,7 +255,6 @@ export default connect(state => ({
             }
             return null
         };
-
 
         keyExtractor = (item, index) => 'key-' + index;
 

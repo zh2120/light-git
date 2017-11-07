@@ -16,8 +16,8 @@ import {repoContent, fileContent, popDir, clearDir} from '../../actions/repo'
 
 export default connect(state => ({
     content: state.repoContent.content,
-    readme: state.repoFile.readme,
-    dirs: state.repoFile.dirs,
+    readme: state.repoContent.readme,
+    dirs: state.repoContent.dirs,
     nav: state.nav
 }), bindActions({repoContent, fileContent, openToast, popDir, clearDir, back, openActionSheet}))(
     class extends PureComponent {
@@ -47,12 +47,7 @@ export default connect(state => ({
         }
 
         componentWillReceiveProps(nextProps) {
-            const {dirs, navigation} = this.props;
 
-            // if (dirs.length === 0 && nextProps.dirs.length === 1 && this.hasMore) { // 目录栈，刚入栈一个
-            //     this.hasMore = true
-            //     navigation.navigate('RepoDir', {fullName: this.state.fullName, name: this.nextDirName})
-            // }
         }
 
         componentWillUnmount() {

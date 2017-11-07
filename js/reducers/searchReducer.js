@@ -10,7 +10,7 @@ export function searchInfo(state = {repos: [], history: [], searching: false}, a
             return Object.assign({}, state, {repos: action.payload.repos, searching: false})
 
         case Types.SEARCH_REPO_RESET:
-            return Object.assign({}, state, {searching: false})
+            return Object.assign({}, state, {searching: false, repos: []})
 
         default:
             return state

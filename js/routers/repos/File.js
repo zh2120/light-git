@@ -5,7 +5,7 @@ import {bindActions} from '../../actions/'
 import {openToast} from '../../actions/common'
 import {fileContent, getFileDenied} from '../../actions/repo'
 
-export default connect(state => ({file: state.repoFile.file}), bindActions({fileContent, openToast, getFileDenied}))(
+export default connect(state => ({file: state.repoContent.file}), bindActions({fileContent, openToast, getFileDenied}))(
     class extends Component {
         static navigationOptions = ({navigation}) => {
             const params = navigation.state.params
@@ -44,7 +44,7 @@ export default connect(state => ({file: state.repoFile.file}), bindActions({file
 
             return (
                 <ScrollView contentContainerStyle={styles.wrap}>
-                    <Text style={{fontSize: 14, fontFamily: 'Arial', lineHeight: 22}}>{file}</Text>
+                    <Text style={{fontSize: 14, fontFamily: 'Arial', lineHeight: 22, color: '#333'}}>{file}</Text>
                 </ScrollView>
             )
         }

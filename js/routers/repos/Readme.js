@@ -6,7 +6,7 @@ import {openToast} from '../../actions/common'
 import {fileContent, getFileDenied} from '../../actions/repo'
 import {html, md} from '../../components'
 
-export default connect(state => ({readme: state.repoFile.readme}), bindActions({
+export default connect(state => ({readme: state.repoContent.readme}), bindActions({
     fileContent,
     openToast,
     getFileDenied

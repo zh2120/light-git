@@ -1,7 +1,7 @@
 import {userInfo, userSignInfo} from './userReducer';
 import {searchInfo} from './searchReducer'
 import {commons} from './comReducer'
-import {repoContent, repoFile} from './repoReducer'
+import {repoContent} from './repoReducer'
 import {navReducer} from '../routers'
 
 export default {
@@ -10,6 +10,5 @@ export default {
     userSignInfo,
     searchInfo,
     commons,
-    repoContent,
-    repoFile
+    repoContent
 }

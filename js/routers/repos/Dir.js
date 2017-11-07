@@ -14,8 +14,8 @@ import {openToast} from '../../actions/common'
 import {fileContent, popDir, clearDir} from '../../actions/repo'
 
 export default connect(state => ({
-    readme: state.repoFile.readme,
-    dirs: state.repoFile.dirs,
+    readme: state.repoContent.readme,
+    dirs: state.repoContent.dirs,
     nav: state.nav
 }), bindActions({fileContent, openToast, popDir, clearDir, back}))(
     class extends PureComponent {

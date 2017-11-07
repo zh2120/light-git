@@ -2,7 +2,6 @@ import {createStore, applyMiddleware, compose} from 'redux'
 import {persistStore, persistCombineReducers, createMigrate, purgeStoredState} from 'redux-persist'
 import {createEpicMiddleware} from 'redux-observable';
 import storage from 'redux-persist/lib/storage'
-import {AsyncStorage} from 'react-native'
 import rootReducer from './reducers'
 import rootEpic from './epics'
 import {put, get, Delete, post, patch} from './utils/api'
