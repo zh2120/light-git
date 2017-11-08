@@ -4,7 +4,6 @@ import {Easing, Animated, BackHandler} from 'react-native'
 import PropTypes from 'prop-types'
 
 import {connect} from "react-redux";
-import Main from './Main'
 import Search from './Search'
 import SignIn from './SignIn'
 import SignUp from './SignUp'
@@ -37,7 +36,6 @@ const MainRouters = {
     Search: {screen: Search},
     SignIn: {screen: SignIn},
     SignUp: {screen: SignUp},
-    Main: {screen: Main},
     Readme: {screen: Readme}
 }
 

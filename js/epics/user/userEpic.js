@@ -1,11 +1,17 @@
-import * as Types from '../../actions/types';
-import {userSignAccept, getUserInfo, userSignDenied, deleteAuth, exit, clearUser} from '../../actions/users';
+import {
+    UserTypes,
+    clearUser,
+    deleteAuth,
+    getUserInfo,
+    userSignAccept,
+    userSignDenied,
+} from '../../reducers/userReducer';
 import {openToast, putError} from '../../reducers/comReducer';
 import {Observable} from 'rxjs/Rx'
 
 export function userSignInEpic(action$, {dispatch}, {put}) {
     // 创建或者获取指定应用的授权
-    return action$.ofType(Types.USER_SIGNIN)
+    return action$.ofType(UserTypes.USER_SIGNIN)
         .switchMap(action => {
             const {auth} = action.payload
             const config = require('../../../config.json')
@@ -58,7 +64,7 @@ export function userSignInEpic(action$, {dispatch}, {put}) {
 
 
 export function userInfoEpic(action$, {dispatch}, {get}) {
-    return action$.ofType(Types.USER_SIGNIN_ACCEPT)
+    return action$.ofType(UserTypes.USER_SIGNIN_ACCEPT)
         .switchMap(action => {
             const {token, id} = action.payload.auth
             const url = '/user'
@@ -81,7 +87,7 @@ export function userInfoEpic(action$, {dispatch}, {get}) {
 }
 
 export function clearUserInfoEpic(action$, {dispatch, getState}, ajax) {
-    return action$.ofType(Types.DELETE_AUTH)
+    return action$.ofType(UserTypes.DELETE_AUTH)
         .mergeMap(action => {
             const {id} = action.payload
             const url = `/authorizations/${id}`

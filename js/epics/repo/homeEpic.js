@@ -1,4 +1,4 @@
-import * as Types from '../../actions/types';
+
 import {
     getFile,
     getDir,
@@ -8,10 +8,11 @@ import {
     getRepoContentDenied,
 } from '../../reducers/repoReducer';
 import {putError} from '../../reducers/comReducer';
+import {RepoTypes} from '../../reducers/repoReducer'
 import {Observable} from 'rxjs/Rx'
 
 export function repoContentEpic(action$, {getState, dispatch}, {get}) {
-    return action$.ofType(Types.REPO_HOME)
+    return action$.ofType(RepoTypes.REPO_HOME)
         .switchMap(action => {
             const {fullName, ref} = action.payload
             const auth = getState().userSignInfo.auth
@@ -41,13 +42,13 @@ export function repoContentEpic(action$, {getState, dispatch}, {get}) {
                     }
                     dispatch(getRepoContentDenied()) // 重置搜索状态
                     return Observable.of(putError('获取仓库内容，失败。网络状况不佳，请稍后在试'))
-                        .takeUntil(action$.ofType(Types.REPO_HOME_CONTENTS_DENIED))
+                        .takeUntil(action$.ofType(RepoTypes.REPO_HOME_CONTENTS_DENIED))
                 })
         })
 }
 
 export function repoFileEpic(action$, {getState, dispatch}, {get}) {
-    return action$.ofType(Types.FILE)
+    return action$.ofType(RepoTypes.FILE)
         .switchMap(action => {
             const {fullName, path, ref, type} = action.payload
             const auth = getState().userSignInfo.auth
@@ -84,7 +85,7 @@ export function repoFileEpic(action$, {getState, dispatch}, {get}) {
                     }
                     dispatch(getFileDenied()) // 重置搜索状态
                     return Observable.of(putError(message))
-                        .takeUntil(action$.ofType(Types.FILE_CONTENT_DENIED))
+                        .takeUntil(action$.ofType(RepoTypes.FILE_CONTENT_DENIED))
                 })
         })
 }

@@ -6,7 +6,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import {openToast, bindActions} from '../reducers/comReducer'
 import {searchRepo} from '../reducers/searchReducer'
-import {userSignAccept} from '../actions/users'
+import {userSignAccept} from '../reducers/userReducer'
 
 import {
     View,

@@ -1,6 +1,6 @@
 import {bindActionCreators} from 'redux';
 
-export const comTypes = {
+export const ComTypes = {
     OPEN_TOAST: 'OPEN_TOAST', // 打开提示
     CLOSE_TOAST: 'CLOSE_TOAST', // 关闭提示
     PUT_ERROR: 'PUT_ERROR',  // 提示错误
@@ -17,50 +17,50 @@ export const back = (routeName) => ({type: 'Navigation/BACK', routeName})
  * @param toastOpened -> true or false
  * @returns {{type: string, payload: {show: *}}}
  */
-export const openToast = (text) => ({type: comTypes.OPEN_TOAST, payload: {text}})
+export const openToast = (text) => ({type: ComTypes.OPEN_TOAST, payload: {text}})
 
 /**
  * 关闭通知
  * @returns {{type}}
  */
-export const closeToast = () => ({type: comTypes.CLOSE_TOAST})
+export const closeToast = () => ({type: ComTypes.CLOSE_TOAST})
 
 /**
  * 通知错误信息
  * @param message
  * @returns {{type, payload: {message: *, error: boolean}}}
  */
-export const putError = (message) => ({type: comTypes.PUT_ERROR, payload: {message, error: true}})
+export const putError = (message) => ({type: ComTypes.PUT_ERROR, payload: {message, error: true}})
 
 /**
  * 打开动态选择框
  * @param actions 动作数组
  */
-export const openActionSheet = (actions) => ({type: comTypes.OPEN_ACTIONSHEET, payload: {actions}})
+export const openActionSheet = (actions) => ({type: ComTypes.OPEN_ACTIONSHEET, payload: {actions}})
 
 /**
  * 关闭动作框
  */
-export const closeActionSheet = () => ({type: comTypes.CLOESE_ACTIONSHEET})
+export const closeActionSheet = () => ({type: ComTypes.CLOESE_ACTIONSHEET})
 
-export default (state = {toastOpened: false, text: '', success: false, actionSheetOpen: false}, action) => {
+export default comInfo = (state = {toastOpened: false, text: '', success: false, actionSheetOpen: false}, action) => {
     switch (action.type) {
-        case comTypes.OPEN_TOAST:
+        case ComTypes.OPEN_TOAST:
             return {...state, toastOpened: true, text: action.payload.text, success: true}
 
-        case comTypes.CLOSE_TOAST:
+        case ComTypes.CLOSE_TOAST:
             return {...state, toastOpened: false, success: false}
 
-        case comTypes.PUT_ERROR:
+        case ComTypes.PUT_ERROR:
             if (action.payload.message) {
                 return {...state, toastOpened: true, text: action.payload.message, error: true}
             }
             return {...state, toastOpened: true}
 
-        case comTypes.OPEN_ACTIONSHEET: // 打开actionSheet
+        case ComTypes.OPEN_ACTIONSHEET: // 打开actionSheet
             return {...state, actionSheetOpen: true}
 
-        case comTypes.CLOESE_ACTIONSHEET: // 关闭actionSheet
+        case ComTypes.CLOESE_ACTIONSHEET: // 关闭actionSheet
             return {...state, actionSheetOpen: false}
 
         default:
