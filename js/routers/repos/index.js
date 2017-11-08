@@ -10,14 +10,14 @@ import {
 } from 'react-native'
 import Octicons from 'react-native-vector-icons/Octicons'
 import {Button} from '../../components'
-import {bindActions, back} from '../../actions/'
-import {openToast, openActionSheet} from '../../actions/common'
-import {repoContent, fileContent, popDir, clearDir} from '../../actions/repo'
+
+import {repoContent, fileContent, popDir, clearDir} from '../../reducers/repoReducer'
+import {openToast, openActionSheet, bindActions, back} from '../../reducers/comReducer'
 
 export default connect(state => ({
-    content: state.repoContent.content,
-    readme: state.repoContent.readme,
-    dirs: state.repoContent.dirs,
+    content: state.repoInfo.content,
+    readme: state.repoInfo.readme,
+    dirs: state.repoInfo.dirs,
     nav: state.nav
 }), bindActions({repoContent, fileContent, openToast, popDir, clearDir, back, openActionSheet}))(
     class extends PureComponent {

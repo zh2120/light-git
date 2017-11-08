@@ -9,13 +9,12 @@ import {
     TouchableOpacity,
 } from 'react-native'
 import Octicons from 'react-native-vector-icons/Octicons'
-import {bindActions, back} from '../../actions/'
-import {openToast} from '../../actions/common'
-import {fileContent, popDir, clearDir} from '../../actions/repo'
+import {openToast, bindActions, back} from '../../reducers/comReducer'
+import {fileContent, popDir, clearDir} from '../../reducers/repoReducer'
 
 export default connect(state => ({
-    readme: state.repoContent.readme,
-    dirs: state.repoContent.dirs,
+    readme: state.repoInfo.readme,
+    dirs: state.repoInfo.dirs,
     nav: state.nav
 }), bindActions({fileContent, openToast, popDir, clearDir, back}))(
     class extends PureComponent {

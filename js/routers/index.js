@@ -9,7 +9,6 @@ import Search from './Search'
 import SignIn from './SignIn'
 import SignUp from './SignUp'
 import Home from './Home'
-import Test from './Test'
 import RepoHome from './repos/'
 import RepoFile from './repos/File'
 import RepoDir from './repos/Dir'
@@ -38,7 +37,6 @@ const MainRouters = {
     Search: {screen: Search},
     SignIn: {screen: SignIn},
     SignUp: {screen: SignUp},
-    Test: {screen: Test},
     Main: {screen: Main},
     Readme: {screen: Readme}
 }

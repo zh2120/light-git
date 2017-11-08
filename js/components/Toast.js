@@ -2,13 +2,12 @@ import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
 import {Animated, Text, StyleSheet, Easing, TouchableWithoutFeedback} from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import {bindActions} from '../actions'
-import {closeToast} from '../actions/common'
+import {closeToast, bindActions} from '../reducers/comReducer'
 
 
 export default connect(state => ({
     signed: state.userSignInfo.signed,
-    commons: state.commons
+    comInfo: state.comInfo
 }), bindActions({closeToast}))(
     class extends PureComponent {
         constructor(props) {
@@ -35,7 +34,7 @@ export default connect(state => ({
         }
 
         componentWillReceiveProps(nextProps) {
-            if (nextProps.commons.toastOpened) {
+            if (nextProps.comInfo.toastOpened) {
                 this.animationOpen.start(() => {
                     this.timer && clearTimeout(this.timer)
                     this.timer = setTimeout(() => this.close(), 3000) // 3s 后触发关闭toast
@@ -60,7 +59,7 @@ export default connect(state => ({
         }
 
         render() {
-            const {toastOpened, text, success} = this.props.commons
+            const {toastOpened, text, success} = this.props.comInfo
 
             if (!toastOpened) return null
 

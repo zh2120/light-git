@@ -1,11 +1,10 @@
-import * as Types from '../../actions/types';
-import {searchRepoResult, resetSearch} from '../../actions';
-import {openToast, putError} from '../../actions/common';
+import {searchTypes, searchRepoResult, resetSearch} from '../../reducers/searchReducer';
+import {putError} from '../../reducers/comReducer';
 import {Observable} from 'rxjs/Rx'
 
 // todo 清空搜索结果
 export function searchRepoByQueryEpic(action$, {getState, dispatch}, {get}) {
-    return action$.ofType(Types.SEARCH_REPO)
+    return action$.ofType(searchTypes.SEARCH_REPO)
         .switchMap(action => {
             const {url} = action.payload
             // const headers = {
@@ -18,7 +17,7 @@ export function searchRepoByQueryEpic(action$, {getState, dispatch}, {get}) {
                 .catch(e => {
                     dispatch(resetSearch()) // 重置搜索状态
                     return Observable.of(putError('网络状况不佳，请稍后在试'))
-                        .takeUntil(action$.ofType(Types.SEARCH_REPO_RESET))
+                        .takeUntil(action$.ofType(searchTypes.SEARCH_REPO_RESET))
                 })
         })
 }

@@ -4,9 +4,9 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-import {searchRepo, bindActions} from '../actions'
-import {openToast} from '../actions/common'
-import {userSignAccept, exit} from '../actions/users'
+import {openToast, bindActions} from '../reducers/comReducer'
+import {searchRepo} from '../reducers/searchReducer'
+import {userSignAccept} from '../actions/users'
 
 import {
     View,
@@ -20,7 +20,6 @@ import {
     TouchableHighlight,
     TouchableWithoutFeedback
 } from 'react-native'
-
 
 const underlayColor = 'rgba(100,100,100 ,0.1)';
 

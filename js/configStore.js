@@ -23,7 +23,7 @@ export default (initialState) => {
     const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(...middleWares)))
     const persistor = persistStore(store)
 
-    // persistor.purge()
+    persistor.purge()
 
     return {persistor, store}
 }

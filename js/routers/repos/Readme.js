@@ -1,12 +1,11 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {View, StyleSheet, WebView} from 'react-native'
-import {bindActions} from '../../actions/'
-import {openToast} from '../../actions/common'
-import {fileContent, getFileDenied} from '../../actions/repo'
+import {openToast, bindActions} from '../../reducers/comReducer'
+import {fileContent, getFileDenied} from '../../reducers/repoReducer'
 import {html, md} from '../../components'
 
-export default connect(state => ({readme: state.repoContent.readme}), bindActions({
+export default connect(state => ({readme: state.repoInfo.readme}), bindActions({
     fileContent,
     openToast,
     getFileDenied

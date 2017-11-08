@@ -2,11 +2,10 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {StyleSheet, Modal, View} from 'react-native'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
-import {bindActions} from '../actions'
-import {closeActionSheet} from '../actions/common'
+import {closeActionSheet, bindActions} from '../reducers/comReducer'
 import {Button} from '../components'
 
-export default connect(state => ({opened: state.commons.actionSheetOpen}), bindActions({closeActionSheet}))(
+export default connect(state => ({opened: state.comInfo.actionSheetOpen}), bindActions({closeActionSheet}))(
     class extends Component {
         render() {
             const {opened} = this.props

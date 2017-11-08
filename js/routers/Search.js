@@ -15,8 +15,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Octicons from 'react-native-vector-icons/Octicons'
 import {Button} from '../components'
-import {bindActions} from '../actions'
-import {searchRepo, saveHistory} from '../actions/search'
+import {bindActions} from '../reducers/comReducer'
+import {searchRepo} from '../reducers/searchReducer'
 
 const searchStyles = StyleSheet.create({
     wrap: {
@@ -36,7 +36,8 @@ const searchStyles = StyleSheet.create({
         alignItems: 'center'
     },
     textInput: {flex: 1, padding: 0, marginHorizontal: 4},
-    searchIcon: {color: '#000', marginHorizontal: 5, alignItems: 'center'}
+    searchIcon: {color: '#000', marginHorizontal: 5, alignItems: 'center'},
+    cancel: {width: 54, height: 44, alignItems: 'center', justifyContent: 'center'}
 });
 
 const SearchHeader = connect(state => ({}), bindActions({searchRepo}))(
@@ -65,10 +66,7 @@ const SearchHeader = connect(state => ({}), bindActions({searchRepo}))(
             }
             const url = '/search/repositories' + getParams(params)
 
-            return this.setState(pre => {
-                searchRepo({name: searchText, url});
-                return {searchText: ''}
-            })
+            return searchRepo({name: searchText, url});
         } // 当前页面递交搜索内容
 
         render() {
@@ -101,11 +99,9 @@ const SearchHeader = connect(state => ({}), bindActions({searchRepo}))(
                             ) : null
                         }
                     </View>
-                    <TouchableOpacity
-                        style={{width: 54, height: 44, alignItems: 'center', justifyContent: 'center'}}
-                        onPress={() => navigation.goBack()}>
-                        <Text style={{color: '#fff'}}>cancel</Text>
-                    </TouchableOpacity>
+                    <Button style={searchStyles.cancel}
+                            content={<Text style={{color: '#fff'}}>cancel</Text>}
+                            onPress={() => navigation.goBack()}/>
                 </View>
             )
         }
@@ -163,8 +159,6 @@ export default connect(state => ({
                 clear = () => {
                 }
             }
-
-            console.log(this.props.searching)
 
             return (
                 <View style={[styles.sectionBase, styles.sectionWrap]}>

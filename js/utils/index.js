@@ -1,6 +1,7 @@
 import React from 'react';
 import {Dimensions, Platform} from 'react-native'
 
+
 const {width, height} = Dimensions.get('window')
 /**
  * 自适应解决方案 px 2 dp
@@ -31,7 +32,7 @@ global.getParams = (params) => {
 
 global.isEmpty = (o) => {
     if (o instanceof Object) {
-        for (let i in o) {
+        for (const i in o) {
             return false
         }
         return true

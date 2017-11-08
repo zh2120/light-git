@@ -18,8 +18,8 @@ import {
 import {connect} from 'react-redux'
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
-import {searchRepo, bindActions} from '../actions'
-import {openToast} from '../actions/common'
+import {openToast, bindActions} from '../reducers/comReducer'
+import {searchRepo} from '../reducers/searchReducer'
 import {userSignAccept} from '../actions/users'
 
 const UserHead = props => {

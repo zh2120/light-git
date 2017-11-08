@@ -7,7 +7,7 @@
 import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
 import {View, Text, Button, TextInput} from 'react-native'
-import {bindActions} from '../actions'
+import {bindActions} from '../reducers/comReducer'
 
 class User extends PureComponent {
 

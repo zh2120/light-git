@@ -1,11 +1,10 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {View, Text, ScrollView, TextInput, StyleSheet} from 'react-native'
-import {bindActions} from '../../actions/'
-import {openToast} from '../../actions/common'
-import {fileContent, getFileDenied} from '../../actions/repo'
+import {openToast, bindActions} from '../../reducers/comReducer'
+import {fileContent, getFileDenied} from '../../reducers/repoReducer'
 
-export default connect(state => ({file: state.repoContent.file}), bindActions({fileContent, openToast, getFileDenied}))(
+export default connect(state => ({file: state.repoInfo.file}), bindActions({fileContent, openToast, getFileDenied}))(
     class extends Component {
         static navigationOptions = ({navigation}) => {
             const params = navigation.state.params

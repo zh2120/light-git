@@ -8,9 +8,8 @@ import {
 import {connect} from 'react-redux'
 import Octicons from 'react-native-vector-icons/Octicons';
 import {Button} from '../components'
-import {bindActions} from '../actions'
 import {userSignIn, userSignAccept} from '../actions/users'
-import {openToast} from '../actions/common'
+import {openToast, bindActions} from '../reducers/comReducer'
 
 export default connect(state => ({
     disabled: state.userSignInfo.signInPending,

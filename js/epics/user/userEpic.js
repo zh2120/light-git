@@ -1,6 +1,6 @@
 import * as Types from '../../actions/types';
 import {userSignAccept, getUserInfo, userSignDenied, deleteAuth, exit, clearUser} from '../../actions/users';
-import {openToast, putError} from '../../actions/common';
+import {openToast, putError} from '../../reducers/comReducer';
 import {Observable} from 'rxjs/Rx'
 
 export function userSignInEpic(action$, {dispatch}, {put}) {

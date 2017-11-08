@@ -1,14 +1,13 @@
 import * as Types from '../../actions/types';
 import {
-    getRepoContent,
-    getRepoContentDenied,
     getFile,
     getDir,
     getReadme,
     getFileDenied,
-    fileContent
-} from '../../actions/repo';
-import {putError} from '../../actions/common';
+    getRepoContent,
+    getRepoContentDenied,
+} from '../../reducers/repoReducer';
+import {putError} from '../../reducers/comReducer';
 import {Observable} from 'rxjs/Rx'
 
 export function repoContentEpic(action$, {getState, dispatch}, {get}) {
