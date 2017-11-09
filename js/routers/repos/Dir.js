@@ -11,7 +11,7 @@ import {
 import Octicons from 'react-native-vector-icons/Octicons'
 import {openToast, bindActions, back} from '../../reducers/comReducer'
 import {fileContent, popDir, clearDir} from '../../reducers/repoReducer'
-
+import {Loading} from '../../components'
 export default connect(state => ({
     readme: state.repoInfo.readme,
     dirs: state.repoInfo.dirs,
@@ -104,7 +104,7 @@ export default connect(state => ({
         render() {
             const {dirs} = this.props;
 
-            if (this.dirIndex < 0) return null
+            if (this.dirIndex < 0) return <Loading />
 
             return (
                 <View style={styles.wrap}>

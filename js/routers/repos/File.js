@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {View, Text, ScrollView, TextInput, StyleSheet} from 'react-native'
 import {openToast, bindActions} from '../../reducers/comReducer'
 import {fileContent, getFileDenied} from '../../reducers/repoReducer'
-
+import {Loading} from '../../components'
 export default connect(state => ({file: state.repoInfo.file}), bindActions({fileContent, openToast, getFileDenied}))(
     class extends Component {
         static navigationOptions = ({navigation}) => {
@@ -39,7 +39,7 @@ export default connect(state => ({file: state.repoInfo.file}), bindActions({file
         render() {
             const {file} = this.props
 
-            if (isEmpty(file)) return null
+            if (isEmpty(file)) return <Loading />
 
             return (
                 <ScrollView contentContainerStyle={styles.wrap}>

@@ -17,9 +17,9 @@ import {openActionSheet, bindActions, back} from '../../reducers/comReducer'
 
 const pr = 'PR';
 const wiki = 'Wiki';
-const code = 'Code';
-const issues = 'Issues';
-const insights = 'Insights';
+const Code = 'code';
+const Issues = 'issues';
+const Insights = 'insights';
 
 export default connect(state => ({
     nav: state.nav,
@@ -41,15 +41,15 @@ export default connect(state => ({
             const {params} = props.navigation.state
             this.state = {
                 fullName: params ? params.fullName : '',
-                navName: code
+                navName: Code
             }
             this.hasMore = false
             this.navBtns = [
-                {name: code},
-                {name: issues},
+                {name: Code, onPress: this.getRepoCode},
+                {name: Issues, onPress: this.getIssues},
                 // {name: pr},
                 // {name: wiki},
-                // {name: insights},
+                // {name: Insights},
             ]
         }
 
@@ -57,8 +57,7 @@ export default connect(state => ({
             const {fullName} = this.state
 
             if (fullName) {
-                // this.getRepoCode(fullName)
-                this.getIssues(fullName)
+                this.getRepoCode(fullName)
             }
         }
 
@@ -69,16 +68,22 @@ export default connect(state => ({
 
         getRepoCode = (fullName) => {
             const {repoContent} = this.props;
-            const url = '/repos/' + fullName + '/contents' + getParams({ref: 'master'})
+            const url = '/repos/' + fullName + '/contents' + getParams({ref: 'master', page: 1})
 
-            return repoContent(url)
+            return this.setState(() => {
+                repoContent(url)
+                return {navName: Code}
+            })
         }
 
         getIssues = (fullName) => {
             const {getIssue} = this.props;
-            const url = '/repos/' + fullName + '/issues' + getParams({ref: 'master', page: 2})
+            const url = '/repos/' + fullName + '/issues' + getParams({ref: 'master', page: 1})
 
-            return getIssue(url)
+            return this.setState(() => {
+                getIssue(url)
+                return {navName: Issues}
+            })
         }
 
         /**
@@ -122,7 +127,8 @@ export default connect(state => ({
         separator = () => <View style={styles.separator}/>;
 
         renderNav = () => {
-            const {navName} = this.state
+            const {navName, fullName} = this.state
+
             return this.navBtns.map((item, index) => {
                 const cur = navName === item.name
                 return (
@@ -130,7 +136,7 @@ export default connect(state => ({
                         key={index}
                         content={<Text style={{color: cur ? '#e36209' : '#333'}}>{item.name}</Text>}
                         style={styles.navBtn}
-                        onPress={() => cur ? null : this.setState({navName: item.name})}/>
+                        onPress={() => cur ? null : item.onPress(fullName)}/>
                 )
             })
         }
@@ -139,7 +145,7 @@ export default connect(state => ({
             const {navName} = this.state
 
             switch (navName) {
-                case code:
+                case Code:
                     const {content} = this.props;
                     return (
                         <FlatList
@@ -151,10 +157,10 @@ export default connect(state => ({
                             keyExtractor={this.keyExtractor}
                             renderItem={this.renderDirOrFile}/>
                     );
-                case issues:
+                case Issues:
                     const {issuesData} = this.props
-                    console.log('--> ',issuesData)
-                    return ;
+                    console.log('--> ', issuesData)
+                    return;
                 default :
                     return;
             }

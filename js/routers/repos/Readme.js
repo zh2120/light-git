@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {View, StyleSheet, WebView} from 'react-native'
 import {openToast, bindActions} from '../../reducers/comReducer'
 import {fileContent, getFileDenied} from '../../reducers/repoReducer'
-import {html, md} from '../../components'
+import {html, md, Loading} from '../../components'
 
 export default connect(state => ({readme: state.repoInfo.readme}), bindActions({
     fileContent,
@@ -44,7 +44,7 @@ export default connect(state => ({readme: state.repoInfo.readme}), bindActions({
         render() {
             const {readme} = this.props
 
-            if (isEmpty(readme)) return null
+            if (isEmpty(readme)) return <Loading />
 
             return (
                 <View style={styles.wrap}>
