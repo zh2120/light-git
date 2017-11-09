@@ -15,17 +15,20 @@ import Readme from './repos/Readme'
 
 const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
     const defaultHeaderStyle = {
-        backgroundColor: '#fff',
-        elevation: 0,
-        shadowOpacity: 0,
         height: 64,
+        elevation: 0,
         paddingTop: 24,
+        shadowOpacity: 0,
+        borderBottomWidth: 0,
         borderBottomColor: null,
-        borderBottomWidth: 0
+        backgroundColor: 'rgba(30,144,255,0.6)'
     }
-    const tmpStyle = Object.assign({}, defaultHeaderStyle, navigationOptions.headerStyle)
-
-    return Object.assign({}, navigationOptions, {headerStyle: tmpStyle, gesturesEnabled: true})
+    return {
+        ...navigationOptions,
+        gesturesEnabled: true,
+        headerTintColor: '#f7f7f7',
+        headerStyle: {...defaultHeaderStyle, ...navigationOptions.headerStyle}
+    }
 };
 
 const MainRouters = {
@@ -80,7 +83,7 @@ const Navigator = StackNavigator(MainRouters, {
     ...transitions
 });
 
-const initialState = Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams('Home'))
+const initialState = Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams('Search'))
 
 export const navReducer = (state = initialState, action) => {
     switch (action.type) {

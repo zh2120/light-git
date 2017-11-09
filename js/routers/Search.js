@@ -14,7 +14,7 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Octicons from 'react-native-vector-icons/Octicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import {Button} from '../components'
+import {Button, Loading} from '../components'
 import {bindActions} from '../reducers/comReducer'
 import {searchRepo} from '../reducers/searchReducer'
 
@@ -124,18 +124,6 @@ export default connect(state => ({
             }
         }
 
-        componentWillReceiveProps(nextProps) {
-            const {searching} = this.props;
-
-            if (searching !== nextProps.searching) {
-
-            }
-        }
-
-        componentWillUnmount() {
-
-        }
-
         reSearch = (item) => this.setState(pre => {
             this.props.searchRepo(item)
 
@@ -165,10 +153,6 @@ export default connect(state => ({
                     <View style={styles.sectionBase}>
                         <EvilIcons name={leftIconName} size={28}/>
                         <Text style={{marginRight: 12}}>{title}</Text>
-                        {
-                            section.type === 'repos' ? (
-                                <ActivityIndicator animating={this.props.searching} color={'#0366d6'}/>) : null
-                        }
                     </View>
                     <TouchableOpacity onPress={clear}>
                         <View style={styles.sectionBase}>
@@ -254,24 +238,28 @@ export default connect(state => ({
 
         render() {
             const {recordOpen} = this.state;
-            const {repos, history} = this.props;
+            const {repos, history, searching} = this.props;
             const effectiveHiStory = recordOpen ? history : []; // 可用的历史，隐藏或者展示
 
             return (
                 <View style={{backgroundColor: '#fff', flex: 1,}}>
-                    <SectionList
-                        ItemSeparatorComponent={() => (<View style={styles.separator}/>)}
-                        showsVerticalScrollIndicator={false}
-                        style={{marginTop: 16}}
-                        stickySectionHeadersEnabled={true}
-                        renderSectionHeader={this.renderSectionHeader}
-                        keyExtractor={this.keyExtractor}
-                        ListEmptyComponent={<View><Text>暂无数据</Text></View>}
-                        sections={[ // 不同section渲染不同类型的子组件
-                            {data: effectiveHiStory, renderItem: this.renderHistoryItem, type: 'history'},
-                            {data: repos, renderItem: this.renderReposItem, type: 'repos'},
-                        ]}
-                    />
+                    {
+                        searching
+                            ? <Loading name={'cursor'}/>
+                            : <SectionList
+                                ItemSeparatorComponent={() => (<View style={styles.separator}/>)}
+                                showsVerticalScrollIndicator={false}
+                                style={{marginTop: 16}}
+                                stickySectionHeadersEnabled={true}
+                                renderSectionHeader={this.renderSectionHeader}
+                                keyExtractor={this.keyExtractor}
+                                ListEmptyComponent={<View><Text>暂无数据</Text></View>}
+                                sections={[ // 不同section渲染不同类型的子组件
+                                    {data: effectiveHiStory, renderItem: this.renderHistoryItem, type: 'history'},
+                                    {data: repos, renderItem: this.renderReposItem, type: 'repos'},
+                                ]}
+                            />
+                    }
                 </View>
             )
         }

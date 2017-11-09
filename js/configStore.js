@@ -13,7 +13,7 @@ const epicMiddleware = createEpicMiddleware(rootEpic, {
 const reducer = persistCombineReducers({
     key: 'light-git-root',
     storage,
-    whitelist: ['userSignInfo', 'userInfo', 'searchInfo'],
+    whitelist: ['userSignInfo', 'userInfo', 'searchInfo', 'repoInfo'],
 }, rootReducer)
 
 export default (initialState) => {

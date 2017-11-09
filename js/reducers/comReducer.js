@@ -43,7 +43,7 @@ export const openActionSheet = (actions) => ({type: ComTypes.OPEN_ACTIONSHEET, p
  */
 export const closeActionSheet = () => ({type: ComTypes.CLOESE_ACTIONSHEET})
 
-export default comInfo = (state = {toastOpened: false, text: '', success: false, actionSheetOpen: false}, action) => {
+export default (state = {toastOpened: false, text: '', success: false, actionSheetOpen: false}, action) => {
     switch (action.type) {
         case ComTypes.OPEN_TOAST:
             return {...state, toastOpened: true, text: action.payload.text, success: true}

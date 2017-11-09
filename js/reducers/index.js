@@ -1,14 +1,16 @@
-import {userInfo, userSignInfo} from './userReducer';
-import searchInfo from './searchReducer'
 import comInfo from './comReducer'
 import repoInfo from './repoReducer'
 import {navReducer} from '../routers'
+import issueInfo from './issueReducer'
+import searchInfo from './searchReducer'
+import {userInfo, userSignInfo} from './userReducer';
 
 export default {
-    nav: navReducer,
-    userInfo,
-    userSignInfo,
-    searchInfo,
     comInfo,
-    repoInfo
+    repoInfo,
+    userInfo,
+    issueInfo,
+    searchInfo,
+    userSignInfo,
+    nav: navReducer
 }

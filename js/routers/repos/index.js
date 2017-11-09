@@ -9,17 +9,25 @@ import {
     TouchableOpacity,
 } from 'react-native'
 import Octicons from 'react-native-vector-icons/Octicons'
-import {Button} from '../../components'
 
-import {repoContent, fileContent, popDir, clearDir} from '../../reducers/repoReducer'
-import {openToast, openActionSheet, bindActions, back} from '../../reducers/comReducer'
+import {Button, Loading} from '../../components'
+import {repoContent, clearDir} from '../../reducers/repoReducer'
+import {getIssue} from '../../reducers/issueReducer'
+import {openActionSheet, bindActions, back} from '../../reducers/comReducer'
+
+const pr = 'PR';
+const wiki = 'Wiki';
+const code = 'Code';
+const issues = 'Issues';
+const insights = 'Insights';
 
 export default connect(state => ({
-    content: state.repoInfo.content,
-    readme: state.repoInfo.readme,
+    nav: state.nav,
     dirs: state.repoInfo.dirs,
-    nav: state.nav
-}), bindActions({repoContent, fileContent, openToast, popDir, clearDir, back, openActionSheet}))(
+    readme: state.repoInfo.readme,
+    content: state.repoInfo.content,
+    issuesData: state.issueInfo.issues
+}), bindActions({repoContent, clearDir, back, openActionSheet, getIssue}))(
     class extends PureComponent {
         static navigationOptions = ({navigation}) => {
             const params = navigation.state.params;
@@ -32,27 +40,45 @@ export default connect(state => ({
             super(props);
             const {params} = props.navigation.state
             this.state = {
-                fullName: params ? params.fullName : ''
+                fullName: params ? params.fullName : '',
+                navName: code
             }
             this.hasMore = false
+            this.navBtns = [
+                {name: code},
+                {name: issues},
+                // {name: pr},
+                // {name: wiki},
+                // {name: insights},
+            ]
         }
 
         componentWillMount() {
             const {fullName} = this.state
-            const {repoContent} = this.props;
 
             if (fullName) {
-                repoContent({fullName})
+                // this.getRepoCode(fullName)
+                this.getIssues(fullName)
             }
-        }
-
-        componentWillReceiveProps(nextProps) {
-
         }
 
         componentWillUnmount() {
             // todo 清理仓库主页
             this.props.clearDir()
+        }
+
+        getRepoCode = (fullName) => {
+            const {repoContent} = this.props;
+            const url = '/repos/' + fullName + '/contents' + getParams({ref: 'master'})
+
+            return repoContent(url)
+        }
+
+        getIssues = (fullName) => {
+            const {getIssue} = this.props;
+            const url = '/repos/' + fullName + '/issues' + getParams({ref: 'master', page: 2})
+
+            return getIssue(url)
         }
 
         /**
@@ -77,7 +103,6 @@ export default connect(state => ({
             return (
                 <TouchableOpacity
                     onPress={() => isDir
-                        // ? this.getDir({fullName: this.state.fullName, path, name})
                         ? navigation.navigate('RepoDir', {fullName: this.state.fullName, name, path})
                         : navigation.navigate('RepoFile', {fullName: this.state.fullName, path, type})}>
 
@@ -88,7 +113,6 @@ export default connect(state => ({
                         </Text>
                     </View>
                 </TouchableOpacity>
-
             )
         };
 
@@ -97,57 +121,87 @@ export default connect(state => ({
          */
         separator = () => <View style={styles.separator}/>;
 
-        /**
-         * 列表头
-         */
-        repoHeader = () =>
-            <View>
-                <View style={styles.starWrap}>
-                    <Button icon={<Octicons name={'triangle-down'} size={18}/>}
-                            content={<Text>Branch: master</Text>}
-                            style={styles.starButton} onPress={this.props.openActionSheet}/>
-                    <Button icon={<Octicons name={'star'} size={18}/>}
-                            content={<Text>Unstar: 232</Text>}
-                            style={styles.starButton} onPress={() => this.props.openToast('sss')}/>
+        renderNav = () => {
+            const {navName} = this.state
+            return this.navBtns.map((item, index) => {
+                const cur = navName === item.name
+                return (
+                    <Button
+                        key={index}
+                        content={<Text style={{color: cur ? '#e36209' : '#333'}}>{item.name}</Text>}
+                        style={styles.navBtn}
+                        onPress={() => cur ? null : this.setState({navName: item.name})}/>
+                )
+            })
+        }
 
-                </View>
-                <Button style={{width: '100%', height: 56}} content={<Text>README</Text>}
-                        onPress={() => this.props.navigation.navigate('Readme',
-                            {fullName: this.state.fullName, path: 'README.md'})}/>
-            </View>
+        renderNacContainer = () => {
+            const {navName} = this.state
+
+            switch (navName) {
+                case code:
+                    const {content} = this.props;
+                    return (
+                        <FlatList
+                            horizontal={false}
+                            data={content}
+                            showsVerticalScrollIndicator={false}
+                            ItemSeparatorComponent={this.separator}
+                            contentContainerStyle={{padding: 14}}
+                            keyExtractor={this.keyExtractor}
+                            renderItem={this.renderDirOrFile}/>
+                    );
+                case issues:
+                    const {issuesData} = this.props
+                    console.log('--> ',issuesData)
+                    return ;
+                default :
+                    return;
+            }
+        }
 
         render() {
             const {content} = this.props;
 
             return (
                 <View style={styles.wrap}>
-                    <FlatList
-                        horizontal={false}
-                        data={content}
-                        style={{width: vw, height: vh}}
-                        showsVerticalScrollIndicator={false}
-                        ItemSeparatorComponent={this.separator}
-                        contentContainerStyle={{padding: 14}}
-                        ListHeaderComponent={this.repoHeader}
-                        keyExtractor={this.keyExtractor}
-                        renderItem={this.renderDirOrFile}/>
+                    <View style={styles.navBox}>
+                        {this.renderNav()}
+                    </View>
+                    {
+                        isEmpty(content)
+                            ? <Loading/>
+                            : this.renderNacContainer()
+                    }
                 </View>
             )
         }
     })
 
-const styles = StyleSheet.create({
+const styles = {
     wrap: {flex: 1, backgroundColor: '#fff'},
     starWrap: {
         flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
         marginVertical: 12
     },
     starButton: {
-        overflow: 'hidden',
-        paddingHorizontal: 10,
-        paddingVertical: 6,
         borderRadius: 2,
+        marginBottom: 8,
+        overflow: 'hidden',
+        paddingVertical: 6,
+        paddingHorizontal: 10,
         borderWidth: StyleSheet.hairlineWidth
+    },
+    navBox: {
+        height: 36,
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#f7f7f7'
+    },
+    navBtn: {
+        flex: 1,
+        height: '100%'
     },
     contentRow: {flexDirection: 'row', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 4},
     separator: {
@@ -155,4 +209,4 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(10,10,10, 0.2)'
     },
     contentName: {marginLeft: 6}
-});
+};

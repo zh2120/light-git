@@ -9,6 +9,8 @@ import 'rxjs/add/operator/catch'
 import 'rxjs/add/operator/switchMap'
 import 'rxjs/add/operator/takeUntil'
 import 'rxjs/add/operator/filter'
+import 'rxjs/add/operator/reduce'
+import 'rxjs/add/operator/mapTo'
 import {PersistGate} from 'redux-persist/es/integration/react'
 
 import StacksInDrawer from './routers/index'

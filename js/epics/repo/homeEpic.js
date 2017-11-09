@@ -1,25 +1,21 @@
-
 import {
     getFile,
     getDir,
     getReadme,
+    RepoTypes,
     getFileDenied,
     getRepoContent,
     getRepoContentDenied,
 } from '../../reducers/repoReducer';
 import {putError} from '../../reducers/comReducer';
-import {RepoTypes} from '../../reducers/repoReducer'
 import {Observable} from 'rxjs/Rx'
 
 export function repoContentEpic(action$, {getState, dispatch}, {get}) {
     return action$.ofType(RepoTypes.REPO_HOME)
         .switchMap(action => {
-            const {fullName, ref} = action.payload
+            const {url} = action.payload
             const auth = getState().userSignInfo.auth
             // const headers = {"Authorization": `token ${auth && auth.token}`}
-            const url = '/repos/' + fullName + '/contents' + getParams({ref})
-
-            // return get(url, headers)
             return get(url, null)
                 .map(res => res.response || res)
                 .map(content => {
