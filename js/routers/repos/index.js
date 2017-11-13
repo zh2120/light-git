@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {
     View,
     Text,
-    WebView,
+    Image,
     FlatList,
     StyleSheet,
     TouchableOpacity,
@@ -94,6 +94,41 @@ export default connect(state => ({
         keyExtractor = (item, index) => 'dirORFile' + index;
 
         /**
+         * 行分隔线
+         */
+        separator = () => <View style={styles.separator}/>;
+
+        /**
+         * 渲染导航栏
+         * @returns {Array} 导航按钮组
+         */
+        renderNav = () => {
+            const {navName, fullName} = this.state
+
+            return this.navBtns.map((item, index) => {
+                const cur = navName === item.name
+                return (
+                    <Button
+                        key={index}
+                        content={<Text style={{color: cur ? '#e36209' : '#333'}}>{item.name}</Text>}
+                        style={styles.navBtn}
+                        onPress={() => cur ? null : item.onPress(fullName)}/>
+                )
+            })
+        }
+
+        /**
+         * 列表通用属性
+         */
+        listProps = {
+            horizontal: false,
+            keyExtractor: this.keyExtractor,
+            showsVerticalScrollIndicator: false,
+            contentContainerStyle: {padding: 14},
+            ItemSeparatorComponent: this.separator
+        };
+
+        /**
          * 渲染目录或者文件
          * @param item 每行元素
          * @returns {XML}
@@ -123,27 +158,26 @@ export default connect(state => ({
             )
         };
 
-        /**
-         * 行分隔线
-         */
-        separator = () => <View style={styles.separator}/>;
 
-        renderNav = () => {
-            const {navName, fullName} = this.state
+        renderIssues = ({item}) => {
+            const {title, user, comments} = item
 
-            return this.navBtns.map((item, index) => {
-                const cur = navName === item.name
-                return (
-                    <Button
-                        key={index}
-                        content={<Text style={{color: cur ? '#e36209' : '#333'}}>{item.name}</Text>}
-                        style={styles.navBtn}
-                        onPress={() => cur ? null : item.onPress(fullName)}/>
-                )
-            })
+            return (
+                <View style={styles.issueBox}>
+                    <Image source={{uri: user.avater_url}} style={styles.avatarBox}/>
+                    <View style={styles.issueDescBox}>
+                        <Text>{title}</Text>
+                    </View>
+                    <Text>{comments}</Text>
+                </View>
+            )
         }
 
-        renderNacContainer = () => {
+        /**
+         * 渲染导航对应的内容
+         * @returns {XML}
+         */
+        renderNavContainer = () => {
             const {navName} = this.state
 
             switch (navName) {
@@ -151,18 +185,20 @@ export default connect(state => ({
                     const {content} = this.props;
                     return (
                         <FlatList
-                            horizontal={false}
                             data={content}
-                            showsVerticalScrollIndicator={false}
-                            ItemSeparatorComponent={this.separator}
-                            contentContainerStyle={{padding: 14}}
-                            keyExtractor={this.keyExtractor}
-                            renderItem={this.renderDirOrFile}/>
+                            renderItem={this.renderDirOrFile}
+                            {...this.listProps}/>
                     );
                 case Issues:
                     const {issuesData} = this.props
                     console.log('--> ', issuesData)
-                    return;
+
+                    return (
+                        <FlatList
+                            data={issuesData}
+                            renderItem={this.renderIssues}
+                            {...this.listProps}/>
+                    );
                 default :
                     return;
             }
@@ -179,7 +215,7 @@ export default connect(state => ({
                     {
                         isEmpty(content)
                             ? <Loading/>
-                            : this.renderNacContainer()
+                            : this.renderNavContainer()
                     }
                 </View>
             )
@@ -216,5 +252,8 @@ const styles = {
         height: StyleSheet.hairlineWidth,
         backgroundColor: 'rgba(10,10,10, 0.2)'
     },
-    contentName: {marginLeft: 6}
+    contentName: {marginLeft: 6},
+    issueBox: {flexDirection: 'row', alignItems: 'flex-start'},
+    avatarBox: {width: 32, height: 32, borderRadius: 16},
+    issueDescBox: {flex:1}
 };

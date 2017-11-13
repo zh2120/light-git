@@ -15,7 +15,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import Octicons from 'react-native-vector-icons/Octicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import {Button, Loading} from '../components'
-import {bindActions} from '../reducers/comReducer'
+import {bindActions, openToast} from '../reducers/comReducer'
 import {searchRepo} from '../reducers/searchReducer'
 
 const searchStyles = StyleSheet.create({
@@ -40,7 +40,7 @@ const searchStyles = StyleSheet.create({
     cancel: {width: 54, height: 44, alignItems: 'center', justifyContent: 'center'}
 });
 
-const SearchHeader = connect(state => ({}), bindActions({searchRepo}))(
+const SearchHeader = connect(state => ({}), bindActions({searchRepo, openToast}))(
     class extends Component {
         constructor(props) {
             super(props);
@@ -59,14 +59,18 @@ const SearchHeader = connect(state => ({}), bindActions({searchRepo}))(
         changeText = (text) => this.setState({searchText: text});
 
         searchSubmit = (searchText) => {
-            const {searchRepo} = this.props
+            const {searchRepo, openToast} = this.props
             const params = {
-                q: searchText,
+                q: searchText.replace(/^\s+|\s+$/g,''),
                 sort: 'star'
             }
-            const url = '/search/repositories' + getParams(params)
+            if (params.q.length > 0) {
+                const url = '/search/repositories' + getParams(params)
 
-            return searchRepo({name: searchText, url});
+                return searchRepo({name: searchText, url});
+            }
+            return openToast('Input Content')
+
         } // 当前页面递交搜索内容
 
         render() {

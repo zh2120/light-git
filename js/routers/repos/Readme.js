@@ -4,7 +4,7 @@ import {View, StyleSheet, WebView} from 'react-native'
 import {openToast, bindActions} from '../../reducers/comReducer'
 import {fileContent, getFileDenied} from '../../reducers/repoReducer'
 import {html, md, Loading} from '../../components'
-import HTMLView  from 'react-native-htmlview'
+
 export default connect(state => ({readme: state.repoInfo.readme}), bindActions({
     fileContent,
     openToast,
@@ -44,21 +44,15 @@ export default connect(state => ({readme: state.repoInfo.readme}), bindActions({
         render() {
             const {readme} = this.props
 
-            console.log(readme)
             if (!readme) return <Loading />
 
             return (
-                <HTMLView
-                    value={md(readme)}
-                />
+                <View style={styles.wrap}>
+                    <WebView
+                        userAgent={'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.75 Safari/537.36'}
+                        source={{html: html(md(readme))}}/>
+                </View>
             )
-            // return (
-            //     <View style={styles.wrap}>
-            //         <WebView
-            //             userAgent={'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.75 Safari/537.36'}
-            //             source={{html: html(md(readme))}}/>
-            //     </View>
-            // )
         }
     }
 )
