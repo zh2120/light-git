@@ -10,13 +10,13 @@ import {
 import {putError} from '../../reducers/comReducer';
 import {Observable} from 'rxjs/Rx'
 
-export function repoContentEpic(action$, {getState, dispatch}, {get}) {
+export function repoContentEpic(action$, {getState, dispatch}, {get}) { // 请求主仓库目录内容
     return action$.ofType(RepoTypes.REPO_HOME)
         .switchMap(action => {
             const {url} = action.payload
             const auth = getState().userSignInfo.auth
             // const headers = {"Authorization": `token ${auth && auth.token}`}
-            return get(url, null)
+            return get(url)
                 .map(res => res.response || res)
                 .map(content => {
                     if (content instanceof Array) {
@@ -53,11 +53,14 @@ export function repoFileEpic(action$, {getState, dispatch}, {get}) {
                 "Accept": "application/vnd.github.v3.raw+json"
             }
             const url = '/repos/' + fullName + '/contents/' + path + getParams({ref})
-            const apiConfig = type === 'dir' ? {} :{responseType: 'text'} // 不是目录，请求文件内容
-
+            const apiConfig = type === 'dir' ? {} : {responseType: 'text'} // 不是目录，请求文件内容
+            // todo 某些文件只有json格式
             // return get(url, headers, apiConfig)
-            return get(url, headers, apiConfig)
-                .map(res => res.response || res)
+            return get(url, null, headers, apiConfig)
+                .map(res => {
+                    console.log(res)
+                    return res.response || res
+                })
                 .map(file => {
                     if (file instanceof Array) {
                         file.sort((pre, next) => {
@@ -76,7 +79,7 @@ export function repoFileEpic(action$, {getState, dispatch}, {get}) {
                 .catch(e => {
                     console.log('repoFileEpic', e)
                     let message = '获取文件，失败。网络状况不佳，请稍后在试'
-                    if(e.status === 404) {
+                    if (e.status === 404) {
                         message = '作者有点懒，仓库没有找到README...'
                     }
                     dispatch(getFileDenied()) // 重置搜索状态

@@ -39,6 +39,8 @@ export default connect(state => ({file: state.repoInfo.file}), bindActions({file
         render() {
             const {file} = this.props
 
+            console.log(file)
+
             if (isEmpty(file)) return <Loading />
 
             return (

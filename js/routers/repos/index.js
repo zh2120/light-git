@@ -109,7 +109,9 @@ export default connect(state => ({
                 <TouchableOpacity
                     onPress={() => isDir
                         ? navigation.navigate('RepoDir', {fullName: this.state.fullName, name, path})
-                        : navigation.navigate('RepoFile', {fullName: this.state.fullName, path, type})}>
+                        : item.name === 'README.md'
+                            ? navigation.navigate('Readme', {fullName: this.state.fullName, path, type})
+                            : navigation.navigate('RepoFile', {fullName: this.state.fullName, path, type})}>
 
                     <View style={styles.contentRow}>
                         <Octicons name={isDir ? 'file-directory' : 'file'} size={24} style={{color: '#888'}}/>

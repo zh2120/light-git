@@ -25,14 +25,18 @@ export default (initialState) => {
     const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(...middleWares)))
     const persistor = persistStore(store)
 
-    // persistor.purge()
+    persistor.purge()
 
     if (module.hot) {
-        module.hot.accept( './epics', () => {
+        const acceptCallback = () => {
             const nextRootEpic = require('./epics/index').default;
             epicMiddleware.replaceEpic(nextRootEpic);
-        })
+        }
+
+        module.hot.accept('./epics')
+        module.hot.acceptCallback = acceptCallback
     }
+
 
     return {persistor, store}
 }

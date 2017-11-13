@@ -73,7 +73,7 @@ export const popDir = (dirs) => ({type: RepoTypes.DIR_POP, payload: {dirs}})
 export const clearDir = () => ({type: RepoTypes.CLEAR_DIR})
 
 
-export default (state = {getting: false, content: [], file: {}, readme: {}, dirs: []}, action) =>  {
+export default (state = {getting: false, content: [], file: {}, readme: '', dirs: []}, action) =>  {
     switch (action.type) {
         case RepoTypes.REPO_HOME: // 请求库主内容，文件或者目录
             return {...state, getting: true}
