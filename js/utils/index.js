@@ -3,13 +3,7 @@ import {Dimensions, Platform} from 'react-native'
 
 
 const {width, height} = Dimensions.get('window')
-/**
- * 自适应解决方案 px 2 dp
- * @param px {Number} 设计图像素
- * @param useHeight {Boolean} 是否使用高度比
- * @returns {number}
 
- */
 global.dp = function (px, useHeight = false) {
     return px * (useHeight ? height / 667 : width / 375)
 }

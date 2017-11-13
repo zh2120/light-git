@@ -1,75 +1,35 @@
 import {ajax} from 'rxjs/observable/dom/ajax';
 
-const requestConfig = {
-    timeout: 30000,
-    body: null,
-    method: "GET",
-    url: "https://api.github.com",
-    headers: {
+function create(baseUrl) {
 
+    const time = 30000
+    const defaultHeaders = {
         "Content-Type": "application/vnd.github.v3+json",
-        "Accept": "application/vnd.github.v3+json"
+        "Accept": "application/vnd.github.v3+json",
     }
-};
+    const apiArr = ["GET", "DELETE", "PATCH", "PUT", "POST"]
+    const api = {}
 
-export const get = (url, headers, config) => {
-    return new ajax(Object.assign({}, requestConfig, {
-        ...config,
-        url: requestConfig.url + url,
-        headers: {
-            "Content-Type": "application/vnd.github.mercy-preview+json",
-            ...headers
+    for (let i = 0; i < apiArr.length; i++) {
+        if (apiArr[i] === "GET" || apiArr[i] === "DELETE") {
+            api[apiArr[i].toLowerCase()] = (url, headers, config) => new ajax({
+                time, ...config, url: baseUrl + url, headers: {
+                    ...headers,
+                    ...defaultHeaders
+                }
+            })
         }
-    }))
-};
+        api[apiArr[i].toLowerCase()] = (url, body, headers, config) => new ajax({
+            body, time, ...config,
+            url: baseUrl + url,
+            headers: {
+                ...headers,
+                ...defaultHeaders
+            }
+        })
+    }
 
-export const put = (url, body, headers, config) => {
-    return new ajax(Object.assign({}, requestConfig, {
-        ...config,
-        body: JSON.stringify(body),
-        method: "PUT",
-        url: requestConfig.url + url,
-        headers: {
-            "Content-Type": "application/vnd.github.mercy-preview+json",
-            ...headers
-        }
-    }))
-};
+    return api
+}
 
-export const Delete = (url, headers, config) => {
-    return new ajax(Object.assign({}, requestConfig, {
-        ...config,
-        method: "DELETE",
-        url: requestConfig.url + url,
-        headers: {
-            "Content-Type": "application/vnd.github.mercy-preview+json",
-            ...headers
-        }
-    }))
-};
-
-export const post = (url, body, headers, config) => {
-    return new ajax(Object.assign({}, requestConfig, {
-        ...config,
-        body: JSON.stringify(body),
-        method: "POST",
-        url: requestConfig.url + url,
-        headers: {
-            "Content-Type": "application/vnd.github.mercy-preview+json",
-            ...headers
-        }
-    }))
-};
-
-export const patch = (url, body, headers, config) => {
-    return new ajax(Object.assign({}, requestConfig, {
-        ...config,
-        body: JSON.stringify(body),
-        method: "PATCH",
-        url: requestConfig.url + url,
-        headers: {
-            "Content-Type": "application/vnd.github.mercy-preview+json",
-            ...headers
-        }
-    }))
-};
+export default create("https://api.github.com")

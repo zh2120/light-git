@@ -4,10 +4,12 @@ import {createEpicMiddleware} from 'redux-observable';
 import storage from 'redux-persist/lib/storage'
 import rootReducer from './reducers'
 import rootEpic from './epics'
-import {put, get, Delete, post, patch} from './utils/api'
+// import {put, get, Delete, post, patch} from './utils/api'
+import api from './utils/api'
 
 const epicMiddleware = createEpicMiddleware(rootEpic, {
-    dependencies: {get, put, post, patch, delete: Delete}
+    dependencies: {get: api.get, put: api.put, post: api.post, patch: api.patch, delete: api.delete}
+    // dependencies: {get, put, post, patch, delete: Delete}
 });
 
 const reducer = persistCombineReducers({
@@ -24,6 +26,13 @@ export default (initialState) => {
     const persistor = persistStore(store)
 
     // persistor.purge()
+
+    if (module.hot) {
+        module.hot.accept( './epics', () => {
+            const nextRootEpic = require('./epics/index').default;
+            epicMiddleware.replaceEpic(nextRootEpic);
+        })
+    }
 
     return {persistor, store}
 }
