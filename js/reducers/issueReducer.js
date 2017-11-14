@@ -21,7 +21,7 @@ export default (state = {getting: false, issues: []}, action) => {
             return {...state, getting: true}
 
         case IssueTypes.ISSUE:
-            return {...state, issues: [...state.issues, ...action.payload.data], getting: false}
+            return {...state, issues: [...action.payload.data], getting: false}
 
         case IssueTypes.ERR_ISSUE:
             return {...state, issues: [], getting: false}

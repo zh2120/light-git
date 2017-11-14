@@ -6,7 +6,9 @@ import {
     Image,
     FlatList,
     StyleSheet,
+    RefreshControl,
     TouchableOpacity,
+    TouchableHighlight,
 } from 'react-native'
 import Octicons from 'react-native-vector-icons/Octicons'
 
@@ -17,7 +19,7 @@ import {openActionSheet, bindActions, back} from '../../reducers/comReducer'
 
 const pr = 'PR';
 const wiki = 'Wiki';
-const Code = 'code';
+const Code = 'contents';
 const Issues = 'issues';
 const Insights = 'insights';
 
@@ -40,50 +42,80 @@ export default connect(state => ({
             super(props);
             const {params} = props.navigation.state
             this.state = {
-                fullName: params ? params.fullName : '',
-                navName: Issues
+                navName: Issues,
+                isRefreshing: false,
+                fullName: params ? params.fullName : ''
             }
             this.hasMore = false
             this.navBtns = [
-                {name: Code, onPress: this.getRepoCode},
-                {name: Issues, onPress: this.getIssues},
+                {name: Code},
+                {name: Issues},
                 // {name: pr},
                 // {name: wiki},
                 // {name: Insights},
             ]
+
+            /**
+             * 列表通用属性
+             */
+            this.listProps = {
+                horizontal: false,
+                keyExtractor: this.keyExtractor,
+                refreshControl: <RefreshControl
+                    refreshing={this.state.isRefreshing}
+                    onRefresh={this.onRefreshing}
+                    tintColor="#ff0000"
+                    title="Loading..."
+                    titleColor="#00ff00"
+                    colors={['#ff0000', '#00ff00', '#0000ff']}
+                    progressBackgroundColor="#ffff00"
+                />,
+                showsVerticalScrollIndicator: false,
+                ItemSeparatorComponent: this.separator,
+                contentContainerStyle: {paddingVertical: 14},
+                ListEmptyComponent: () => <View style={{height: dp(250)}}><Loading/></View>
+            };
         }
 
-        componentWillMount() {
-            const {fullName} = this.state
+        componentDidMount() {
+            const {fullName, navName} = this.state
 
             if (fullName) {
-                // this.getRepoCode(fullName)
-                this.getIssues(fullName)
+                console.log(0)
+                this.getNavContent(fullName, navName)
             }
         }
+
 
         componentWillUnmount() {
             // todo 清理仓库主页
             this.props.clearDir()
         }
 
-        getRepoCode = (fullName) => {
-            const {repoContent} = this.props;
-            const url = '/repos/' + fullName + '/contents' + getParams({ref: 'master', page: 1})
+        /**
+         *
+         * @param fullName
+         * @param type contents | issues
+         * @returns {*}
+         */
+        getNavContent = (fullName, type) => {
+            const {getIssue, repoContent} = this.props
+            const url = '/repos/' + fullName + `/${type}` + getParams({ref: 'master', page: 1})
+            let press
 
-            return this.setState(() => {
-                repoContent(url)
-                return {navName: Code}
-            })
-        }
+            switch (type) {
+                case Code:
+                    press = repoContent;
+                    break
+                case Issues:
+                    press = getIssue;
+                    break
+            }
+            return this.setState((pre) => {
+                press(url)
+                if (pre.navName === type) return;
 
-        getIssues = (fullName) => {
-            const {getIssue} = this.props;
-            const url = '/repos/' + fullName + '/issues' + getParams({ref: 'master', page: 1})
-
-            return this.setState(() => {
-                getIssue(url)
-                return {navName: Issues}
+                return {navName: type}
             })
         }
 
@@ -105,7 +137,7 @@ export default connect(state => ({
          */
         renderNav = () => {
             const {navName, fullName} = this.state
-
+            console.log(4)
             return this.navBtns.map((item, index) => {
                 const cur = navName === item.name
                 return (
@@ -113,21 +145,19 @@ export default connect(state => ({
                         key={index}
                         content={<Text style={{color: cur ? '#e36209' : '#333'}}>{item.name}</Text>}
                         style={styles.navBtn}
-                        onPress={() => cur ? null : item.onPress(fullName)}/>
+                        onPress={() => cur ? null : this.getNavContent(fullName, item.name)}/>
                 )
             })
         }
 
-        /**
-         * 列表通用属性
-         */
-        listProps = {
-            horizontal: false,
-            keyExtractor: this.keyExtractor,
-            showsVerticalScrollIndicator: false,
-            contentContainerStyle: {padding: 14},
-            ItemSeparatorComponent: this.separator
-        };
+        onRefreshing = () => {
+            const {fullName, navName, isRefreshing} = this.state
+
+            // return !isRefreshing && this.setState((pre) => {
+            // this.getNavContent(fullName, navName)
+            //     return {isRefreshing: !pre.isRefreshing}
+            // })
+        }
 
         /**
          * 渲染目录或者文件
@@ -159,18 +189,25 @@ export default connect(state => ({
             )
         };
 
-
+        /**
+         * 渲染问题列表
+         * @param item
+         * @returns {XML}
+         */
         renderIssues = ({item}) => {
             const {title, user, comments} = item
 
             return (
-                <View style={styles.issueBox}>
-                    <Image source={{uri: user.avater_url}} style={styles.avatarBox}/>
-                    <View style={styles.issueDescBox}>
-                        <Text>{title}</Text>
+                <TouchableHighlight onPress={() => {
+                }} underlayColor={'rgba(100,100,100 ,0.1)'}>
+                    <View style={styles.issueBox}>
+                        <Image source={{uri: user.avatar_url}} style={styles.avatarBox}/>
+                        <View style={styles.issueDescBox}>
+                            <Text style={styles.titleText}>{title}</Text>
+                        </View>
+                        <Text style={styles.titleText}>{comments}</Text>
                     </View>
-                    <Text>{comments}</Text>
-                </View>
+                </TouchableHighlight>
             )
         }
 
@@ -192,7 +229,6 @@ export default connect(state => ({
                     );
                 case Issues:
                     const {issuesData} = this.props
-                    console.log('--> ', issuesData)
 
                     return (
                         <FlatList
@@ -206,17 +242,13 @@ export default connect(state => ({
         }
 
         render() {
-            const {content} = this.props;
-
             return (
                 <View style={styles.wrap}>
                     <View style={styles.navBox}>
                         {this.renderNav()}
                     </View>
                     {
-                        isEmpty(content)
-                            ? <Loading/>
-                            : this.renderNavContainer()
+                        this.renderNavContainer()
                     }
                 </View>
             )
@@ -248,13 +280,14 @@ const styles = {
         flex: 1,
         height: '100%'
     },
-    contentRow: {flexDirection: 'row', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 4},
+    contentRow: {flexDirection: 'row', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 16},
     separator: {
         height: StyleSheet.hairlineWidth,
         backgroundColor: 'rgba(10,10,10, 0.2)'
     },
     contentName: {marginLeft: 6},
-    issueBox: {flexDirection: 'row', alignItems: 'flex-start'},
+    issueBox: {flexDirection: 'row', alignItems: 'flex-start', height: 72, marginTop: 10, paddingHorizontal: 16},
     avatarBox: {width: 32, height: 32, borderRadius: 16},
-    issueDescBox: {flex:1}
+    titleText: {fontSize: 16, color: '#333'},
+    issueDescBox: {flex: 1, marginHorizontal: 16}
 };
