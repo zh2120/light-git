@@ -7,6 +7,8 @@ import rootEpic from './epics'
 // import {put, get, Delete, post, patch} from './utils/api'
 import api from './utils/api'
 
+console.log(api)
+
 const epicMiddleware = createEpicMiddleware(rootEpic, {
     dependencies: {get: api.get, put: api.put, post: api.post, patch: api.patch, delete: api.delete}
     // dependencies: {get, put, post, patch, delete: Delete}
@@ -25,7 +27,7 @@ export default (initialState) => {
     const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(...middleWares)))
     const persistor = persistStore(store)
 
-    persistor.purge()
+    // persistor.purge()
 
     if (module.hot) {
         const acceptCallback = () => {

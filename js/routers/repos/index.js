@@ -41,7 +41,7 @@ export default connect(state => ({
             const {params} = props.navigation.state
             this.state = {
                 fullName: params ? params.fullName : '',
-                navName: Code
+                navName: Issues
             }
             this.hasMore = false
             this.navBtns = [
@@ -57,7 +57,8 @@ export default connect(state => ({
             const {fullName} = this.state
 
             if (fullName) {
-                this.getRepoCode(fullName)
+                // this.getRepoCode(fullName)
+                this.getIssues(fullName)
             }
         }
 

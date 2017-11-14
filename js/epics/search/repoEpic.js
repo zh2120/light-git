@@ -11,7 +11,7 @@ export function searchRepoByQueryEpic(action$, {getState, dispatch}, {get}) {
             //     "Authorization": `token ${getState().userSignInfo.auth.token}`
             // }
             // return get(url, headers)
-            return get(url, null)
+            return get(url)
                 .map(res => res.response || res)
                 .map(repos => searchRepoResult(repos.items || [])) // 返回正确结果
                 .catch(e => {
