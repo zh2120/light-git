@@ -47,16 +47,14 @@ export function repoFileEpic(action$, {getState, dispatch}, {get}) {
     return action$.ofType(RepoTypes.FILE)
         .switchMap(action => {
             const {fullName, path, ref, type} = action.payload
-            const auth = getState().userSignInfo.auth
             const headers = {
-                // "Authorization": `token ${auth && auth.token}`,
-                "Accept": "application/vnd.github.v3.raw+json"
+                // "Content-Type": "application/json",
+                "Accept": "application/vnd.github.v3.raw"
             }
             const url = '/repos/' + fullName + '/contents/' + path + getParams({ref})
-            const apiConfig = type === 'dir' ? {} : {responseType: 'text'} // 不是目录，请求文件内容
+            const apiConfig = type === 'dir' ? {} : {"responseType": "text"} // 不是目录，请求文件内容
             // todo 某些文件只有json格式
-            // return get(url, headers, apiConfig)
-            return get(url, null, headers, apiConfig)
+            return get(url, headers, apiConfig)
                 .map(res => {
                     console.log(res)
                     return res.response || res

@@ -42,7 +42,7 @@ export default connect(state => ({
             super(props);
             const {params} = props.navigation.state;
             this.state = {
-                navName: Issues,
+                navName: Code,
                 isRefreshing: false,
                 fullName: params ? params.fullName : ''
             }

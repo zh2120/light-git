@@ -13,12 +13,11 @@ function create(baseUrl) {
     for (let i = 0; i < apiArr.length; i++) {
         if (apiArr[i] === "GET" || apiArr[i] === "DELETE") {
             api[apiArr[i].toLowerCase()] = (url, headers, config) =>
-                new ajax({
-                    ...config,
+                new ajax(Object.assign({}, {
                     timeout,
                     url: baseUrl + url,
                     headers: {...defaultHeaders, ...headers}
-                })
+                }, config))
             continue
         }
         api[apiArr[i].toLowerCase()] = (url, body, headers, config) =>
