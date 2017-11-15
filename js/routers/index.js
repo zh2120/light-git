@@ -8,10 +8,8 @@ import Search from './Search'
 import SignIn from './SignIn'
 import SignUp from './SignUp'
 import Home from './Home'
-import RepoHome from './repos/'
-import RepoFile from './repos/File'
-import RepoDir from './repos/Dir'
-import Readme from './repos/Readme'
+
+import {RepoHome, Readme, RepoDir, RepoIssues, RepoFile} from './repos/'
 
 const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
     const defaultHeaderStyle = {
@@ -39,7 +37,8 @@ const MainRouters = {
     Search: {screen: Search},
     SignIn: {screen: SignIn},
     SignUp: {screen: SignUp},
-    Readme: {screen: Readme}
+    Readme: {screen: Readme},
+    RepoIssues: {screen: RepoIssues}
 }
 
 for (const key in MainRouters) {
@@ -83,7 +82,7 @@ const Navigator = StackNavigator(MainRouters, {
     ...transitions
 });
 
-const initialState = Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams('Search'))
+const initialState = Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams('RepoIssues'))
 
 export const navReducer = (state = initialState, action) => {
     switch (action.type) {
