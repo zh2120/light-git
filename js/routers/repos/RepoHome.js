@@ -214,7 +214,7 @@ export default connect(state => ({
                             <Image source={{uri: user.avatar_url}} style={styles.avatarBox}/>
                         </View>
                         <View style={styles.issueDescBox}>
-                            <Text style={styles.titleText}>{title.slice(0, 60)}</Text>
+                            <Text style={styles.titleText}>{title}</Text>
                         </View>
                         <Text style={styles.titleText}>{comments}</Text>
                     </View>
