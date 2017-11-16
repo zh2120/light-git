@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {StackNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
-import {Easing, Animated, BackHandler} from 'react-native'
+import {Easing, Animated, BackHandler, View, Text} from 'react-native'
 import PropTypes from 'prop-types'
 
 import {connect} from "react-redux";
@@ -29,6 +29,15 @@ const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
     }
 };
 
+class Test extends Component {
+    render() {
+        return (
+            <View>
+                <Text>sdgasg</Text>
+            </View>
+        )
+    }
+}
 const MainRouters = {
     Home: {screen: Home},
     RepoHome: {screen: RepoHome},

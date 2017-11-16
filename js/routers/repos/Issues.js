@@ -20,13 +20,12 @@ export default connect(state => ({
         static navigationOptions = ({navigation}) => {
             const {params} = navigation.state;
             return {
-                headerTitle: params ? params.number : '124'
+                headerTitle: params && String(params.number)
             }
         };
 
         constructor(props) {
-            super();
-            console.log(props)
+            super(props);
             const {params} = props.navigation.state;
             this.state = {
                 number: params ? params.number : '124',
