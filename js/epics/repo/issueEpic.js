@@ -4,6 +4,7 @@ import {
     IssueTypes,
     issueBody,
     errIssueBody,
+    getIssueBodyComments,
     issueBodyComments,
     errIssueComments
 } from '../../reducers/issueReducer'
@@ -12,38 +13,37 @@ import {Observable} from 'rxjs/Rx'
 
 export const issueEpic = (action$, {getState, dispatch}, {get}) => action$.ofType(IssueTypes.GET_ISSUE)
     .switchMap(action => {
-        const {url} = action.payload
-        const headers = {"Accept": "application/vnd.github.squirrel-girl-preview"}
+        const {url} = action.payload;
+        const headers = {"Accept": "application/vnd.github.squirrel-girl-preview"};
 
         return get(url, headers).map(res => issue(res.response))
-            .catch(e => {
-                console.log(e)
-                dispatch(errIssue())
-                return Observable.of(putError('获取问题失败')).takeUntil(action$.ofType(IssueTypes.ERR_ISSUE))
-            })
+            .catch(e => Observable.of(putError('获取问题失败')).startWith(dispatch(errIssue())))
     });
 
 
 export const issueBodyEpic = (action$, {getState, dispatch}, {get}) =>
-    action$.ofType(IssueTypes.GET_ISSUE_BODY, IssueTypes.GET_ISSUE_BODY_COMMENTS)
+    action$.ofType(IssueTypes.GET_ISSUE_BODY)
         .switchMap(action => {
-            const {url} = action.payload
-            const headers = {"Accept": "application/vnd.github.VERSION.raw+json"}
-            let request, err, type
-            if (action.type === IssueTypes.GET_ISSUE_BODY) {
-                request = issueBody
-                err = errIssueBody
-                type = IssueTypes.ERR_ISSUE_BODY
-            } else {
-                request = issueBodyComments
-                err = errIssueComments
-                type = IssueTypes.ERR_ISSUE_COMMENTS
-            }
-            return get(url, headers).map(res => request(res.response))
-                .catch(e => {
-                    console.log(e)
-                    dispatch(err())
-                    return Observable.of(putError('获取问题详情失败'))
-                        .takeUntil(action$.ofType(type))
-                })
+            const {url} = action.payload;
+            const headers = {
+                "Accept": "application/vnd.github.v3.raw+json",
+                "Authorization": `Basic OTMxOTkyMTIwQHFxLmNvbTpnaXRodWJAMTIz`
+            };
+
+            return get(url, headers).map(res => issueBody(res.response))
+                .startWith(getIssueBodyComments(url + '/comments'))
+                .catch(e => Observable.of(putError('获取问题主体失败').startWith(errIssueBody())))
+        });
+
+export const issueBodyCommentsEpic = (action$, {getState, dispatch}, {get}) =>
+    action$.ofType(IssueTypes.GET_ISSUE_BODY_COMMENTS)
+        .switchMap(action => {
+            const {url} = action.payload;
+            const headers = {
+                "Accept": "application/vnd.github.v3.raw+json",
+                "Authorization": `Basic OTMxOTkyMTIwQHFxLmNvbTpnaXRodWJAMTIz`
+            };
+
+            return get(url, headers).map(res => issueBodyComments(res.response))
+                .catch(e => Observable.of(putError('获取问题评论失败').startWith(errIssueComments())))
         });

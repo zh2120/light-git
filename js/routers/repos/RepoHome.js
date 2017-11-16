@@ -32,7 +32,7 @@ export default connect(state => ({
 }), bindActions({repoContent, clearDir, back, openActionSheet, getIssue}))(
     class extends PureComponent {
         static navigationOptions = ({navigation}) => {
-            const params = navigation.state.params;
+            const {params} = navigation.state;
             return {
                 headerTitle: params && params.name
             }
@@ -73,7 +73,8 @@ export default connect(state => ({
                 showsVerticalScrollIndicator: false,
                 ItemSeparatorComponent: this.separator,
                 contentContainerStyle: {paddingVertical: 14},
-                ListEmptyComponent: () => <View style={{height: dp(250)}}><Loading/></View>
+                ListEmptyComponent: () => <View
+                    style={{height: dp(250), justifyContent: 'center', alignItems: 'center'}}><Text>None</Text></View>
             };
         }
 
@@ -143,7 +144,7 @@ export default connect(state => ({
                 case Issues:
                     const {issuesData} = this.props;
 
-                    if (isEmpty(issuesData)) press = getIssue; // 问题不存在，才请求
+                    if (!issuesData) press = getIssue; // 问题不存在，才请求
                     break
             }
             return this.setState((pre) => {
@@ -200,20 +201,20 @@ export default connect(state => ({
          * @returns {XML}
          */
         renderIssues = ({item}) => {
-            const {title, user, comments, number, id} = item
-            const {fullName, navName} = this.state
-            const {navigation} = this.props
+            const {title, user, comments, number, id} = item;
+            const {fullName} = this.state;
+            const {navigation} = this.props;
 
             return (
                 <TouchableHighlight onPress={() => navigation.navigate('RepoIssues', {fullName, number})}
                                     underlayColor={'rgba(100,100,100 ,0.1)'}>
                     <View style={styles.issueBox}>
                         <View>
-                            <Text style={{color: '#333'}}>#{number}</Text>
+                            <Text style={{color: '#333'}}>{'#' + number}</Text>
                             <Image source={{uri: user.avatar_url}} style={styles.avatarBox}/>
                         </View>
                         <View style={styles.issueDescBox}>
-                            <Text style={styles.titleText}>{title.slice(0, 100)}</Text>
+                            <Text style={styles.titleText}>{title.slice(0, 60)}</Text>
                         </View>
                         <Text style={styles.titleText}>{comments}</Text>
                     </View>
@@ -239,6 +240,7 @@ export default connect(state => ({
                     );
                 case Issues:
                     const {issuesData} = this.props
+                    if (!issuesData) return <View style={{height: dp(250)}}><Loading/></View>
 
                     return (
                         <FlatList
@@ -296,7 +298,7 @@ const styles = {
         backgroundColor: 'rgba(10,10,10, 0.2)'
     },
     contentName: {marginLeft: 6},
-    issueBox: {flexDirection: 'row', alignItems: 'flex-start', height: 72, marginTop: 10, paddingHorizontal: 16},
+    issueBox: {flexDirection: 'row', alignItems: 'flex-start', marginTop: 10, paddingHorizontal: 16},
     avatarBox: {width: 32, height: 32, borderRadius: 16},
     titleText: {fontSize: 16, color: '#333'},
     issueDescBox: {flex: 1, marginHorizontal: 16}

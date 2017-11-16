@@ -35,25 +35,28 @@ export const issueBodyComments = (comments) => ({type: IssueTypes.ISSUE_BODY_COM
  */
 export const errIssueComments = () => ({type: IssueTypes.ERR_ISSUE_COMMENTS})
 
-export default (state = {getting: false, issues: [], issueBody: {}, issueComments: []}, action) => {
+export default (state = {getting: false, issues: null, issueBody: {}, issueComments: []}, action) => {
     switch (action.type) {
         case IssueTypes.GET_ISSUE:
             return {...state, getting: true}
 
         case IssueTypes.ISSUE:
-            return {...state, issues: [...state.issues, ...action.payload.data], getting: false}
+            if (state.issues) {
+                return {...state, issues: [...state.issues, ...action.payload.data], getting: false}
+            }
+            return {...state, issues: [...action.payload.data], getting: false}
 
         case IssueTypes.ERR_ISSUE:
-            return {...state, issues: [], getting: false}
-
-        case IssueTypes.ERR_ISSUE_BODY:
-            return {...state, issueBody: {}}
+            return {...state, issues: null, getting: false}
 
         case IssueTypes.ISSUE_BODY:
             return {...state, issueBody: action.payload.body}
 
+        case IssueTypes.ERR_ISSUE_BODY:
+            return {...state, issueBody: {}}
+
         case IssueTypes.ISSUE_BODY_COMMENTS:
-            return {...state, issueComments: [...state.issueComments, ...action.payload.comments]}
+            return {...state, issueComments: action.payload.comments}
 
         case IssueTypes.ERR_ISSUE_COMMENTS:
             return {...state, issueComments: []}
