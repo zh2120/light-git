@@ -85,6 +85,12 @@ const initialState = (routerName) =>
 
 export const navReducer = (state = initialState(init), action) => {
     switch (action.type) {
+        case 'Navigation/NAVIGATE':
+            const {routes} = state
+
+            if (routes[routes.length - 1].routeName === action.routeName) return state;
+
+            return Navigator.router.getStateForAction(action, state);
         case 'Navigation/BACK':
             if (action.routeName) {
                 // 寻找栈里，已经存在的场景索引
@@ -93,11 +99,13 @@ export const navReducer = (state = initialState(init), action) => {
                 // 返回从栈底到指定的路由
                 return {index: i, routes: state.routes.slice(0, i + 1)}
             }
-            return {index: state.index - 1, routes: state.routes.slice(0, state.index)}; // 返回上一层
+            if (state.index > 0) return {index: state.index - 1, routes: state.routes.slice(0, state.index)}; // 返回上一层
+            return initialState(init)
         case 'persist/REHYDRATE': // 未登录 重置登录
             if (!action.payload.userSignInfo.auth) {
                 return initialState('SignIn')
             }
+            return state;
         default:
             return Navigator.router.getStateForAction(action, state);
     }
