@@ -3,9 +3,9 @@ import {connect} from 'react-redux'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-import {openToast, bindActions} from '../reducers/comReducer'
-import {searchRepo} from '../reducers/searchReducer'
-import {userSignAccept} from '../reducers/userReducer'
+import {openToast, bindActions} from '../../reducers/comReducer'
+import {searchRepo} from '../../reducers/searchReducer'
+import {userSignAccept} from '../../reducers/userReducer'
 
 import {
     View,
@@ -39,12 +39,13 @@ export default connect(state => ({
         renderUserInfo = () => {
             const {navigation, user} = this.props;
             let onPress, avatar;
+
             if (user) {
                 avatar = <Image source={{uri: user.avatar_url}} style={{width: 36, height: 36}}/>;
-                onPress = () => navigation.navigate('SignIn')
+                onPress = () => navigation.navigate('User', {name: user.login});
             } else {
-                onPress = () => navigation.navigate('SignIn');
-                avatar = <EvilIcons name={'user'} size={36} style={{color: '#fff', padding: 2}}/>
+                avatar = <EvilIcons name={'user'} size={36} style={{color: '#fff', padding: 2}}/>;
+                onPress = () => navigation.navigate('SignIn')
             }
 
             return (

@@ -13,9 +13,9 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Octicons from 'react-native-vector-icons/Octicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import {Button, Loading} from '../components'
-import {bindActions, openToast} from '../reducers/comReducer'
-import {searchRepo} from '../reducers/searchReducer'
+import {Button, Loading} from '../../components/index'
+import {bindActions, openToast} from '../../reducers/comReducer'
+import {searchRepo} from '../../reducers/searchReducer'
 
 const searchStyles = StyleSheet.create({
     wrap: {

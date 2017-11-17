@@ -1,14 +1,10 @@
 import React, {PureComponent} from 'react'
 import {StackNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
 import {Easing, Animated, BackHandler} from 'react-native'
-import PropTypes from 'prop-types'
 
 import {connect} from "react-redux";
-import Search from './Search'
-import SignIn from './SignIn'
-import SignUp from './SignUp'
-import Home from './Home'
 
+import {Home, Search, SignIn, SignUp, User} from './user/'
 import {RepoHome, Readme, RepoDir, RepoIssues, RepoFile} from './repos/'
 
 const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
@@ -31,6 +27,7 @@ const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
 
 const MainRouters = {
     Home: {screen: Home},
+    User: {screen: User},
     Search: {screen: Search},
     SignIn: {screen: SignIn},
     SignUp: {screen: SignUp},
@@ -90,7 +87,6 @@ export const navReducer = (state = initialState(init), action) => {
     switch (action.type) {
         case 'Navigation/BACK':
             if (action.routeName) {
-                console.log('___ 2', action.payload)
                 // 寻找栈里，已经存在的场景索引
                 const i = state.routes.findIndex(item => item.routeName === action.routeName);
 

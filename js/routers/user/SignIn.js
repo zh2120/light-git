@@ -7,9 +7,9 @@ import {
 } from 'react-native'
 import {connect} from 'react-redux'
 import Octicons from 'react-native-vector-icons/Octicons';
-import {Button} from '../components'
-import {userSignIn, userSignAccept} from '../reducers/userReducer'
-import {openToast, bindActions, reset} from '../reducers/comReducer'
+import {Button} from '../../components/index'
+import {userSignIn, userSignAccept} from '../../reducers/userReducer'
+import {openToast, bindActions, reset} from '../../reducers/comReducer'
 
 export default connect(state => ({
     auth: state.userSignInfo.auth,
