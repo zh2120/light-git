@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 import {StackNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
-import {Easing, Animated, BackHandler, View, Text} from 'react-native'
+import {Easing, Animated, BackHandler} from 'react-native'
 import PropTypes from 'prop-types'
 
 import {connect} from "react-redux";
@@ -29,24 +29,15 @@ const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
     }
 };
 
-class Test extends Component {
-    render() {
-        return (
-            <View>
-                <Text>sdgasg</Text>
-            </View>
-        )
-    }
-}
 const MainRouters = {
     Home: {screen: Home},
-    RepoHome: {screen: RepoHome},
-    RepoFile: {screen: RepoFile},
-    RepoDir: {screen: RepoDir},
     Search: {screen: Search},
     SignIn: {screen: SignIn},
     SignUp: {screen: SignUp},
     Readme: {screen: Readme},
+    RepoDir: {screen: RepoDir},
+    RepoHome: {screen: RepoHome},
+    RepoFile: {screen: RepoFile},
     RepoIssues: {screen: RepoIssues}
 }
 
@@ -91,35 +82,33 @@ const Navigator = StackNavigator(MainRouters, {
     ...transitions
 });
 
-const initialState = Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams('Search'))
+let init = 'Home'
+const initialState = (routerName) =>
+    Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams(routerName))
 
-export const navReducer = (state = initialState, action) => {
+export const navReducer = (state = initialState(init), action) => {
     switch (action.type) {
         case 'Navigation/BACK':
-            if (action.routeName) { // 重置路由
+            if (action.routeName) {
+                console.log('___ 2', action.payload)
                 // 寻找栈里，已经存在的场景索引
-                const i = state.routes.findIndex(item => item.routeName === action.routeName)
+                const i = state.routes.findIndex(item => item.routeName === action.routeName);
 
                 // 返回从栈底到指定的路由
                 return {index: i, routes: state.routes.slice(0, i + 1)}
             }
+            return {index: state.index - 1, routes: state.routes.slice(0, state.index)}; // 返回上一层
+        case 'persist/REHYDRATE': // 未登录 重置登录
+            if (!action.payload.userSignInfo.auth) {
+                return initialState('SignIn')
+            }
         default:
             return Navigator.router.getStateForAction(action, state);
-
     }
 };
 
-const AppWithNavigationState = ({dispatch, nav}) => (
-    <Navigator navigation={addNavigationHelpers({dispatch, state: nav})}/>
-);
-
-AppWithNavigationState.propTypes = {
-    dispatch: PropTypes.func.isRequired,
-    nav: PropTypes.object.isRequired,
-};
-
 export default connect(state => ({nav: state.nav}))(
-    class extends Component {
+    class extends PureComponent {
 
         componentDidMount() {
             BackHandler.addEventListener("hardwareBackPress", this.onBackPress);

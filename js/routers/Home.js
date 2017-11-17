@@ -1,8 +1,7 @@
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import {openToast, bindActions} from '../reducers/comReducer'
 import {searchRepo} from '../reducers/searchReducer'
@@ -14,11 +13,8 @@ import {
     Image,
     TextInput,
     StyleSheet,
-    Animated,
-    ActivityIndicator,
     TouchableOpacity,
-    TouchableHighlight,
-    TouchableWithoutFeedback
+    TouchableHighlight
 } from 'react-native'
 
 const underlayColor = 'rgba(100,100,100 ,0.1)';
@@ -28,45 +24,26 @@ export default connect(state => ({
     auth: state.userSignInfo.auth,
     signed: state.userSignInfo.signed
 }), bindActions({searchRepo, userSignAccept, openToast}))(
-    class extends Component {
-        static navigationOptions = {
-            header: null
-        }
+    class extends PureComponent {
+        static navigationOptions = {header: null};
 
-        constructor(props) {
-            super(props);
-            this.state = {
-                searchText: '',
-                repos: [],
-            };
-            this.rotate = new Animated.Value(0)
+        state = {
+            searchText: ''
         }
 
         componentDidMount() {
-            const {navigation} = this.props
-            // navigation.navigate('Search')
         }
 
-        changeText = (text) => this.setState({searchText: text})
-
-        // keyExtractor = (item, index) => index;
-
-        renderItem = ({item, index}) => {
-            return (
-                <View key={index}>
-                    <Text>1234</Text>
-                </View>
-            )
-        };
+        changeText = (text) => this.setState({searchText: text});
 
         renderUserInfo = () => {
             const {navigation, user} = this.props;
             let onPress, avatar;
             if (user) {
-                avatar = <Image source={{uri: user.avatar_url}} style={{width: 36, height: 36}}/>
+                avatar = <Image source={{uri: user.avatar_url}} style={{width: 36, height: 36}}/>;
                 onPress = () => navigation.navigate('SignIn')
             } else {
-                onPress = () => navigation.navigate('SignIn')
+                onPress = () => navigation.navigate('SignIn');
                 avatar = <EvilIcons name={'user'} size={36} style={{color: '#fff', padding: 2}}/>
             }
 
@@ -133,7 +110,7 @@ export default connect(state => ({
 
                         <View style={[styles.logoRow, {justifyContent: 'space-around',}]}>
                             <TouchableHighlight underlayColor={underlayColor} onPress={() => {
-                            }} disabled={!signed}>
+                            }}>
                                 <View style={styles.iconWrap}>
                                     <Ionicons name={'md-folder-open'} size={24} style={styles.icon}/>
                                     <Text style={styles.icon}>Repos</Text>
@@ -142,7 +119,7 @@ export default connect(state => ({
 
                             <TouchableHighlight underlayColor={underlayColor}
                                                 onPress={() => {
-                                                }} disabled={!signed}>
+                                                }}>
                                 <View style={styles.iconWrap}>
                                     <Ionicons name={'md-star-outline'} size={24} style={styles.icon}/>
                                     <Text style={styles.icon}>Stars</Text>
@@ -151,7 +128,7 @@ export default connect(state => ({
 
 
                             <TouchableHighlight underlayColor={underlayColor}
-                                                onPress={() => navigation.navigate('Search')} disabled={!signed}>
+                                                onPress={() => navigation.navigate('Search')}>
                                 <View style={styles.iconWrap}>
                                     <Ionicons name={'md-bulb'} size={24} style={styles.icon}/>
                                     <Text style={styles.icon}>Gists</Text>

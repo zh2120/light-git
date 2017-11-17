@@ -12,9 +12,9 @@ import {userSignIn, userSignAccept} from '../reducers/userReducer'
 import {openToast, bindActions} from '../reducers/comReducer'
 
 export default connect(state => ({
-    disabled: state.userSignInfo.signInPending,
+    auth: state.userSignInfo.auth,
     signed: state.userSignInfo.signed,
-    auth: state.userSignInfo.auth
+    disabled: state.userSignInfo.signInPending
 }), bindActions({userSignIn, openToast, userSignAccept}))(
     class extends PureComponent {
         static navigationOptions = ({navigation}) => ({
@@ -43,25 +43,17 @@ export default connect(state => ({
         componentWillReceiveProps(nextProps) {
             const {signed} = this.props
 
-            // userSignAccept(auth)
             if (signed !== nextProps.signed) {
                 this.setState(() => {
-                    nextProps.navigation.goBack()
-                    return {
-                        account: '',
-                        password: ''
-                    }
+                    nextProps.navigation.navigate('Home')
+                    return {account: '', password: ''}
                 })
             }
         }
 
-        account = (account) => {
-            return this.setState({account: String(account)})
-        };
+        account = (account) => this.setState({account: String(account)});
 
-        password = (password) => {
-            return this.setState({password: String(password)})
-        };
+        password = (password) => this.setState({password: String(password)});
 
         signInSubmit = () => {
             const {account, password} = this.state

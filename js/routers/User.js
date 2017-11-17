@@ -1,9 +1,3 @@
-/**
- * Slash.js
- * 首页展示更多信息
- * @author traveller
- * @date create 2017.10.11 23:00:00
- */
 import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
 import {View, Text, Button, TextInput} from 'react-native'

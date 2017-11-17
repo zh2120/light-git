@@ -1,5 +1,5 @@
 import './utils'
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {Provider} from 'react-redux'
 import codePush from "react-native-code-push";
 import SplashScreen from 'react-native-splash-screen'
@@ -20,15 +20,14 @@ import {Toast, ActionSheet} from './components'
 
 const {persistor, store} = configureStore()
 
-const Loading = () => (
-    <View style={styles.loadWrap}><Text style={{color: 'red'}}>恢复现场中...</Text></View>)
+const Loading = () => (<View style={styles.loadWrap}><Text style={{color: 'red'}}>恢复现场中...</Text></View>)
 
 const codePushOptions = {
     checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
     installMode: codePush.InstallMode.ON_NEXT_RESUME
 };
 
-class App extends Component {
+class App extends PureComponent {
     componentDidMount() {
         SplashScreen.hide();
     }

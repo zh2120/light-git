@@ -16,6 +16,7 @@ function create(baseUrl) {
                 new ajax(Object.assign({}, {
                     timeout,
                     url: baseUrl + url,
+                    method: apiArr[i],
                     headers: {...defaultHeaders, ...headers}
                 }, config))
             continue
@@ -24,6 +25,7 @@ function create(baseUrl) {
             new ajax(Object.assign({}, {timeout, url: baseUrl + url}, {
                     body: JSON.stringify(body),
                     ...config,
+                    method: apiArr[i],
                     headers: {...defaultHeaders, ...headers}
                 })
             )

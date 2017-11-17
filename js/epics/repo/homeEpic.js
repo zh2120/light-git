@@ -10,6 +10,7 @@ import {
 import {putError} from '../../reducers/comReducer';
 import {Observable} from 'rxjs/Rx'
 
+// todo 防止抖动
 export function repoContentEpic(action$, {getState, dispatch}, {get}) { // 请求主仓库目录内容
     return action$.ofType(RepoTypes.REPO_HOME)
         .switchMap(action => {
