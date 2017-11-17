@@ -9,13 +9,13 @@ import {connect} from 'react-redux'
 import Octicons from 'react-native-vector-icons/Octicons';
 import {Button} from '../components'
 import {userSignIn, userSignAccept} from '../reducers/userReducer'
-import {openToast, bindActions} from '../reducers/comReducer'
+import {openToast, bindActions, reset} from '../reducers/comReducer'
 
 export default connect(state => ({
     auth: state.userSignInfo.auth,
     signed: state.userSignInfo.signed,
     disabled: state.userSignInfo.signInPending
-}), bindActions({userSignIn, openToast, userSignAccept}))(
+}), bindActions({userSignIn, openToast, userSignAccept, reset}))(
     class extends PureComponent {
         static navigationOptions = ({navigation}) => ({
             headerTitle: 'SignIn',
@@ -41,11 +41,11 @@ export default connect(state => ({
         }
 
         componentWillReceiveProps(nextProps) {
-            const {signed} = this.props
+            const {signed, reset} = this.props
 
-            if (signed !== nextProps.signed) {
+            if (signed !== nextProps.signed && nextProps.auth) {
                 this.setState(() => {
-                    nextProps.navigation.navigate('Home')
+                    reset('Home')
                     return {account: '', password: ''}
                 })
             }

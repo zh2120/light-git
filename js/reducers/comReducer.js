@@ -1,4 +1,5 @@
 import {bindActionCreators} from 'redux';
+import {NavigationActions} from 'react-navigation'
 
 export const ComTypes = {
     OPEN_TOAST: 'OPEN_TOAST', // 打开提示
@@ -7,6 +8,11 @@ export const ComTypes = {
     OPEN_ACTIONSHEET: 'OPEN_ACTIONSHEET',
     CLOESE_ACTIONSHEET: 'CLOESE_ACTIONSHEET'
 }
+
+export const reset = (routeName) => NavigationActions.reset({ // 重置路由
+    index: 0,
+    actions: [NavigationActions.navigate({routeName})]
+})
 
 export const bindActions = actions => dispatch => ({...bindActionCreators(actions, dispatch)})
 
