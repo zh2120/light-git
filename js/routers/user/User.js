@@ -3,12 +3,12 @@ import {connect} from 'react-redux'
 import {View, Text, Button, TextInput} from 'react-native'
 import {bindActions} from '../../reducers/comReducer'
 
-export default connect(state => ({}), bindActions({}))(
+export default connect(state => ({user: state.userInfo.user}), bindActions({}))(
     class extends Component {
         static navigationOptions = ({navigation}) => {
             const {params} = navigation.state;
             return {
-                headerTitle: params && String(params.name),
+                headerTitle: "github",
                 headerTitleStyle: {color: 'rgba(255,255,255,0.8)'},
                 headerBackTitleStyle: {color: 'rgba(255,255,255,0.8)'},
                 headerStyle: {
@@ -27,7 +27,7 @@ export default connect(state => ({}), bindActions({}))(
 
 
         render() {
-
+            const {login,avatar_url,name,email,public_repos,public_gists,followers,following,location} = this.props.user
             return (
                 <View style={styles.wrap}>
                     <Text>用户首页</Text>

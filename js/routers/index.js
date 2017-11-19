@@ -79,7 +79,7 @@ const Navigator = StackNavigator(MainRouters, {
     ...transitions
 });
 
-let init = 'Home'
+let init = 'User'
 const initialState = (routerName) =>
     Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams(routerName))
 

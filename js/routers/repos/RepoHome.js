@@ -56,7 +56,7 @@ export default connect(state => ({
             ]
 
             /**
-             * 列表通用属性
+             * 列表通用属性ß
              */
             this.listProps = {
                 horizontal: false,
@@ -73,8 +73,9 @@ export default connect(state => ({
                 showsVerticalScrollIndicator: false,
                 ItemSeparatorComponent: this.separator,
                 contentContainerStyle: {paddingVertical: 14},
+                // 列表为空，
                 ListEmptyComponent: () => <View
-                    style={{height: dp(250), justifyContent: 'center', alignItems: 'center'}}><Text>None</Text></View>
+                    style={{height: dp(250), justifyContent: 'center', alignItems: 'center'}}><Text>Welcome！</Text></View>
             };
         }
 
@@ -232,6 +233,9 @@ export default connect(state => ({
             switch (navName) {
                 case Code:
                     const {content} = this.props;
+                    // 内容为空，从云上下载
+                    if (!content) return <View style={{height: dp(250)}}><Loading/></View>
+
                     return (
                         <FlatList
                             data={content}
