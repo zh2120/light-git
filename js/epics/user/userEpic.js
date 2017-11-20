@@ -5,13 +5,15 @@ import {
     getUserInfo,
     userSignAccept,
     userSignDenied,
+    repoList,
+    errRepoList
 } from '../../reducers/userReducer';
 import {openToast, putError} from '../../reducers/comReducer';
 import {Observable} from 'rxjs/Rx'
 // todo Rewrite
 export const userSignInEpic = (action$, {dispatch}, {put}) => action$.ofType(UserTypes.USER_SIGNIN)
-    .switchMap(action => {
-        const {auth} = action.payload;
+    .switchMap(({payload}) => {
+        const {auth} = payload;
         const config = require('../../../config.json');
         const url = '/authorizations/clients/' + config.client_id;
         const headers = {
@@ -44,14 +46,14 @@ export const userSignInEpic = (action$, {dispatch}, {put}) => action$.ofType(Use
                 switch (err.status) {
                     case 401: // 验证账户或者密码有误，被拒绝 -> 重置状态
                         dispatch(putError('Invalid Username or password')); // 发起UI错误提示
-                        break
+                        break;
                     case 200: // 已在其他设备登录过了，
                         // 1、发起签名失效错误提示,
                         console.log('发起签名失效错误提示');
                         // dispatch(putError(err.desc))
                         // 2、清除之前用户的所有信息，退出操作
                         dispatch(deleteAuth({id: err.id}));
-                        break
+                        break;
                     default:
                         console.log('--> 超时', err);
                         dispatch(putError('Network timeout')) // 超时处理
@@ -62,8 +64,8 @@ export const userSignInEpic = (action$, {dispatch}, {put}) => action$.ofType(Use
 
 
 export const userInfoEpic = (action$, {dispatch}, {get}) => action$.ofType(UserTypes.USER_SIGNIN_ACCEPT)
-    .switchMap(action => {
-        const {token, id} = action.payload.auth;
+    .switchMap(({payload}) => {
+        const {token, id} = payload.auth;
         const url = '/user';
         const headers = {
             "Authorization": `token ${token}`
@@ -84,8 +86,8 @@ export const userInfoEpic = (action$, {dispatch}, {get}) => action$.ofType(UserT
     });
 
 export const clearUserInfoEpic = (action$, {dispatch, getState}, ajax) => action$.ofType(UserTypes.DELETE_AUTH)
-    .mergeMap(action => {
-        const {id} = action.payload;
+    .mergeMap(({payload}) => {
+        const {id} = payload;
         const url = `/authorizations/${id}`;
         const auth = getState().userSignInfo.basic;
         const headers = {
@@ -103,10 +105,10 @@ export const clearUserInfoEpic = (action$, {dispatch, getState}, ajax) => action
     });
 
 export const checkAuthEpic = (action$, {getState}, {get}) => action$.ofType(UserTypes.GET_CHECK_AUTH)
-    .switchMap(action => {
+    .switchMap(() => {
         const {auth} = getState().userSignInfo;
         const {client_id, client_secret} = require('../../../config.json');
-        const headers = {"Authorization": "Basic" + btoa(`${client_id}:${client_secret}`)};
+        const headers = {"Authorization": "Basic " + btoa(`${client_id}:${client_secret}`)};
         const url = `/applications/${client_id}/tokens/${auth.token}`;
 
         return get(url, headers).map(res => {
@@ -120,4 +122,22 @@ export const checkAuthEpic = (action$, {getState}, {get}) => action$.ofType(User
     }).catch(err => {
         console.log(err);
         return Observable.of(putError('检查auth失败'))
+    });
+
+export const repoListEpic = (action$, {getState}, {get}) => action$.ofType(UserTypes.GET_REPO_LIST)
+    .switchMap(({payload}) => {
+        const {username} = payload;
+        const {auth} = getState().userSignInfo;
+        const headers = {"Authorization": "token " + auth.token};
+
+        let url = '/user/repos' + getParams({sort: 'pushed'});
+        if (username) {
+            url = `/users/${username}/repos${getParams({sort: 'pushed'})}`
+        }
+
+        return get(url, headers).map(res => repoList(res.response))
+
+    }).catch(e => {
+        console.log(e);
+        return Observable.of(putError('获取列表h失败'))
     });

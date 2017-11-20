@@ -41,7 +41,7 @@ export default (state = {getting: false, issues: null, issueBody: null, issueCom
             return {...state, getting: true};
 
         case IssueTypes.ISSUE:
-            if (state.issues) {
+            if (state.issues) { // get more
                 return {...state, issues: [...state.issues, ...payload.data], getting: false}
             }
             return {...state, issues: [...payload.data], getting: false};
@@ -53,7 +53,7 @@ export default (state = {getting: false, issues: null, issueBody: null, issueCom
             return {...state, issueBody: payload.body};
 
         case IssueTypes.ERR_ISSUE_BODY:
-            return {...state, issueBody: null,};
+            return {...state, issueBody: null};
 
         case IssueTypes.ISSUE_BODY_COMMENTS:
             return {...state, issueComments: payload.comments};

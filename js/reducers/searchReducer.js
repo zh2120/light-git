@@ -26,14 +26,15 @@ export const resetSearch = () => ({type: SearchTypes.SEARCH_REPO_RESET})
 export default (state = {repos: [], history: [], searching: false}, {type, payload}) => {
     switch (type) {
         case SearchTypes.SEARCH_REPO:
-            const arr = state.history.filter(item => item && item.name !== payload.name)
-            return Object.assign({}, state, {history: [...arr, payload], searching: true})
+            const arr = state.history.filter(item => item && item.name !== payload.name);
+            return {...state, history: [...arr, payload], searching: true};
 
         case SearchTypes.SEARCH_REPO_RESULT:
-            return Object.assign({}, state, {repos: payload.repos, searching: false})
+            return {...state,repos: payload.repos, searching: false};
 
         case SearchTypes.SEARCH_REPO_RESET:
-            return Object.assign({}, state, {searching: false, repos: []})
+            // todo repos 没有进行任何的搜索历史
+            return {...state,searching: false, repos: []};
 
         default:
             return state

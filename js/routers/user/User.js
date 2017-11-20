@@ -2,8 +2,9 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {View, Text, StyleSheet, Image} from 'react-native'
 import {bindActions} from '../../reducers/comReducer'
+import {getRepoList} from '../../reducers/userReducer'
 
-export default connect(state => ({user: state.userInfo.user}), bindActions({}))(
+export default connect(state => ({user: state.userInfo.user}), bindActions({getRepoList}))(
     class extends Component {
         static navigationOptions = ({navigation}) => {
             const {params} = navigation.state;
@@ -23,6 +24,7 @@ export default connect(state => ({user: state.userInfo.user}), bindActions({}))(
         }
 
         componentDidMount() {
+            this.props.getRepoList({username: ''})
         }
 
 
@@ -60,11 +62,11 @@ const styles = {
         borderBottomWidth: StyleSheet.hairlineWidth,
     },
     avatarBox: {
-        width: dp(56),
-        height: dp(56),
+        width: dp(48),
+        height: dp(48),
         margin: 10,
     },
-    userInfoBox:{
+    userInfoBox: {
         flex: 1,
         marginLeft: 10
     },
