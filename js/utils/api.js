@@ -2,13 +2,13 @@ import {ajax} from 'rxjs/observable/dom/ajax';
 
 function create(baseUrl) {
 
-    const timeout = 30000
+    const timeout = 30000;
     const defaultHeaders = {
         "Content-Type": "application/vnd.github.mercy-preview+json",
         "Accept": "application/vnd.github.v3+json",
-    }
-    const apiArr = ["GET", "DELETE", "PATCH", "PUT", "POST"]
-    const api = {}
+    };
+    const apiArr = ["GET", "DELETE", "PATCH", "PUT", "POST"];
+    const api = {};
 
     for (let i = 0; i < apiArr.length; i++) {
         if (apiArr[i] === "GET" || apiArr[i] === "DELETE") {
@@ -18,7 +18,7 @@ function create(baseUrl) {
                     url: baseUrl + url,
                     method: apiArr[i],
                     headers: {...defaultHeaders, ...headers}
-                }, config))
+                }, config));
             continue
         }
         api[apiArr[i].toLowerCase()] = (url, body, headers, config) =>

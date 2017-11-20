@@ -73,13 +73,13 @@ export const popDir = (dirs) => ({type: RepoTypes.DIR_POP, payload: {dirs}})
 export const clearDir = () => ({type: RepoTypes.CLEAR_DIR})
 
 
-export default (state = {getting: false, content: [], file: {}, readme: '', dirs: []}, action) =>  {
-    switch (action.type) {
+export default (state = {getting: false, content: [], file: {}, readme: '', dirs: []}, {type, payload}) => {
+    switch (type) {
         case RepoTypes.REPO_HOME: // 请求库主内容，文件或者目录
             return {...state, getting: true}
 
         case RepoTypes.REPO_HOME_CONTENTS:
-            return {...state, getting: false, content: action.payload.content}
+            return {...state, getting: false, content: payload.content}
 
         case RepoTypes.REPO_HOME_CONTENTS_DENIED: // 仓库主要内容被清空
             return {...state, getting: false, content: []}
@@ -88,22 +88,22 @@ export default (state = {getting: false, content: [], file: {}, readme: '', dirs
             return {...state, getting: true}
 
         case RepoTypes.README: // 请求仓库的自述文件
-            return {...state, getting: false, readme: action.payload.file}
+            return {...state, getting: false, readme: payload.file}
 
         case RepoTypes.FILE_CONTENT:  // 接受存储仓库
-            return {...state, getting: false, file: action.payload.file}
+            return {...state, getting: false, file: payload.file}
 
         case RepoTypes.FILE_CONTENT_DENIED:  // 获取文件失败，
             return {...state, getting: false, file: {}, readme: {}}
 
         case RepoTypes.DIR_CONTENT:  //接受请求 逐级存储仓库目录
-            return {...state, getting: false, dirs: [...state.dirs, action.payload.dirs]}
+            return {...state, getting: false, dirs: [...state.dirs, payload.dirs]}
 
         case RepoTypes.CLEAR_DIR:  // 清空库内的子目录所有内容
             return {getting: false, file: {}, readme: {}, dirs: [], content: []}
 
         case RepoTypes.DIR_POP:  // 逐级清空仓库子目录的内容
-            return {...state, dirs: [...action.payload.dirs]}
+            return {...state, dirs: [...payload.dirs]}
 
         default:
             return state

@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react'
 import {StackNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
 import {Easing, Animated, BackHandler} from 'react-native'
-
+import SplashScreen from 'react-native-splash-screen'
 import {connect} from "react-redux";
 
 import {Home, Search, SignIn, SignUp, User} from './user/'
@@ -17,6 +17,7 @@ const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
         borderBottomColor: null,
         backgroundColor: 'rgba(30,144,255,0.6)'
     }
+
     return {
         ...navigationOptions,
         gesturesEnabled: true,
@@ -49,8 +50,8 @@ const transitions = {
     transitionConfig: () => ({
         transitionSpec: {
             duration: 300,
-            easing: Easing.out(Easing.poly(4)),
             timing: Animated.timing,
+            easing: Easing.out(Easing.poly(4)),
         },
         screenInterpolator: sceneProps => {
             const {layout, position, scene} = sceneProps;
@@ -79,14 +80,14 @@ const Navigator = StackNavigator(MainRouters, {
     ...transitions
 });
 
-let init = 'User'
+let init = 'User';
 const initialState = (routerName) =>
     Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams(routerName))
 
 export const navReducer = (state = initialState(init), action) => {
     switch (action.type) {
         case 'Navigation/NAVIGATE':
-            const {routes} = state
+            const {routes} = state;
 
             if (routes[routes.length - 1].routeName === action.routeName) return state;
 
@@ -111,11 +112,17 @@ export const navReducer = (state = initialState(init), action) => {
     }
 };
 
-export default connect(state => ({nav: state.nav}))(
+export default connect(state => ({nav: state.nav, auth: state.userSignInfo.auth}))(
     class extends PureComponent {
+
+        componentWillMount() {
+            // todo 验证token的有效性
+        }
 
         componentDidMount() {
             BackHandler.addEventListener("hardwareBackPress", this.onBackPress);
+            SplashScreen.hide();
+            console.log(this.props)
         }
 
         componentWillUnmount() {

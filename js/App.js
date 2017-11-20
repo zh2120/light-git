@@ -1,8 +1,7 @@
 import './utils'
-import React, {PureComponent} from 'react';
+import React from 'react';
 import {Provider} from 'react-redux'
 import codePush from "react-native-code-push";
-import SplashScreen from 'react-native-splash-screen'
 import {View, StyleSheet, StatusBar, Text} from 'react-native'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/catch'
@@ -27,32 +26,24 @@ const codePushOptions = {
     installMode: codePush.InstallMode.ON_NEXT_RESUME
 };
 
-class App extends PureComponent {
-    componentDidMount() {
-        SplashScreen.hide();
-    }
-
-    render() {
-        return (
-            <Provider store={store}>
-                <PersistGate
-                    persistor={persistor}
-                    loading={<Loading/>}>
-                    <View style={styles.container}>
-                        <StatusBar
-                            translucent={true}
-                            animated={true}
-                            backgroundColor="rgba(11, 11, 11, 0.4)"
-                            barStyle="default"/>
-                        <StacksInDrawer screenProps={{themeColor: 'red'}}/>
-                        <Toast persistor={persistor}/>
-                        <ActionSheet/>
-                    </View>
-                </PersistGate>
-            </Provider>
-        )
-    }
-}
+const App = () => (
+    <Provider store={store}>
+        <PersistGate
+            persistor={persistor}
+            loading={<Loading/>}>
+            <View style={styles.container}>
+                <StatusBar
+                    translucent={true}
+                    animated={true}
+                    backgroundColor="rgba(11, 11, 11, 0.4)"
+                    barStyle="default"/>
+                <StacksInDrawer screenProps={{themeColor: 'red'}}/>
+                <Toast persistor={persistor}/>
+                <ActionSheet/>
+            </View>
+        </PersistGate>
+    </Provider>
+);
 
 export default codePush(codePushOptions)(App)
 
