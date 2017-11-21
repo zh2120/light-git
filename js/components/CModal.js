@@ -1,11 +1,14 @@
+/**
+ * 自定义modal, 以 C 开头
+ */
 import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
 import {StyleSheet, Modal, View, Text} from 'react-native'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
-import {closeActionSheet, bindActions} from '../reducers/comReducer'
+import {closeModal, bindActions} from '../reducers/comReducer'
 import {Button} from '../components'
 
-export default connect(state => ({opened: state.comInfo.actionSheetOpen}), bindActions({closeActionSheet}))(
+export default connect(state => ({opened: state.comInfo.modalOpen}), bindActions({closeModal}))(
     class extends PureComponent {
         render() {
             const {opened} = this.props;
@@ -26,7 +29,7 @@ export default connect(state => ({opened: state.comInfo.actionSheetOpen}), bindA
                             </View>
                             <Button style={styles.closeBox}
                                     content={<EvilIcons name={'close'} size={32}/>}
-                                    onPress={this.props.closeActionSheet}/>
+                                    onPress={this.props.closeModal}/>
                         </View>
                     </View>
                 </Modal>

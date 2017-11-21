@@ -7,15 +7,15 @@ import {
 } from 'react-native'
 import {connect} from 'react-redux'
 import Octicons from 'react-native-vector-icons/Octicons';
-import {Button, ActionSheet} from '../../components/'
+import {Button} from '../../components/'
 import {userSignIn, userSignAccept} from '../../reducers/userReducer'
-import {openToast, bindActions, reset} from '../../reducers/comReducer'
+import {openToast, bindActions, reset, openModal} from '../../reducers/comReducer'
 
 export default connect(state => ({
     auth: state.userSignInfo.auth,
     signed: state.userSignInfo.signed,
     disabled: state.userSignInfo.signInPending
-}), bindActions({userSignIn, openToast, userSignAccept, reset}))(
+}), bindActions({userSignIn, openToast, userSignAccept, reset, openModal}))(
     class extends PureComponent {
         static navigationOptions = ({navigation}) => ({
             headerTitle: 'SignIn',
@@ -57,22 +57,22 @@ export default connect(state => ({
         password = (password) => this.setState({password: String(password)});
 
         signInSubmit = () => {
-            const {account, password} = this.state
-            const {userSignIn, openToast} = this.props
-
+            const {account, password} = this.state;
+            const {userSignIn, openToast, openModal} = this.props;
+            openModal()
             // todo 账号过滤空格，回车等
             if (account && password) {
                 const auth = btoa(`${account}:${password}`);
 
-                userSignIn(auth)
+                // userSignIn(auth)
             } else {
                 openToast('Check Account or Password')
             }
         };
 
         render() {
-            const {account, password} = this.state
-            const {disabled} = this.props
+            const {account, password} = this.state;
+            const {disabled} = this.props;
             // todo 键盘遮掩
             // todo 如果登录中，延迟过高，中途用户退出，登录状态还没有重置，再次打开App 无法登录，需要遮掩层，无法操作
             return (

@@ -6,8 +6,8 @@ export const ComTypes = {
     OPEN_TOAST: 'OPEN_TOAST', // 打开提示
     CLOSE_TOAST: 'CLOSE_TOAST', // 关闭提示
     PUT_ERROR: 'PUT_ERROR',  // 提示错误
-    OPEN_ACTIONSHEET: 'OPEN_ACTIONSHEET',
-    CLOESE_ACTIONSHEET: 'CLOESE_ACTIONSHEET'
+    OPEN_MODAL: 'OPEN_MODAL',
+    CLOSE_MODAL: 'CLOSE_MODAL'
 };
 
 export const reset = (routeName) => NavigationActions.reset({ // 重置路由
@@ -40,16 +40,16 @@ export const putError = (message) => ({type: ComTypes.PUT_ERROR, payload: {messa
 
 /**
  * 打开动态选择框
- * @param actions 动作数组
+ * @param reactElement 组件
  */
-export const openActionSheet = (actions) => ({type: ComTypes.OPEN_ACTIONSHEET, payload: {actions}});
+export const openModal = (reactElement) => ({type: ComTypes.OPEN_MODAL, payload: {reactElement}});
 
 /**
  * 关闭动作框
  */
-export const closeActionSheet = () => ({type: ComTypes.CLOESE_ACTIONSHEET});
+export const closeModal = () => ({type: ComTypes.CLOSE_MODAL});
 
-export default (state = {toastOpened: false, text: '', success: false, actionSheetOpen: false}, {type, payload}) => {
+export default (state = {toastOpened: false, text: '', success: false, modalOpen: false}, {type, payload}) => {
     switch (type) {
         case ComTypes.OPEN_TOAST:
             return {...state, toastOpened: true, text: payload.text, success: true};
@@ -63,11 +63,11 @@ export default (state = {toastOpened: false, text: '', success: false, actionShe
             }
             return {...state, toastOpened: true};
 
-        case ComTypes.OPEN_ACTIONSHEET: // 打开actionSheet
-            return {...state, actionSheetOpen: true};
+        case ComTypes.OPEN_MODAL: // 打开modal
+            return {...state, modalOpen: true};
 
-        case ComTypes.CLOESE_ACTIONSHEET: // 关闭actionSheet
-            return {...state, actionSheetOpen: false};
+        case ComTypes.CLOSE_MODAL: // 关闭modal
+            return {...state, modalOpen: false};
 
         default:
             return state

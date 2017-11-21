@@ -15,7 +15,7 @@ import {PersistGate} from 'redux-persist/es/integration/react'
 
 import StacksInDrawer from './routers/index'
 import configureStore from './configStore'
-import {Toast, ActionSheet} from './components'
+import {Toast, CModal} from './components'
 
 const {persistor, store} = configureStore();
 
@@ -39,7 +39,7 @@ const App = () => (
                     barStyle="default"/>
                 <StacksInDrawer screenProps={{themeColor: 'red'}}/>
                 <Toast persistor={persistor}/>
-                <ActionSheet/>
+                <CModal/>
             </View>
         </PersistGate>
     </Provider>

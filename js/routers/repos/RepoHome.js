@@ -15,7 +15,7 @@ import Octicons from 'react-native-vector-icons/Octicons'
 import {Button, Loading} from '../../components'
 import {repoContent, clearDir} from '../../reducers/repoReducer'
 import {getIssue} from '../../reducers/issueReducer'
-import {openActionSheet, bindActions, back} from '../../reducers/comReducer'
+import {openModal, bindActions, back} from '../../reducers/comReducer'
 
 const pr = 'PR';
 const wiki = 'Wiki';
@@ -29,7 +29,7 @@ export default connect(state => ({
     readme: state.repoInfo.readme,
     content: state.repoInfo.content,
     issuesData: state.issueInfo.issues
-}), bindActions({repoContent, clearDir, back, openActionSheet, getIssue}))(
+}), bindActions({repoContent, clearDir, back, openModal, getIssue}))(
     class extends PureComponent {
         static navigationOptions = ({navigation}) => {
             const {params} = navigation.state;
