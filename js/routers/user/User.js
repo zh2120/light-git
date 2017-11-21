@@ -42,7 +42,8 @@ export default connect(state => ({user: state.userInfo.user, auth: state.userSig
             const {auth} = this.props;
 
             if (auth && !nextProps.auth) { // 前一次auth存在，下一次不存在，则退出
-                nextProps.reset('SignIn')
+                nextProps.reset('Home')
+                console.log("reset('Home')")
             }
         }
 

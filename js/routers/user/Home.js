@@ -31,21 +31,6 @@ export default connect(state => ({
             searchText: ''
         }
 
-        componentWillMount() {
-            const {auth, reset} = this.props;
-            if (!auth) { // 授权过期
-                reset('SignIn')
-            }
-        }
-
-        componentWillReceiveProps(nextProps) {
-            const {auth} = this.props;
-
-            if (auth && !nextProps.auth) { // 前一次auth存在，下一次不存在，则退出
-                nextProps.reset('SignIn')
-            }
-        }
-
         changeText = (text) => this.setState({searchText: text});
 
         renderUserInfo = () => {

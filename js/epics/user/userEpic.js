@@ -5,9 +5,7 @@ import {
     userSignAccept,
     userSignDenied,
     repoList,
-    errRepoList,
     deleteAuth,
-    userSignIn
 } from '../../reducers/userReducer';
 import {openToast, putError} from '../../reducers/comReducer';
 import {Observable} from 'rxjs/Rx'
@@ -45,7 +43,7 @@ export const userSignInEpic = (action$, {dispatch}, {put}) => action$.ofType(Use
                         break;
                     case 200:
                         // todo 重写
-                        return Observable.of(deleteAuth({id: err.id})).startWith(userSignIn(err.auth));
+                        return Observable.of(deleteAuth({id: err.id}));
                         break;
                     default:
                         console.log('--> 超时', err);

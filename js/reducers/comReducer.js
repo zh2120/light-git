@@ -107,7 +107,7 @@ export const navReducer = (state = initialState(init), action) => {
             });
 
             return {...state, routes: nextRoutes};
-            
+
         case 'Navigation/RESET':
             return Navigator.router.getStateForAction(action);
 

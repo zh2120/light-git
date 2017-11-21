@@ -6,7 +6,7 @@ import {Observable} from 'rxjs/Rx'
 export function searchRepoByQueryEpic(action$, {getState, dispatch}, {get}) {
     return action$.ofType(SearchTypes.SEARCH_REPO)
         .switchMap(action => {
-            const {url} = action.payload
+            const {url} = action.payload;
             // const headers = {
             //     "Authorization": `token ${getState().userSignInfo.auth.token}`
             // }

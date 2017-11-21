@@ -97,11 +97,6 @@ export default connect(state => ({nav: state.nav, auth: state.userSignInfo.auth}
             SplashScreen.hide();
         }
 
-        componentWillReceiveProps(nextProps) {
-            const {auth} =this.props
-            if (auth) {}
-        }
-
         componentWillUnmount() {
             BackHandler.removeEventListener("hardwareBackPress", this.onBackPress);
         }

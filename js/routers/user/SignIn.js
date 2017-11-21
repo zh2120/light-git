@@ -24,10 +24,10 @@ export default connect(state => ({
                     return navigation.state.params.goSignUp()
                 }
             }}/>
-        })
+        });
 
         constructor(props) {
-            super(props)
+            super(props);
 
             this.state = {
                 account: '',
@@ -35,18 +35,22 @@ export default connect(state => ({
             }
         }
 
+        componentWillMount() {
+
+        }
+
+
         componentDidMount() {
-            const {setParams, navigate} = this.props.navigation;
-            // todo setParams
-            setParams({goSignUp: () => navigate('SignUp')})
+            const {navigation} = this.props;
+            //  setParams
+            navigation.setParams({goSignUp: () => navigation.navigate('SignUp')})
         }
 
         componentWillReceiveProps(nextProps) {
-            const {signed, reset} = this.props;
-
-            if (signed !== nextProps.signed && nextProps.auth) {
+            const {auth} = this.props;
+            if (!auth && nextProps.auth && nextProps.signed) {
                 this.setState(() => {
-                    reset('Home');
+                    nextProps.reset('Home');
                     return {account: '', password: ''}
                 })
             }
