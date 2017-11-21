@@ -94,7 +94,7 @@ export const clearUserInfoEpic = (action$, {dispatch, getState}, ajax) => action
                 if (status === 204) return userSignDenied();
                 throw {err: '其他错误'}
             })
-            .startWith(clearUser())
+            .startWith(clearUser()).startWith(openToast('已退出授权'))
             .catch(err => {
                 console.log('err', err);
                 return Observable.of(putError('清除用户数据失败'))

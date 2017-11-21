@@ -18,8 +18,11 @@ export const repoListEpic = () => {
 export const repoContentEpic = (action$, {getState, dispatch}, {get}) => action$.ofType(RepoTypes.REPO_HOME)
     .switchMap(({payload}) => {
         const {url} = payload;
-        const auth = getState().userSignInfo.auth;
-        const headers = {"Authorization": `token ${auth && auth.token}`};
+        const {auth} = getState().userSignInfo;
+        let headers = {};
+        if (auth) {
+            headers = {"Authorization": `token ${auth.token}`};
+        }
 
         return get(url, headers)
             .map(res => res.response || res)
@@ -46,9 +49,11 @@ export const repoContentEpic = (action$, {getState, dispatch}, {get}) => action$
 export const repoFileEpic = (action$, {getState, dispatch}, {get}) => action$.ofType(RepoTypes.FILE)
     .switchMap(({payload}) => {
         const {fullName, path, ref, type} = payload;
-        const headers = {
-            "Accept": "application/vnd.github.v3.raw"
-        };
+        const {auth} = getState().userSignInfo;
+        let headers = {"Accept": "application/vnd.github.v3.raw"};
+        if (auth) {
+            headers = {...headers, "Authorization": `token ${auth.token}`};
+        }
         const url = '/repos/' + fullName + '/contents/' + path + getParams({ref});
         const apiConfig = type === 'dir' ? {} : {"responseType": "text"}; // 不是目录，请求文件内容
         // todo 某些文件只有json格式

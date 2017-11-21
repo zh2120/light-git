@@ -14,7 +14,11 @@ import {Observable} from 'rxjs/Rx'
 export const issueEpic = (action$, {getState, dispatch}, {get}) => action$.ofType(IssueTypes.GET_ISSUE)
     .switchMap(action => {
         const {url} = action.payload;
-        const headers = {"Accept": "application/vnd.github.squirrel-girl-preview"};
+        const {auth} = getState().userSignInfo;
+        let headers = {"Accept": "application/vnd.github.squirrel-girl-preview"};
+        if (auth) {
+            headers = {...headers, "Authorization": `token ${auth.token}`};
+        }
 
         return get(url, headers).map(res => issue(res.response))
             .catch(e => Observable.of(putError('获取问题失败')).startWith(dispatch(errIssue())))
@@ -25,10 +29,11 @@ export const issueBodyEpic = (action$, {getState, dispatch}, {get}) =>
     action$.ofType(IssueTypes.GET_ISSUE_BODY)
         .switchMap(action => {
             const {url} = action.payload;
-            const headers = {
-                "Accept": "application/vnd.github.v3.raw+json",
-                "Authorization": `Basic OTMxOTkyMTIwQHFxLmNvbTpnaXRodWJAMTIz`
-            };
+            const {auth} = getState().userSignInfo;
+            let headers = {"Accept": "application/vnd.github.v3.raw+json"};
+            if (auth) {
+                headers = {...headers, "Authorization": `token ${auth.token}`};
+            }
 
             return get(url, headers).map(res => issueBody(res.response))
                 .startWith(getIssueBodyComments(url + '/comments'))
@@ -39,10 +44,11 @@ export const issueBodyCommentsEpic = (action$, {getState, dispatch}, {get}) =>
     action$.ofType(IssueTypes.GET_ISSUE_BODY_COMMENTS)
         .switchMap(action => {
             const {url} = action.payload;
-            const headers = {
-                "Accept": "application/vnd.github.v3.raw+json",
-                "Authorization": `Basic OTMxOTkyMTIwQHFxLmNvbTpnaXRodWJAMTIz`
-            };
+            const {auth} = getState().userSignInfo;
+            let headers = {"Accept": "application/vnd.github.v3.raw+json"};
+            if (auth) {
+                headers = {...headers, "Authorization": `token ${auth.token}`};
+            }
 
             return get(url, headers).map(res => issueBodyComments(res.response))
                 .catch(e => Observable.of(putError('获取问题评论失败').startWith(errIssueComments())))
