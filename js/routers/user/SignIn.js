@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import {connect} from 'react-redux'
 import Octicons from 'react-native-vector-icons/Octicons';
-import {Button} from '../../components/index'
+import {Button} from '../../components/'
 import {userSignIn, userSignAccept} from '../../reducers/userReducer'
 import {openToast, bindActions, reset} from '../../reducers/comReducer'
 
@@ -36,7 +36,8 @@ export default connect(state => ({
         }
 
         componentDidMount() {
-            const {setParams, navigate} = this.props.navigation
+            const {setParams, navigate} = this.props.navigation;
+            // todo setParams
             setParams({goSignUp: () => navigate('SignUp')})
         }
 
@@ -59,6 +60,7 @@ export default connect(state => ({
             const {account, password} = this.state
             const {userSignIn, openToast} = this.props
 
+            // todo 账号过滤空格，回车等
             if (account && password) {
                 const auth = btoa(`${account}:${password}`)
 
@@ -71,7 +73,7 @@ export default connect(state => ({
         render() {
             const {account, password} = this.state
             const {disabled} = this.props
-
+            // todo 键盘遮掩
             return (
                 <View style={styles.container}>
                     <Octicons name={'mark-github'} size={60} style={{marginVertical: 32}}/>

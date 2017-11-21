@@ -1,6 +1,12 @@
 import React from 'react';
 import {Dimensions, Platform} from 'react-native'
 
+if (!__DEV__) {
+    console = {
+        log: () => {},
+        error: () => {},
+    }
+}
 
 const {width, height} = Dimensions.get('window')
 

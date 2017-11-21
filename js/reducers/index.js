@@ -1,6 +1,5 @@
-import comInfo from './comReducer'
+import comInfo, {navReducer} from './comReducer'
 import repoInfo from './repoReducer'
-import {navReducer} from '../routers'
 import issueInfo from './issueReducer'
 import searchInfo from './searchReducer'
 import {userInfo, userSignInfo} from './userReducer';

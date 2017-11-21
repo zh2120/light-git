@@ -1,9 +1,20 @@
 import {combineEpics} from 'redux-observable';
 
-import {userSignInEpic, userInfoEpic, clearUserInfoEpic, repoListEpic} from './user/userEpic';
 import {searchRepoByQueryEpic} from './search/repoEpic'
 import {repoContentEpic, repoFileEpic} from './repo/homeEpic'
 import {issueEpic, issueBodyEpic, issueBodyCommentsEpic} from './repo/issueEpic'
+import {userSignInEpic, userInfoEpic, clearUserInfoEpic, repoListEpic, checkAuthEpic} from './user/userEpic';
 
-export default combineEpics(userSignInEpic, searchRepoByQueryEpic, userInfoEpic,
-    clearUserInfoEpic, repoContentEpic, repoFileEpic, issueEpic, issueBodyEpic, issueBodyCommentsEpic, repoListEpic);
+export default combineEpics(
+    issueEpic,
+    issueBodyEpic,
+    repoListEpic,
+    checkAuthEpic,
+    userInfoEpic,
+    repoFileEpic,
+    userSignInEpic,
+    repoContentEpic,
+    clearUserInfoEpic,
+    issueBodyCommentsEpic,
+    searchRepoByQueryEpic,
+);

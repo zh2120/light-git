@@ -71,7 +71,7 @@ export const repoList = (list) => ({type: UserTypes.REPO_LIST, payload: {list}})
 /**
  * 出错
  */
-export const errRepoList = () => ({type: UserTypes.ERR_REPO_LIST});
+export const errRepoList = () => ({type: UserTypes.ERR_REPO_LIST})
 /**
  * 用户信息库
  * @param state

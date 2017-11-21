@@ -6,6 +6,8 @@ import {connect} from "react-redux";
 
 import {Home, Search, SignIn, SignUp, User} from './user/'
 import {RepoHome, Readme, RepoDir, RepoIssues, RepoFile} from './repos/'
+import {reset} from "../reducers/comReducer";
+import {getCheckedAuth} from "../reducers/userReducer";
 
 const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
     const defaultHeaderStyle = {
@@ -72,7 +74,7 @@ const transitions = {
     }),
 }
 
-const Navigator = StackNavigator(MainRouters, {
+export const Navigator = StackNavigator(MainRouters, {
     headerMode: 'screen',
     navigationOptions: {
         gesturesEnabled: false,
@@ -80,49 +82,20 @@ const Navigator = StackNavigator(MainRouters, {
     ...transitions
 });
 
-let init = 'User';
-const initialState = (routerName) =>
-    Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams(routerName))
-
-export const navReducer = (state = initialState(init), action) => {
-    switch (action.type) {
-        case 'Navigation/NAVIGATE':
-            const {routes} = state;
-
-            if (routes[routes.length - 1].routeName === action.routeName) return state;
-
-            return Navigator.router.getStateForAction(action, state);
-        case 'Navigation/BACK':
-            if (action.routeName) {
-                // 寻找栈里，已经存在的场景索引
-                const i = state.routes.findIndex(item => item.routeName === action.routeName);
-
-                // 返回从栈底到指定的路由
-                return {index: i, routes: state.routes.slice(0, i + 1)}
-            }
-            if (state.index > 0) return {index: state.index - 1, routes: state.routes.slice(0, state.index)}; // 返回上一层
-            return initialState(init)
-        case 'persist/REHYDRATE': // 未登录 重置登录
-            if (!action.payload.userSignInfo.auth) {
-                return initialState('SignIn')
-            }
-            return state;
-        default:
-            return Navigator.router.getStateForAction(action, state);
-    }
-};
-
 export default connect(state => ({nav: state.nav, auth: state.userSignInfo.auth}))(
     class extends PureComponent {
 
         componentWillMount() {
             // todo 验证token的有效性
+            const {dispatch, auth} = this.props;
+            if (auth) {
+                dispatch(getCheckedAuth())
+            }
         }
 
         componentDidMount() {
             BackHandler.addEventListener("hardwareBackPress", this.onBackPress);
             SplashScreen.hide();
-            console.log(this.props)
         }
 
         componentWillUnmount() {

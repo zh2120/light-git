@@ -17,7 +17,7 @@ import StacksInDrawer from './routers/index'
 import configureStore from './configStore'
 import {Toast, ActionSheet} from './components'
 
-const {persistor, store} = configureStore()
+const {persistor, store} = configureStore();
 
 const Loading = () => (<View style={styles.loadWrap}><Text style={{color: 'red'}}>恢复现场中...</Text></View>)
 

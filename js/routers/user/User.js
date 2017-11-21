@@ -1,10 +1,15 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {View, Text, StyleSheet, Image} from 'react-native'
-import {bindActions} from '../../reducers/comReducer'
-import {getRepoList} from '../../reducers/userReducer'
+import {Button} from '../../components'
+import {bindActions, reset} from '../../reducers/comReducer'
+import {getRepoList, deleteAuth} from '../../reducers/userReducer'
 
-export default connect(state => ({user: state.userInfo.user}), bindActions({getRepoList}))(
+export default connect(state => ({user: state.userInfo.user, auth: state.userSignInfo.auth}), bindActions({
+    getRepoList,
+    deleteAuth,
+    reset
+}))(
     class extends Component {
         static navigationOptions = ({navigation}) => {
             const {params} = navigation.state;
@@ -14,7 +19,10 @@ export default connect(state => ({user: state.userInfo.user}), bindActions({getR
                 headerBackTitleStyle: {color: 'rgba(255,255,255,0.8)'},
                 headerStyle: {
                     backgroundColor: '#000'
-                }
+                },
+                headerRight: <Button content={<Text style={{color: '#fff'}}>sign out</Text>} onPress={() => {
+                    if (params) return params.signOut({id: params.id})
+                }}/>
             }
         };
 
@@ -24,12 +32,26 @@ export default connect(state => ({user: state.userInfo.user}), bindActions({getR
         }
 
         componentDidMount() {
-            this.props.getRepoList({username: ''})
+            const {navigation, deleteAuth, auth} = this.props;
+            if (auth) {
+                navigation.setParams({signOut: deleteAuth, id: auth.id})
+            }
+        }
+
+        componentWillReceiveProps(nextProps) {
+            const {auth} = this.props;
+
+            if (auth && !nextProps.auth) { // 前一次auth存在，下一次不存在，则退出
+                nextProps.reset('SignIn')
+            }
         }
 
 
         render() {
-            const {login, avatar_url, name, email, public_repos, public_gists, followers, following, location} = this.props.user;
+            const {user} = this.props;
+            if (!user) return null;
+
+            const {login, avatar_url, name, email, public_repos, public_gists, followers, following, location} = user;
 
             return (
                 <View style={styles.wrap}>
@@ -42,7 +64,7 @@ export default connect(state => ({user: state.userInfo.user}), bindActions({getR
                         </View>
                     </View>
                     <View style={styles.container}>
-
+                        <Button content={<Text>重置</Text>} onPress={() => this.props.reset('Home')}/>
                     </View>
                 </View>
             )
