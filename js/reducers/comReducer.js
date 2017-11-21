@@ -83,7 +83,7 @@ export const navReducer = (state = initialState(init), action) => {
         case 'Navigation/NAVIGATE':
             const {routes} = state;
 
-            if (routes[routes.length - 1].routeName === action.routeName) return state;
+            if (action.routeName !== 'RepoDir' && routes[routes.length - 1].routeName === action.routeName) return state;
 
             return Navigator.router.getStateForAction(action, state);
         case 'Navigation/BACK':
@@ -107,12 +107,7 @@ export const navReducer = (state = initialState(init), action) => {
             });
 
             return {...state, routes: nextRoutes};
-
-        case 'persist/REHYDRATE': // 未登录 重置登录
-            if (!action.payload.userSignInfo.auth) return initialState('SignIn');
-
-            return state;
-
+            
         case 'Navigation/RESET':
             return Navigator.router.getStateForAction(action);
 

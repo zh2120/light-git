@@ -31,12 +31,12 @@ export default connect(state => ({
             searchText: ''
         }
 
-        // componentWillMount() {
-        //     const {auth, reset} = this.props
-        //     if (!auth) { // 授权过期
-        //         reset('SignIn')
-        //     }
-        // }
+        componentWillMount() {
+            const {auth, reset} = this.props;
+            if (!auth) { // 授权过期
+                reset('SignIn')
+            }
+        }
 
         componentWillReceiveProps(nextProps) {
             const {auth} = this.props;

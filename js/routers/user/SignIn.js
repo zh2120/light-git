@@ -59,12 +59,12 @@ export default connect(state => ({
         signInSubmit = () => {
             const {account, password} = this.state;
             const {userSignIn, openToast, openModal} = this.props;
-            openModal()
+            // openModal()
             // todo 账号过滤空格，回车等
             if (account && password) {
                 const auth = btoa(`${account}:${password}`);
 
-                // userSignIn(auth)
+                userSignIn(auth)
             } else {
                 openToast('Check Account or Password')
             }
@@ -80,7 +80,6 @@ export default connect(state => ({
                     <Octicons name={'mark-github'} size={60} style={{marginVertical: 32}}/>
                     <TextInput
                         value={account}
-                        editable={!disabled}
                         placeholder="UserName or Email"
                         autoCapitalize="none"
                         onChangeText={this.account}
@@ -90,7 +89,6 @@ export default connect(state => ({
                         }}/>
                     <TextInput
                         value={password}
-                        editable={!disabled}
                         secureTextEntry={true}
                         placeholder="password"
                         autoCapitalize="none"
@@ -100,7 +98,7 @@ export default connect(state => ({
                         onSubmitEditing={() => {
                         }}/>
                     <Button content={<Text>{disabled ? 'login ...' : 'Authorized Login'}</Text>}
-                            style={styles.btnContent} disabled={disabled}
+                            style={styles.btnContent}
                             onPress={this.signInSubmit}/>
                 </View>
             )

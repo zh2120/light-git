@@ -32,19 +32,20 @@ export const userSignInEpic = (action$, {dispatch}, {put}) => action$.ofType(Use
         return put(url, body, headers)
             .map(({status, response}) => {
                 // 重构登录逻辑 对201做正常处理，对200 抛出异常
-                if (status === 200) throw {status: 200, desc: 'Signature invalid', auth};
+                if (status === 200) throw {status: 200, desc: 'Signature invalid', auth, id: response.id};
                 return response
             })
             // 进入授权登录流程å)，只有正常登录才有提示
             .map(auth => userSignAccept(auth))
             .catch(err => {
-                let error$
+                let error$;
                 switch (err.status) {
                     case 401: // 验证账户或者密码有误，被拒绝 -> 重置状态
                         error$ = Observable.of(putError('Invalid Username or password')); //发起UI错误提示
                         break;
                     case 200:
-                        return Observable.of(userSignIn(err.auth));
+                        // todo 重写
+                        return Observable.of(deleteAuth({id: err.id})).startWith(userSignIn(err.auth));
                         break;
                     default:
                         console.log('--> 超时', err);
