@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-import {openToast, bindActions} from '../../reducers/comReducer'
+import {openToast, bindActions, reset} from '../../reducers/comReducer'
 import {searchRepo} from '../../reducers/searchReducer'
 import {userSignAccept} from '../../reducers/userReducer'
 
@@ -23,7 +23,7 @@ export default connect(state => ({
     user: state.userInfo.user,
     auth: state.userSignInfo.auth,
     signed: state.userSignInfo.signed
-}), bindActions({searchRepo, userSignAccept, openToast}))(
+}), bindActions({searchRepo, userSignAccept, openToast, reset}))(
     class extends PureComponent {
         static navigationOptions = {header: null};
 
@@ -31,7 +31,19 @@ export default connect(state => ({
             searchText: ''
         }
 
-        componentDidMount() {
+        // componentWillMount() {
+        //     const {auth, reset} = this.props
+        //     if (!auth) { // 授权过期
+        //         reset('SignIn')
+        //     }
+        // }
+
+        componentWillReceiveProps(nextProps) {
+            const {auth} = this.props;
+
+            if (auth && !nextProps.auth) { // 前一次auth存在，下一次不存在，则退出
+                nextProps.reset('SignIn')
+            }
         }
 
         changeText = (text) => this.setState({searchText: text});

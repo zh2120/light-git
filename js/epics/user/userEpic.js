@@ -6,7 +6,8 @@ import {
     userSignDenied,
     repoList,
     errRepoList,
-    deleteAuth
+    deleteAuth,
+    userSignIn
 } from '../../reducers/userReducer';
 import {openToast, putError} from '../../reducers/comReducer';
 import {Observable} from 'rxjs/Rx'
@@ -31,7 +32,7 @@ export const userSignInEpic = (action$, {dispatch}, {put}) => action$.ofType(Use
         return put(url, body, headers)
             .map(({status, response}) => {
                 // 重构登录逻辑 对201做正常处理，对200 抛出异常
-                if (status === 200) throw {status: 200, desc: 'Signature invalid', id: response.id};
+                if (status === 200) throw {status: 200, desc: 'Signature invalid', auth};
                 return response
             })
             // 进入授权登录流程å)，只有正常登录才有提示
@@ -43,7 +44,7 @@ export const userSignInEpic = (action$, {dispatch}, {put}) => action$.ofType(Use
                         error$ = Observable.of(putError('Invalid Username or password')); //发起UI错误提示
                         break;
                     case 200:
-                        error$ = Observable.of(deleteAuth({id: err.id}));
+                        return Observable.of(userSignIn(err.auth));
                         break;
                     default:
                         console.log('--> 超时', err);
@@ -69,7 +70,7 @@ export const userInfoEpic = (action$, {dispatch}, {get}) => action$.ofType(UserT
 
         return get(url, headers)
             .map(({response}) => getUserInfo(response))
-            .startWith(openToast(' successful! '))
+            .startWith(openToast(' successful!'))
             .catch(err => Observable.of(userSignDenied()))
     });
 
@@ -115,7 +116,11 @@ export const checkAuthEpic = (action$, {getState}, {get}) => action$.ofType(User
         const url = `/applications/${client_id}/tokens/${auth.token}`;
 
         return get(url, headers).map(() => ({type: 'Checked_Successfully'}))
-    }).catch(err => Observable.of(userSignDenied()));
+    }).catch(({status}) => {
+        if (status === 404) {
+            return Observable.of(userSignDenied()).startWith(putError('授权已过期，请重新登录'))
+        }
+    });
 
 /**
  * 获取仓库列表

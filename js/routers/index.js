@@ -6,7 +6,6 @@ import {connect} from "react-redux";
 
 import {Home, Search, SignIn, SignUp, User} from './user/'
 import {RepoHome, Readme, RepoDir, RepoIssues, RepoFile} from './repos/'
-import {reset} from "../reducers/comReducer";
 import {getCheckedAuth} from "../reducers/userReducer";
 
 const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
@@ -96,6 +95,11 @@ export default connect(state => ({nav: state.nav, auth: state.userSignInfo.auth}
         componentDidMount() {
             BackHandler.addEventListener("hardwareBackPress", this.onBackPress);
             SplashScreen.hide();
+        }
+
+        componentWillReceiveProps(nextProps) {
+            const {auth} =this.props
+            if (auth) {}
         }
 
         componentWillUnmount() {

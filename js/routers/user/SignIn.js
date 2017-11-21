@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import {connect} from 'react-redux'
 import Octicons from 'react-native-vector-icons/Octicons';
-import {Button} from '../../components/'
+import {Button, ActionSheet} from '../../components/'
 import {userSignIn, userSignAccept} from '../../reducers/userReducer'
 import {openToast, bindActions, reset} from '../../reducers/comReducer'
 
@@ -42,11 +42,11 @@ export default connect(state => ({
         }
 
         componentWillReceiveProps(nextProps) {
-            const {signed, reset} = this.props
+            const {signed, reset} = this.props;
 
             if (signed !== nextProps.signed && nextProps.auth) {
                 this.setState(() => {
-                    reset('Home')
+                    reset('Home');
                     return {account: '', password: ''}
                 })
             }
@@ -62,7 +62,7 @@ export default connect(state => ({
 
             // todo 账号过滤空格，回车等
             if (account && password) {
-                const auth = btoa(`${account}:${password}`)
+                const auth = btoa(`${account}:${password}`);
 
                 userSignIn(auth)
             } else {
@@ -74,6 +74,7 @@ export default connect(state => ({
             const {account, password} = this.state
             const {disabled} = this.props
             // todo 键盘遮掩
+            // todo 如果登录中，延迟过高，中途用户退出，登录状态还没有重置，再次打开App 无法登录，需要遮掩层，无法操作
             return (
                 <View style={styles.container}>
                     <Octicons name={'mark-github'} size={60} style={{marginVertical: 32}}/>
