@@ -8,15 +8,15 @@ if (!__DEV__) {
     }
 }
 
-const {width, height} = Dimensions.get('window')
+const {width, height} = Dimensions.get('window');
 
 global.dp = function (px, useHeight = false) {
-    return px * (useHeight ? height / 667 : width / 375)
-}
-global.vw = width
-global.vh = height
+    return parseInt(px * (useHeight ? height / 667 : width / 375))
+};
+global.vw = width;
+global.vh = height;
 
-global.ios = Platform.OS === 'ios'
+global.ios = Platform.OS === 'ios';
 
 if (typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ && global.originalXMLHttpRequest) {
     global.XMLHttpRequest = global.originalXMLHttpRequest
@@ -24,8 +24,8 @@ if (typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ &&
 
 global.getParams = (params) => {
     if (typeof params === 'object') {
-        const paramsArray = []
-        Object.keys(params).map(key => paramsArray.push(key + '=' + params[key]))
+        const paramsArray = [];
+        Object.keys(params).map(key => paramsArray.push(key + '=' + params[key]));
         return '?' + paramsArray.join('&')
     }
 }
@@ -126,5 +126,5 @@ function atob(s) {
     return result.join('');
 }
 
-global.btoa = btoa
-global.atob = atob
+global.btoa = btoa;
+global.atob = atob;

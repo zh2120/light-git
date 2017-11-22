@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import {connect} from 'react-redux'
 import Octicons from 'react-native-vector-icons/Octicons';
-import {Button} from '../../components/'
+import {Button, CAlert} from '../../components/'
 import {userSignIn, userSignAccept} from '../../reducers/userReducer'
 import {openToast, bindActions, reset, openModal} from '../../reducers/comReducer'
 
@@ -63,12 +63,12 @@ export default connect(state => ({
         signInSubmit = () => {
             const {account, password} = this.state;
             const {userSignIn, openToast, openModal} = this.props;
-            // openModal()
+            openModal(<CAlert />, true)
             // todo 账号过滤空格，回车等
             if (account && password) {
                 const auth = btoa(`${account}:${password}`);
 
-                userSignIn(auth)
+                // userSignIn(auth)
             } else {
                 openToast('Check Account or Password')
             }
@@ -81,27 +81,26 @@ export default connect(state => ({
             // todo 如果登录中，延迟过高，中途用户退出，登录状态还没有重置，再次打开App 无法登录，需要遮掩层，无法操作
             return (
                 <View style={styles.container}>
-                    <Octicons name={'mark-github'} size={60} style={{marginVertical: 32}}/>
+                    <Octicons name={'mark-github'} size={60} style={{marginBottom: 24}}/>
                     <TextInput
                         value={account}
                         placeholder="UserName or Email"
                         autoCapitalize="none"
                         onChangeText={this.account}
+                        selectionColor={'#333'}
                         style={styles.textInput}
-                        underlineColorAndroid={'transparent'}
-                        onSubmitEditing={() => {
-                        }}/>
+                        underlineColorAndroid={'transparent'}/>
                     <TextInput
                         value={password}
+                        selectionColor={'#333'}
                         secureTextEntry={true}
                         placeholder="password"
                         autoCapitalize="none"
                         onChangeText={this.password}
                         style={styles.textInput}
                         underlineColorAndroid={'transparent'}
-                        onSubmitEditing={() => {
-                        }}/>
-                    <Button content={<Text>{disabled ? 'login ...' : 'Authorized Login'}</Text>}
+                        onSubmitEditing={this.signInSubmit}/>
+                    <Button content={<Text>Authorized Login</Text>}
                             style={styles.btnContent}
                             onPress={this.signInSubmit}/>
                 </View>
@@ -115,22 +114,23 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: -54
     },
     textInput: {
-        width: '80%',
-        borderWidth: 0.5,
+        width: 320,
+        borderWidth: StyleSheet.hairlineWidth,
         borderColor: '#888',
         borderRadius: 2,
-        padding: 8,
-        marginTop: 30,
+        marginTop: 36,
     },
     btnContent: {
         width: 200,
         height: 36,
+        marginTop: 24,
         borderRadius: 2,
-        borderWidth: 0.5,
+        borderWidth: StyleSheet.hairlineWidth,
         borderColor: '#888',
-        marginTop: 28,
     }
 })
 

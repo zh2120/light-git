@@ -39,17 +39,25 @@ export const closeToast = () => ({type: ComTypes.CLOSE_TOAST});
 export const putError = (message) => ({type: ComTypes.PUT_ERROR, payload: {message, error: true}});
 
 /**
- * 打开动态选择框
- * @param reactElement 组件
+ *
+ * @param ele
+ * @param cancelShow
  */
-export const openModal = (reactElement) => ({type: ComTypes.OPEN_MODAL, payload: {reactElement}});
+export const openModal = (ele, cancelShow) => ({type: ComTypes.OPEN_MODAL, payload: {ele, cancelShow}});
 
 /**
  * 关闭动作框
  */
 export const closeModal = () => ({type: ComTypes.CLOSE_MODAL});
 
-export default (state = {toastOpened: false, text: '', success: false, modalOpen: false}, {type, payload}) => {
+export default (state = {
+    toastOpened: false,
+    text: '',
+    success: false,
+    modalOpen: false,
+    ele: null,
+    cancelShow: false
+}, {type, payload}) => {
     switch (type) {
         case ComTypes.OPEN_TOAST:
             return {...state, toastOpened: true, text: payload.text, success: true};
@@ -64,17 +72,17 @@ export default (state = {toastOpened: false, text: '', success: false, modalOpen
             return {...state, toastOpened: true};
 
         case ComTypes.OPEN_MODAL: // 打开modal
-            return {...state, modalOpen: true};
+            return {...state, modalOpen: true, cancelShow: payload.cancelShow, ele: payload.ele || null};
 
         case ComTypes.CLOSE_MODAL: // 关闭modal
-            return {...state, modalOpen: false};
+            return {...state, modalOpen: false, ele: null};
 
         default:
             return state
     }
 }
 
-const init = 'Home';
+const init = 'SignIn';
 const initialState = (routerName) =>
     Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams(routerName));
 
