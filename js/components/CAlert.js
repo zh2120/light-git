@@ -62,8 +62,7 @@ export default connect(state => ({}), bindActions({closeModal}))(class extends C
     };
 
     render() {
-        const {title} = this.props;
-        let text = '文本内容', actions = [{text: 'nok', onPress: () => alert(1)}, {text: 'nok', onPress: () => alert(1)}]
+        const {title, text, actions} = this.props;
 
         return (
             <View style={styles.wrap}>
@@ -91,7 +90,7 @@ const styles = StyleSheet.create({
     cBox: {
         width: 280,
         borderRadius: 2,
-        paddingTop: 18,
+        paddingVertical: 18,
         alignItems: 'center',
         backgroundColor: '#fff',
     },

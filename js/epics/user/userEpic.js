@@ -7,7 +7,7 @@ import {
     repoList,
     deleteAuth,
 } from '../../reducers/userReducer';
-import {openToast, putError} from '../../reducers/comReducer';
+import {openToast, putError, closeModal} from '../../reducers/comReducer';
 import {Observable} from 'rxjs/Rx'
 // Rewrite over
 /*.catch() 放到了 .mergeMap() 内部，AJAX 调用的后面;如果让错误到达 action$.ofType()，epic 会终止并且不会监听任何 actions。*/
@@ -36,18 +36,18 @@ export const userSignInEpic = (action$, {dispatch}, {put}) => action$.ofType(Use
             // 进入授权登录流程å)，只有正常登录才有提示
             .map(auth => userSignAccept(auth))
             .catch(err => {
-                let error$;
+                let error$ = Observable.of(closeModal()).delay(50);
                 switch (err.status) {
                     case 401: // 验证账户或者密码有误，被拒绝 -> 重置状态
-                        error$ = Observable.of(putError('Invalid Username or password')); //发起UI错误提示
+                        error$ = error$.startWith(putError('Invalid Username or password')); //发起UI错误提示
                         break;
                     case 200:
-                        // todo 重写
-                        return Observable.of(deleteAuth({id: err.id}));
+                        // 重写
+                        return error$.startWith(deleteAuth({id: err.id}));
                         break;
                     default:
                         console.log('--> 超时', err);
-                        error$ = Observable.of(putError('Network timeout'));// 超时处理
+                        error$ = error$.startWith(putError('Network timeout'));// 超时处理
                 }
                 return error$.startWith(userSignDenied())
             })
@@ -69,7 +69,7 @@ export const userInfoEpic = (action$, {dispatch}, {get}) => action$.ofType(UserT
 
         return get(url, headers)
             .map(({response}) => getUserInfo(response))
-            .startWith(openToast(' successful!'))
+            .startWith(closeModal())
             .catch(err => Observable.of(userSignDenied()))
     });
 

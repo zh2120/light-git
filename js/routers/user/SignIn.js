@@ -63,12 +63,11 @@ export default connect(state => ({
         signInSubmit = () => {
             const {account, password} = this.state;
             const {userSignIn, openToast, openModal} = this.props;
-            openModal(<CAlert title={'提示'}/>, 1)
             // todo 账号过滤空格，回车等
             if (account && password) {
                 const auth = btoa(`${account}:${password}`);
-
-                // userSignIn(auth)
+                openModal(<CAlert title={'In obtaining authorization！'}/>)
+                userSignIn(auth)
             } else {
                 openToast('Check Account or Password')
             }
@@ -78,7 +77,7 @@ export default connect(state => ({
             const {account, password} = this.state;
             const {disabled} = this.props;
             // todo 键盘遮掩
-            // todo 如果登录中，延迟过高，中途用户退出，登录状态还没有重置，再次打开App 无法登录，需要遮掩层，无法操作
+            // 如果登录中，延迟过高，中途用户退出，登录状态还没有重置，再次打开App 无法登录，需要遮掩层，无法操作
             return (
                 <View style={styles.container}>
                     <Octicons name={'mark-github'} size={60} style={{marginBottom: 24}}/>

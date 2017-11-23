@@ -11,6 +11,7 @@ import 'rxjs/add/operator/filter'
 import 'rxjs/add/operator/reduce'
 import 'rxjs/add/operator/mergeMap'
 import 'rxjs/add/operator/startWith'
+import 'rxjs/add/operator/delay'
 import {PersistGate} from 'redux-persist/es/integration/react'
 
 import StacksInDrawer from './routers/index'
