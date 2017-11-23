@@ -5,7 +5,7 @@
 	"scripts": {
 		"start": "node node_modules/react-native/local-cli/cli.js start",
 		"install-and": "cd android && ./gradlew installRelease",
-		"code-push-and": "code-push release-react LightG android --t 1.0.0 --dev false --d Production --m true",
+		"code-push-and": "code-push release-react LightG android --t 1.0.3 --dev false --d Production --m true",
 		"test": "jest"
 	},
 	"dependencies": {
