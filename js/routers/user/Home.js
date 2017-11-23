@@ -22,7 +22,6 @@ const underlayColor = 'rgba(100,100,100 ,0.1)';
 export default connect(state => ({
     user: state.userInfo.user,
     auth: state.userSignInfo.auth,
-    signed: state.userSignInfo.signed
 }), bindActions({searchRepo, userSignAccept, openToast, reset}))(
     class extends PureComponent {
         static navigationOptions = {header: null};
@@ -34,10 +33,10 @@ export default connect(state => ({
         changeText = (text) => this.setState({searchText: text});
 
         renderUserInfo = () => {
-            const {navigation, user} = this.props;
+            const {navigation, user, auth} = this.props;
             let onPress, avatar;
 
-            if (user) {
+            if (auth && user) {
                 avatar = <Image source={{uri: user.avatar_url}} style={{width: 36, height: 36}}/>;
                 onPress = () => navigation.navigate('User', {name: user.login});
             } else {
@@ -67,16 +66,14 @@ export default connect(state => ({
 
         render() {
             const {searchText} = this.state;
-            const {navigation, signed} = this.props;
+            const {navigation} = this.props;
 
             return (
                 <View style={styles.wrap}>
                     <View style={styles.header}>
                         <View style={styles.logoRow}>
                             <Text style={styles.logoText}>Github</Text>
-                            {
-                                this.renderUserInfo()
-                            }
+                            {this.renderUserInfo()}
                         </View>
 
                         <TouchableOpacity style={styles.searchWrap} onPress={() => navigation.navigate('Search')}>
