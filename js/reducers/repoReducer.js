@@ -27,8 +27,9 @@ export const repoContent = (url) => ({
 export const getRepoContent = (content) => ({type: RepoTypes.REPO_HOME_CONTENTS, payload: {content}});
 
 /**
- * 获取仓库内容，被拒绝，重置UI和数据状态
+ * 获取仓库内容，被拒绝，重置UI和数据状态，并传递错误信息
  */
+// todo 增加错误信息
 export const getRepoContentDenied = () => ({type: RepoTypes.REPO_HOME_CONTENTS_DENIED});
 
 /**
@@ -74,7 +75,17 @@ export const popDir = (dirs) => ({type: RepoTypes.DIR_POP, payload: {dirs}});
 
 export const clearDir = () => ({type: RepoTypes.CLEAR_DIR});
 
-export default (state = {getting: false, content: [], file: {}, readme: '', dirs: []}, {type, payload}) => {
+/**
+ *
+ * @param state
+ * {getting: false, content: [], file: {}, readme: '', dirs: []}
+ * content 仓库主页的目录和文件列表 file：仓库文件 readme: 自诉文件， dirs: 目录栈
+ * @param type
+ * @param payload
+ * @returns {*}
+ */
+// todo 文件未加载的 UI 处理， getting 的存在，值得考虑一哈
+export default (state = {getting: false, content: null, file: {}, readme: '', dirs: []}, {type, payload}) => {
     switch (type) {
         case RepoTypes.REPO_HOME: // 请求库主内容，文件或者目录
             return {...state, getting: true};
@@ -83,7 +94,7 @@ export default (state = {getting: false, content: [], file: {}, readme: '', dirs
             return {...state, getting: false, content: payload.content};
 
         case RepoTypes.REPO_HOME_CONTENTS_DENIED: // 仓库主要内容被清空
-            return {...state, getting: false, content: []};
+            return {...state, getting: false, content: null};
 
         case RepoTypes.FILE:  // 请求仓库的文件
             return {...state, getting: true};
@@ -101,7 +112,7 @@ export default (state = {getting: false, content: [], file: {}, readme: '', dirs
             return {...state, getting: false, dirs: [...state.dirs, payload.dirs]};
 
         case RepoTypes.CLEAR_DIR:  // 清空库内的子目录所有内容
-            return {getting: false, file: {}, readme: {}, dirs: [], content: []};
+            return {getting: false, content: null, file: {}, readme: {}, dirs: []};
 
         case RepoTypes.DIR_POP:  // 逐级清空仓库子目录的内容
             return {...state, dirs: [...payload.dirs]};

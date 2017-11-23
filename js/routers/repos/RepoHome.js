@@ -45,7 +45,7 @@ export default connect(state => ({
                 navName: Code,
                 isRefreshing: false,
                 fullName: params ? params.fullName : ''
-            }
+            };
             this.hasMore = false;
             this.navBtns = [
                 {name: Code},
@@ -53,7 +53,7 @@ export default connect(state => ({
                 // {name: pr},
                 // {name: wiki},
                 // {name: Insights},
-            ]
+            ];
 
             /**
              * 列表通用属性ß
@@ -87,9 +87,10 @@ export default connect(state => ({
             }
         }
 
+        // todo， 如果出现错误信息，返回上一页
 
         componentWillUnmount() {
-            // todo 清理仓库主页
+            // 清理仓库主页
             this.props.clearDir()
         }
 
@@ -111,7 +112,7 @@ export default connect(state => ({
          * @returns {Array} 导航按钮组
          */
         renderNav = () => {
-            const {navName, fullName} = this.state
+            const {navName, fullName} = this.state;
 
             return this.navBtns.map((item, index) => {
                 const cur = navName === item.name;
@@ -140,7 +141,7 @@ export default connect(state => ({
                 case Code:
                     const {content} = this.props;
 
-                    if (isEmpty(content)) press = repoContent; // 仓库内容不存在，才进行请求
+                    if (!content) press = repoContent; // 仓库内容不存在，才进行请求
                     break;
                 case Issues:
                     const {issuesData} = this.props;
@@ -154,17 +155,16 @@ export default connect(state => ({
 
                 return {navName: type}
             })
-        }
-
+        };
 
         onRefreshing = () => {
-            const {fullName, navName, isRefreshing} = this.state
+            const {fullName, navName, isRefreshing} = this.state;
 
             return !isRefreshing && this.setState((pre) => {
                 // this.getNavContent(fullName, navName)
                 return {isRefreshing: !pre.isRefreshing}
             })
-        }
+        };
 
         /**
          * 渲染目录或者文件
@@ -172,9 +172,9 @@ export default connect(state => ({
          * @returns {XML}
          */
         renderDirOrFile = ({item}) => {
-            const {type, path, name} = item
-            const {navigation} = this.props
-            const isDir = type === 'dir' // 是否是目录
+            const {type, path, name} = item;
+            const {navigation} = this.props;
+            const isDir = type === 'dir'; // 是否是目录
 
             // todo 添加分支的请求
 
@@ -202,7 +202,7 @@ export default connect(state => ({
          * @returns {XML}
          */
         renderIssues = ({item}) => {
-            const {title, user, comments, number, id} = item;
+            const {title, user, comments, number} = item;
             const {fullName} = this.state;
             const {navigation} = this.props;
 
@@ -221,14 +221,14 @@ export default connect(state => ({
                     </View>
                 </TouchableHighlight>
             )
-        }
+        };
 
         /**
          * 渲染导航对应的内容
          * @returns {XML}
          */
         renderNavContainer = () => {
-            const {navName} = this.state
+            const {navName} = this.state;
 
             switch (navName) {
                 case Code:
@@ -243,7 +243,7 @@ export default connect(state => ({
                             {...this.listProps}/>
                     );
                 case Issues:
-                    const {issuesData} = this.props
+                    const {issuesData} = this.props;
                     if (!issuesData) return <View style={{height: dp(250)}}><Loading/></View>
 
                     return (
@@ -255,7 +255,7 @@ export default connect(state => ({
                 default:
                     return null;
             }
-        }
+        };
 
         render() {
             return (
