@@ -41,22 +41,37 @@ export const putError = (message) => ({type: ComTypes.PUT_ERROR, payload: {messa
 /**
  *
  * @param ele
- * @param cancelShow
+ * @param maskingShow // 遮掩层是否触摸关闭
  */
-export const openModal = (ele, cancelShow) => ({type: ComTypes.OPEN_MODAL, payload: {ele, cancelShow}});
+export const openModal = (ele, maskingShow) => ({type: ComTypes.OPEN_MODAL, payload: {ele, maskingShow}});
 
 /**
  * 关闭动作框
  */
 export const closeModal = () => ({type: ComTypes.CLOSE_MODAL});
 
+/**
+ *
+ * @param state
+ * {
+       text: '', 提示文本
+       ele: null, modal 内的组件
+       toastOpened: false, 提示框关闭 or 打开
+       success: false,
+       modalOpen: false,
+       maskingShow: false, modal
+    }
+ * @param type
+ * @param payload
+ * @returns {*}
+ */
 export default (state = {
-    toastOpened: false,
     text: '',
+    ele: null,
     success: false,
     modalOpen: false,
-    ele: null,
-    cancelShow: false
+    maskingShow: false,
+    toastOpened: false
 }, {type, payload}) => {
     switch (type) {
         case ComTypes.OPEN_TOAST:
@@ -72,10 +87,10 @@ export default (state = {
             return {...state, toastOpened: true};
 
         case ComTypes.OPEN_MODAL: // 打开modal
-            return {...state, modalOpen: true, cancelShow: payload.cancelShow, ele: payload.ele || null};
+            return {...state, modalOpen: true, maskingShow: Boolean(payload.maskingShow), ele: payload.ele || null};
 
         case ComTypes.CLOSE_MODAL: // 关闭modal
-            return {...state, modalOpen: false, ele: null};
+            return {...state, modalOpen: false, ele: null, maskingShow: false};
 
         default:
             return state

@@ -1,22 +1,22 @@
 import React, {Component} from 'react'
-import {View, StyleSheet, Animated, Text} from 'react-native'
+import {View, StyleSheet, Animated} from 'react-native'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
-const SimpleIcon = Animated.createAnimatedComponent(SimpleLineIcons)
+const SimpleIcon = Animated.createAnimatedComponent(SimpleLineIcons);
 
 export default class Loading extends Component {
 
-    value = new Animated.Value(0)
+    value = new Animated.Value(0);
 
     fade = this.value.interpolate({
         inputRange: [0, 0.5, 1],
         outputRange: [1, 0.5, 0.9],
-    })
+    });
 
     scale = this.value.interpolate({
         inputRange: [0, 0.5, 1],
         outputRange: [1, 1.6, 1],
-    })
+    });
 
     componentDidMount() {
         this.startAniamte()
@@ -28,13 +28,13 @@ export default class Loading extends Component {
             duration: 2000,
             useNativeDriver: true
         }).start(() => {
-            this.value.setValue(0)
+            this.value.setValue(0);
             this.startAniamte()
         })
     };
 
     render() {
-        const {name} = this.props
+        const {name} = this.props;
         return (
             <View style={styles.wrap}>
                 <SimpleIcon
@@ -57,4 +57,4 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#333'
     }
-})
+});

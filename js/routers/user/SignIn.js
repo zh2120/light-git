@@ -63,7 +63,7 @@ export default connect(state => ({
         signInSubmit = () => {
             const {account, password} = this.state;
             const {userSignIn, openToast, openModal} = this.props;
-            openModal(<CAlert />, true)
+            openModal(<CAlert title={'提示'}/>, 1)
             // todo 账号过滤空格，回车等
             if (account && password) {
                 const auth = btoa(`${account}:${password}`);
