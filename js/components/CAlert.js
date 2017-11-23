@@ -50,7 +50,7 @@ export default connect(state => ({}), bindActions({closeModal}))(class extends C
                             <Button content={<Text style={{fontSize: 14}}>{item.text || 'ok'}</Text>}
                                     style={styles.btnBox}
                                     onPress={() => {
-                                        setTimeout(this.props.closeModal, 100);
+                                        setTimeout(this.props.closeModal, 100); // 延时关闭
                                         return item.onPress() || null
                                     }}
                                     key={'cAlert' + index}/>

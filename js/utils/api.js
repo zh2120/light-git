@@ -2,7 +2,7 @@ import {ajax} from 'rxjs/observable/dom/ajax';
 
 function create(baseUrl) {
 
-    const timeout = 30000;
+    const timeout = 20000;
     const defaultHeaders = {
         "Content-Type": "application/vnd.github.mercy-preview+json",
         "Accept": "application/vnd.github.v3+json",

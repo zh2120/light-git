@@ -9,7 +9,7 @@ import {closeModal, bindActions} from '../reducers/comReducer'
 import {Button} from '../components'
 
 export default connect(state => ({ui: state.comInfo}), bindActions({closeModal}))((props) => {
-    const {modalOpen, cancelShow, ele, maskingShow} = props.ui;
+    const {modalOpen, ele, maskingShow} = props.ui;
     if (!modalOpen) return null;
 
     return (
@@ -17,7 +17,7 @@ export default connect(state => ({ui: state.comInfo}), bindActions({closeModal})
             animationType={"fade"}
             transparent={true}
             visible={modalOpen}
-            onRequestClose={() => console.log("Modal has been closed.")}>
+            onRequestClose={() => console.log("Modal closed.")}>
             <View style={styles.wrap}>
                 {
                     maskingShow
@@ -27,15 +27,7 @@ export default connect(state => ({ui: state.comInfo}), bindActions({closeModal})
                             </TouchableWithoutFeedback>)
                         : null
                 }
-
-                <View style={{flex: 1}}>{ele}</View>
-                {
-                    cancelShow
-                        ? <Button style={styles.closeBox}
-                                  content={<EvilIcons name={'close'} size={32}/>}
-                                  onPress={props.closeModal}/>
-                        : null
-                }
+                <View style={{flex: 1, padding: 24}}>{ele}</View>
             </View>
         </Modal>
     )
