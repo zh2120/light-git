@@ -62,10 +62,9 @@ export default connect(({userSignInfo}) => ({auth: userSignInfo.auth}), bindActi
             if (account && password) {
                 const auth = btoa(`${account}:${password}`);
                 openModal(<CAlert title={'In obtaining authorization！'}/>)
-                userSignIn(auth)
-            } else {
-                openToast('Check Account or Password')
+                return userSignIn(auth)
             }
+            return openToast('Check Account or Password')
         };
 
         render() {
@@ -111,6 +110,7 @@ const styles = StyleSheet.create({
         marginTop: -54
     },
     textInput: {
+        textAlign: 'center',
         width: 320,
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: '#888',

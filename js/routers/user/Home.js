@@ -37,11 +37,11 @@ export default connect(state => ({
             let onPress, avatar;
 
             if (auth && user) {
-
                 avatar = <Image source={{uri: user.avatar_url}} style={{width: 36, height: 36}}/>;
                 onPress = () => {
-                    getStarCount(); // 获取用户星的总数
+                    // getStarCount(); // 获取用户星的总数
                     return navigation.navigate('User', {name: user.login})
+                    // return navigation.navigate('SignIn')
                 };
             } else {
                 avatar = <EvilIcons name={'user'} size={36} style={{color: '#fff', padding: 2}}/>;
@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(30,144,255,0.6)'
     },
     logoRow: {
+        height: 36,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',

@@ -34,20 +34,20 @@ export const userSignInEpic = (action$, {dispatch}, {put}) => action$.ofType(Use
             // 进入授权登录流程
             .map(auth => userSignAccept(auth))
             .catch(err => {
-                let error$ = Observable.of(closeModal()).delay(50);
+                let error$;
                 switch (err.status) {
                     case 401: // 验证账户或者密码有误，被拒绝 -> 重置状态
-                        error$ = error$.startWith(putError('Invalid Username or password')); //发起UI错误提示
+                        error$ = Observable.of(putError('Invalid Username or password')); //发起UI错误提示
                         break;
                     case 200:
                         // 重写
-                        return error$.startWith(deleteAuth({id: err.id}));
+                        error$ = Observable.of(deleteAuth({id: err.id}));
                         break;
                     default:
                         console.log('--> 超时', err);
-                        error$ = error$.startWith(putError('网络状态不佳，请稍后再试'));// 超时处理
+                        error$ = Observable.of(putError('网络状态不佳，请稍后再试'));// 超时处理
                 }
-                return error$.startWith(userSignDenied())
+                return error$.startWith(closeModal()).delay(10).startWith(userSignDenied()) // 最先完成进行数据清理
             })
     })
 ;
@@ -89,13 +89,16 @@ export const clearUserInfoEpic = (action$, {dispatch, getState}, ajax) => action
 
         return ajax.delete(url, headers)
             .map(({status}) => {
-                if (status === 204) return userSignDenied();
-                throw {err: '其他错误'}
+                throw {status} // 主动抛出错误
             })
             .startWith(clearUser()).delay(20).startWith(openToast('已退出授权'))
             .catch(err => {
+                let err$ = Observable.of(putError('网络状态不佳，请稍后再试'));
                 console.log('err', err);
-                return Observable.of(putError('网络状态不佳，请稍后再试'))
+                if (err.status === 204) {
+                    err$ = Observable.of(openToast('已退出授权')).startWith(clearUser()).delay(10).startWith(userSignDenied())
+                }
+                return err$
             })
     });
 
@@ -115,8 +118,7 @@ export const checkAuthEpic = (action$, {getState}, {get}) => action$.ofType(User
         return get(url, headers).map(() => ({type: 'Checked_Successfully'}))
     }).catch(({status}) => {
         if (status === 404) {
-            // return Observable.of(clearUser())
-            return Observable.of(userSignDenied())
+            return Observable.of(clearUser()).startWith(userSignDenied()) // 在清理用户信息之前，取消授权
         }
         return Observable.of(putError('网络状态不佳，请稍后再试'))
     });
