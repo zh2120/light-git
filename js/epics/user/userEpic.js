@@ -33,7 +33,7 @@ export const userSignInEpic = (action$, {dispatch}, {put}) => action$.ofType(Use
                 if (status === 200) throw {status: 200, desc: 'Signature invalid', auth, id: response.id};
                 return response
             })
-            // 进入授权登录流程å)，只有正常登录才有提示
+            // 进入授权登录流程
             .map(auth => userSignAccept(auth))
             .catch(err => {
                 let error$ = Observable.of(closeModal()).delay(50);
@@ -47,7 +47,7 @@ export const userSignInEpic = (action$, {dispatch}, {put}) => action$.ofType(Use
                         break;
                     default:
                         console.log('--> 超时', err);
-                        error$ = error$.startWith(putError('Network timeout'));// 超时处理
+                        error$ = error$.startWith(putError('网络状态不佳，请稍后再试'));// 超时处理
                 }
                 return error$.startWith(userSignDenied())
             })
@@ -97,7 +97,7 @@ export const clearUserInfoEpic = (action$, {dispatch, getState}, ajax) => action
             .startWith(clearUser()).delay(20).startWith(openToast('已退出授权'))
             .catch(err => {
                 console.log('err', err);
-                return Observable.of(putError('清除用户数据失败'))
+                return Observable.of(putError('网络状态不佳，请稍后再试'))
             })
     });
 
@@ -119,6 +119,7 @@ export const checkAuthEpic = (action$, {getState}, {get}) => action$.ofType(User
         if (status === 404) {
             return Observable.of(userSignDenied()).startWith(putError('授权已过期，请重新登录'))
         }
+        return Observable.of(putError('网络状态不佳，请稍后再试'))
     });
 
 /**
@@ -129,6 +130,7 @@ export const checkAuthEpic = (action$, {getState}, {get}) => action$.ofType(User
  */
 export const repoListEpic = (action$, {getState}, {get}) => action$.ofType(UserTypes.GET_REPO_LIST)
     .switchMap(({payload}) => {
+    // todo 列表排序
         const {username} = payload;
         const {auth} = getState().userSignInfo;
         const headers = {"Authorization": "token " + auth.token};
@@ -142,5 +144,5 @@ export const repoListEpic = (action$, {getState}, {get}) => action$.ofType(UserT
 
     }).catch(e => {
         console.log(e);
-        return Observable.of(putError('获取列表h失败'))
+        return Observable.of(putError('网络状态不佳，请稍后再试'))
     });

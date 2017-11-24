@@ -97,7 +97,7 @@ export default (state = {
     }
 }
 
-const init = 'Home';
+const init = 'User';
 const initialState = (routerName) =>
     Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams(routerName));
 
