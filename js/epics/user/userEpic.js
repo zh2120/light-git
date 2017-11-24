@@ -22,9 +22,7 @@ export const userSignInEpic = (action$, {dispatch}, {put}) => action$.ofType(Use
         const {auth} = payload;
         const {client_id, note, scopes, fingerprint, client_secret} = require('../../../config.json');
         const url = '/authorizations/clients/' + client_id;
-        const headers = {
-            "Authorization": `Basic ${auth}`
-        };
+        const headers = {"Authorization": `Basic ${auth}`};
         const body = {note, scopes, fingerprint, client_secret};
 
         return put(url, body, headers)

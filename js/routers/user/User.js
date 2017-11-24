@@ -6,6 +6,7 @@ import {Button} from '../../components'
 import {bindActions, reset} from '../../reducers/comReducer'
 import {getRepoList, deleteAuth} from '../../reducers/userReducer'
 
+
 const UserRow = (props) => {
     const {title, text, iconName} = props;
     return (
@@ -19,10 +20,14 @@ const UserRow = (props) => {
     )
 }
 
-export default connect(state => ({user: state.userInfo.user, auth: state.userSignInfo.auth}), bindActions({
+export default connect(({userInfo, userSignInfo, starInfo}) => ({
+    user: userInfo.user,
+    auth: userSignInfo.auth,
+    count: starInfo.count
+}), bindActions({
+    reset,
     getRepoList,
     deleteAuth,
-    reset
 }))(
     class extends Component {
         static navigationOptions = ({navigation}) => {
@@ -34,9 +39,9 @@ export default connect(state => ({user: state.userInfo.user, auth: state.userSig
                 headerStyle: {
                     backgroundColor: '#000'
                 },
-                headerRight: <Button content={<Text style={{color: '#fff'}}>sign out</Text>} onPress={() => {
-                    if (params) return params.signOut({id: params.id})
-                }}/>
+                headerRight: <Button content={<Text style={{color: '#fff'}}>sign out</Text>}
+                                     onPress={() => params && params.signOut({id: params.id})}
+                                     style={{height: 40, paddingHorizontal: 12}}/>
             }
         };
 
@@ -49,6 +54,7 @@ export default connect(state => ({user: state.userInfo.user, auth: state.userSig
             const {navigation, deleteAuth, auth} = this.props;
             if (auth) {
                 navigation.setParams({signOut: deleteAuth, id: auth.id})
+
             }
         }
 
@@ -62,7 +68,7 @@ export default connect(state => ({user: state.userInfo.user, auth: state.userSig
 
 
         render() {
-            const {user} = this.props;
+            const {user, count} = this.props;
             if (!user) return null;
 
             const {login, avatar_url, name, email, public_repos, public_gists, followers, following} = user;
@@ -83,6 +89,9 @@ export default connect(state => ({user: state.userInfo.user, auth: state.userSig
                             content={<UserRow title={'My repositories'} text={public_repos} iconName={'package'}/>}
                             onPress={() => {
                             }} style={styles.rowBox}/>
+                        <Button content={<UserRow title={'Stared'} text={count} iconName={'star'}/>}
+                                onPress={() => {
+                                }} style={styles.rowBox}/>
                         <Button content={<UserRow title={'My gists'} text={public_gists} iconName={'list'}/>}
                                 onPress={() => {
                                 }} style={styles.rowBox}/>

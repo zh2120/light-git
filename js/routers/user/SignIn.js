@@ -11,19 +11,19 @@ import {Button, CAlert} from '../../components/'
 import {userSignIn, userSignAccept} from '../../reducers/userReducer'
 import {openToast, bindActions, reset, openModal} from '../../reducers/comReducer'
 
-export default connect(state => ({
-    auth: state.userSignInfo.auth,
-    signed: state.userSignInfo.signed,
-    disabled: state.userSignInfo.signInPending
-}), bindActions({userSignIn, openToast, userSignAccept, reset, openModal}))(
+export default connect(({userSignInfo}) => ({auth: userSignInfo.auth}), bindActions({
+    userSignIn,
+    openToast,
+    userSignAccept,
+    reset,
+    openModal
+}))(
     class extends PureComponent {
         static navigationOptions = ({navigation}) => ({
             headerTitle: 'SignIn',
-            headerRight: <Button content={<Text>Sign Up</Text>} onPress={() => {
-                if (navigation.state.params) {
-                    return navigation.state.params.goSignUp()
-                }
-            }}/>
+            headerRight: <Button content={<Text style={{color: '#fff'}}>Sign Up</Text>}
+                                 onPress={() => navigation.state.params && navigation.state.params.goSignUp()}
+                                 style={{height: 40, paddingHorizontal: 12}}/>
         });
 
         constructor(props) {
@@ -35,11 +35,6 @@ export default connect(state => ({
             }
         }
 
-        componentWillMount() {
-
-        }
-
-
         componentDidMount() {
             const {navigation} = this.props;
             //  setParams
@@ -48,7 +43,7 @@ export default connect(state => ({
 
         componentWillReceiveProps(nextProps) {
             const {auth} = this.props;
-            if (!auth && nextProps.auth && nextProps.signed) {
+            if (!auth && nextProps.auth) {
                 this.setState(() => {
                     nextProps.reset('Home');
                     return {account: '', password: ''}
@@ -75,8 +70,7 @@ export default connect(state => ({
 
         render() {
             const {account, password} = this.state;
-            const {disabled} = this.props;
-            // todo 键盘遮掩
+            // 键盘遮掩
             // 如果登录中，延迟过高，中途用户退出，登录状态还没有重置，再次打开App 无法登录，需要遮掩层，无法操作
             return (
                 <View style={styles.container}>

@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import {openToast, bindActions, reset} from '../../reducers/comReducer'
 import {searchRepo} from '../../reducers/searchReducer'
 import {userSignAccept} from '../../reducers/userReducer'
-
+import {getStarCount} from '../../reducers/activityReducer'
 import {
     View,
     Text,
@@ -22,23 +22,27 @@ const underlayColor = 'rgba(100,100,100 ,0.1)';
 export default connect(state => ({
     user: state.userInfo.user,
     auth: state.userSignInfo.auth,
-}), bindActions({searchRepo, userSignAccept, openToast, reset}))(
+}), bindActions({searchRepo, userSignAccept, openToast, reset, getStarCount}))(
     class extends PureComponent {
         static navigationOptions = {header: null};
 
         state = {
             searchText: ''
-        }
+        };
 
         changeText = (text) => this.setState({searchText: text});
 
         renderUserInfo = () => {
-            const {navigation, user, auth} = this.props;
+            const {navigation, user, auth, getStarCount} = this.props;
             let onPress, avatar;
 
             if (auth && user) {
+
                 avatar = <Image source={{uri: user.avatar_url}} style={{width: 36, height: 36}}/>;
-                onPress = () => navigation.navigate('User', {name: user.login});
+                onPress = () => {
+                    getStarCount(); // 获取用户星的总数
+                    return navigation.navigate('User', {name: user.login})
+                };
             } else {
                 avatar = <EvilIcons name={'user'} size={36} style={{color: '#fff', padding: 2}}/>;
                 onPress = () => navigation.navigate('SignIn')
@@ -52,7 +56,7 @@ export default connect(state => ({
         };
 
         goSearch = () => { // 传递搜索内容给 Search，
-            const {navigation, openToast} = this.props
+            const {navigation, openToast} = this.props;
             this.setState(preState => {
                 const searchText = preState.searchText.replace(/^\s+|\s+$/g, ''); // 删除前后的空格
                 if (searchText) {
