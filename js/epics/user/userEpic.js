@@ -115,7 +115,8 @@ export const checkAuthEpic = (action$, {getState}, {get}) => action$.ofType(User
         return get(url, headers).map(() => ({type: 'Checked_Successfully'}))
     }).catch(({status}) => {
         if (status === 404) {
-            return Observable.of(userSignDenied()).startWith(putError('授权已过期，请重新登录'))
+            // return Observable.of(clearUser())
+            return Observable.of(userSignDenied())
         }
         return Observable.of(putError('网络状态不佳，请稍后再试'))
     });
@@ -128,7 +129,7 @@ export const checkAuthEpic = (action$, {getState}, {get}) => action$.ofType(User
  */
 export const repoListEpic = (action$, {getState}, {get}) => action$.ofType(UserTypes.GET_REPO_LIST)
     .switchMap(({payload}) => {
-    // todo 列表排序
+        // todo 列表排序
         const {username} = payload;
         const {auth} = getState().userSignInfo;
         const headers = {"Authorization": "token " + auth.token};
