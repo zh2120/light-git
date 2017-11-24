@@ -21,7 +21,7 @@ export const issueEpic = (action$, {getState, dispatch}, {get}) => action$.ofTyp
         }
 
         return get(url, headers).map(res => issue(res.response))
-            .catch(e => Observable.of(putError('获取问题失败')).startWith(dispatch(errIssue())))
+            .catch(e => Observable.of(putError('获取问题失败')).startWith(errIssue()))
     });
 
 
