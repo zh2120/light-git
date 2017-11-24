@@ -39,9 +39,8 @@ export default connect(state => ({
             if (auth && user) {
                 avatar = <Image source={{uri: user.avatar_url}} style={{width: 36, height: 36}}/>;
                 onPress = () => {
-                    // getStarCount(); // 获取用户星的总数
+                    getStarCount(); // 获取用户星的总数
                     return navigation.navigate('User', {name: user.login})
-                    // return navigation.navigate('SignIn')
                 };
             } else {
                 avatar = <EvilIcons name={'user'} size={36} style={{color: '#fff', padding: 2}}/>;
