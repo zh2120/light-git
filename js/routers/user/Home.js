@@ -19,9 +19,10 @@ import {
 
 const underlayColor = 'rgba(100,100,100 ,0.1)';
 
-export default connect(state => ({
-    user: state.userInfo.user,
-    auth: state.userSignInfo.auth,
+export default connect(({userInfo, userSignInfo}) => ({
+    user: userInfo.user,
+    auth: userSignInfo.auth,
+    signed: userSignInfo.signed
 }), bindActions({searchRepo, userSignAccept, openToast, reset, getStarCount}))(
     class extends PureComponent {
         static navigationOptions = {header: null};
@@ -69,7 +70,7 @@ export default connect(state => ({
 
         render() {
             const {searchText} = this.state;
-            const {navigation} = this.props;
+            const {navigation, signed} = this.props;
 
             return (
                 <View style={styles.wrap}>
@@ -108,7 +109,7 @@ export default connect(state => ({
 
                         <View style={[styles.logoRow, {justifyContent: 'space-around',}]}>
 
-                            <TouchableHighlight underlayColor={underlayColor}
+                            <TouchableHighlight underlayColor={underlayColor} disabled={!signed}
                                                 onPress={() => null}>
                                 <View style={styles.iconWrap}>
                                     <Ionicons name={'md-star-outline'} size={24} style={styles.icon}/>
@@ -116,7 +117,7 @@ export default connect(state => ({
                                 </View>
                             </TouchableHighlight>
 
-                            <TouchableHighlight underlayColor={underlayColor}
+                            <TouchableHighlight underlayColor={underlayColor} disabled={!signed}
                                                 onPress={() => navigation.navigate('UserProList')}>
                                 <View style={styles.iconWrap}>
                                     <Ionicons name={'md-folder-open'} size={24} style={styles.icon}/>
