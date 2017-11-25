@@ -23,12 +23,13 @@ const Code = 'contents';
 const Issues = 'issues';
 const Insights = 'insights';
 
-export default connect(state => ({
-    nav: state.nav,
-    dirs: state.repoInfo.dirs,
-    readme: state.repoInfo.readme,
-    content: state.repoInfo.content,
-    issuesData: state.issueInfo.issues
+export default connect(({nav, repoInfo, issueInfo}) => ({
+    nav: nav,
+    dirs: repoInfo.dirs,
+    readme: repoInfo.readme,
+    content: repoInfo.content,
+    isRefreshing: repoInfo.getting,
+    issuesData: issueInfo.issues
 }), bindActions({repoContent, clearDir, back, openModal, getIssue}))(
     class extends PureComponent {
         static navigationOptions = ({navigation}) => {
@@ -43,7 +44,6 @@ export default connect(state => ({
             const {params} = props.navigation.state;
             this.state = {
                 navName: Code,
-                isRefreshing: false,
                 fullName: params ? params.fullName : ''
             };
             this.hasMore = false;
@@ -62,20 +62,24 @@ export default connect(state => ({
                 horizontal: false,
                 keyExtractor: this.keyExtractor,
                 refreshControl: <RefreshControl
-                    refreshing={this.state.isRefreshing}
+                    refreshing={this.props.isRefreshing}
                     onRefresh={this.onRefreshing}
                     tintColor="#ff0000"
                     title="Loading..."
                     titleColor="#00ff00"
-                    colors={['#ff0000', '#00ff00', '#0000ff']}
-                    progressBackgroundColor="#ffff00"
+                    colors={['#0000ff', '#00ff00', '#ff0000',]}
+                    progressBackgroundColor="#fff"
                 />,
                 showsVerticalScrollIndicator: false,
                 ItemSeparatorComponent: this.separator,
                 contentContainerStyle: {paddingVertical: 14},
                 // 列表为空，
                 ListEmptyComponent: () => <View
-                    style={{height: dp(250), justifyContent: 'center', alignItems: 'center'}}><Text>Welcome！</Text></View>
+                    style={{
+                        height: dp(250),
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}><Text>Welcome！</Text></View>
             };
         }
 
@@ -139,31 +143,26 @@ export default connect(state => ({
 
             switch (type) {
                 case Code:
-                    const {content} = this.props;
-
-                    if (!content) press = repoContent; // 仓库内容不存在，才进行请求
+                    press = repoContent;
                     break;
                 case Issues:
-                    const {issuesData} = this.props;
-
-                    if (!issuesData) press = getIssue; // 问题不存在，才请求
+                    press = getIssue;
                     break
             }
-            return this.setState((pre) => {
-                press(url);
-                if (pre.navName === type) return;
 
-                return {navName: type}
-            })
+            if (this.state.navName === type) return null;
+
+            press(url); // 不同按钮之间的切换，才请求数据
+            return this.setState({navName: type})
         };
 
         onRefreshing = () => {
-            const {fullName, navName, isRefreshing} = this.state;
+            const {fullName, navName} = this.state;
+            const {isRefreshing} = this.props;
 
-            return !isRefreshing && this.setState((pre) => {
-                // this.getNavContent(fullName, navName)
-                return {isRefreshing: !pre.isRefreshing}
-            })
+            if (!isRefreshing) {
+                this.getNavContent(fullName, navName)
+            }
         };
 
         /**

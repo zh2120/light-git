@@ -107,13 +107,6 @@ export default connect(state => ({
                         </TouchableOpacity>
 
                         <View style={[styles.logoRow, {justifyContent: 'space-around',}]}>
-                            <TouchableHighlight underlayColor={underlayColor} onPress={() => {
-                            }}>
-                                <View style={styles.iconWrap}>
-                                    <Ionicons name={'md-folder-open'} size={24} style={styles.icon}/>
-                                    <Text style={styles.icon}>Repos</Text>
-                                </View>
-                            </TouchableHighlight>
 
                             <TouchableHighlight underlayColor={underlayColor}
                                                 onPress={() => {
@@ -124,12 +117,11 @@ export default connect(state => ({
                                 </View>
                             </TouchableHighlight>
 
-
-                            <TouchableHighlight underlayColor={underlayColor}
-                                                onPress={() => navigation.navigate('Search')}>
+                            <TouchableHighlight underlayColor={underlayColor} onPress={() => {
+                            }}>
                                 <View style={styles.iconWrap}>
-                                    <Ionicons name={'md-bulb'} size={24} style={styles.icon}/>
-                                    <Text style={styles.icon}>Gists</Text>
+                                    <Ionicons name={'md-folder-open'} size={24} style={styles.icon}/>
+                                    <Text style={styles.icon}>Repos</Text>
                                 </View>
                             </TouchableHighlight>
 
