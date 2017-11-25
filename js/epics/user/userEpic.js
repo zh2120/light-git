@@ -129,7 +129,7 @@ export const checkAuthEpic = (action$, {getState}, {get}) => action$.ofType(User
  * @param getState
  * @param get
  */
-export const repoListEpic = (action$, {getState}, {get}) => action$.ofType(UserTypes.GET_REPO_LIST)
+export const proListEpic = (action$, {getState}, {get}) => action$.ofType(UserTypes.GET_PRO_LIST)
     .switchMap(({payload}) => {
         // todo 列表排序
         const {username} = payload;
@@ -142,6 +142,10 @@ export const repoListEpic = (action$, {getState}, {get}) => action$.ofType(UserT
         }
 
         return get(url, headers).map(({response}) => repoList(response))
+            .catch(e => {
+                console.log(e)
+                return Observable.of(putError('network timeout'))
+            })
 
     }).catch(e => {
         console.log(e);

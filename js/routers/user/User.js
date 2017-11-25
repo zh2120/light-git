@@ -86,7 +86,7 @@ export default connect(({userInfo, userSignInfo, starInfo}) => ({
                     <View style={{height: 12, backgroundColor: '#ededed',}}/>
                     <View style={{backgroundColor: '#fff', alignItems: 'center'}}>
                         <Button
-                            content={<UserRow title={'My repositories'} text={public_repos} iconName={'package'}/>}
+                            content={<UserRow title={'Repositories'} text={public_repos} iconName={'package'}/>}
                             onPress={() => {
                             }} style={styles.rowBox}/>
                         <Button content={<UserRow title={'Stared'} text={count} iconName={'star'}/>}

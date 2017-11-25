@@ -60,7 +60,7 @@ const SearchHeader = connect(state => ({}), bindActions({searchRepo, openToast})
         searchSubmit = (searchText) => {
             const {searchRepo, openToast} = this.props
             const params = {
-                q: searchText.replace(/^\s+|\s+$/g,''),
+                q: searchText.replace(/^\s+|\s+$/g, ''),
                 sort: 'star'
             }
             if (params.q.length > 0) {
@@ -128,10 +128,10 @@ export default connect(state => ({
         }
 
         reSearch = (item) => this.setState(pre => {
-            this.props.searchRepo(item)
+            this.props.searchRepo(item);
 
             return {recordOpen: !pre}
-        })
+        });
 
         renderSectionHeader = ({section}) => { // 分段头
             let title, leftIconName, rightIconName, clear;
@@ -147,9 +147,9 @@ export default connect(state => ({
                 title = 'Results';
                 leftIconName = 'paperclip';
                 rightIconName = 'broom';
-                clear = () => {
-                }
+                clear = () => null
             }
+
 
             return (
                 <View style={[styles.sectionBase, styles.sectionWrap]}>
@@ -189,52 +189,49 @@ export default connect(state => ({
         }
 
         renderReposItem = ({item, index}) => {
-            if (item) {
-                const {
-                    name,
-                    full_name,
-                    language,
-                    updated_at,
-                    description,
-                    stargazers_count,
-                } = item;
-                const {navigation} = this.props
+            if (!item) return null;
+            const {
+                name,
+                full_name,
+                language,
+                updated_at,
+                description,
+                stargazers_count,
+            } = item;
+            const {navigation} = this.props
 
-                return (
-                    <TouchableHighlight key={`r-${index}`}
-                                        underlayColor={'rgba(100,100,100 ,0.1)'}
-                                        onPress={() => navigation.navigate('RepoHome', {
-                                            fullName: full_name,
-                                            name: name
-                                        })}>
-                        <View style={styles.repoItem}>
-                            <View style={styles.touchItemLeft}>
-                                <Ionicons name={'ios-browsers-outline'} size={22}
-                                          style={{color: '#0366d6', marginRight: 10}}/>
-                                <Text style={styles.repoName}>{full_name}</Text>
-                            </View>
-                            <View style={styles.touchItemLeft}>
-                                <Octicons name={'star'} size={18} style={{marginLeft: 6}}/>
-                                <Text>{stargazers_count}</Text>
-                            </View>
-                            <View style={styles.repoDesc}><Text style={styles.repoDescText}>{description}</Text></View>
-                            <View style={[styles.touchItemLeft, {justifyContent: 'space-between'}]}>
-                                {
-                                    language ? (
-                                        <Text style={{
-                                            backgroundColor: '#e7f3ff',
-                                            padding: 4,
-                                            color: '#0366d6'
-                                        }}>{language}</Text>
-                                    ) : <View/>
-                                }
-                                <Text>Updated {updated_at}</Text>
-                            </View>
+            return (
+                <TouchableHighlight
+                    key={`r-${index}`}
+                    underlayColor={'rgba(100,100,100 ,0.1)'}
+                    onPress={() => navigation.navigate('RepoHome', {fullName: full_name, name: name})}>
+                    <View style={styles.repoItem}>
+                        <View style={styles.touchItemLeft}>
+                            <Ionicons name={'ios-browsers-outline'} size={22}
+                                      style={{color: '#0366d6', marginRight: 10}}/>
+                            <Text style={styles.repoName}>{full_name}</Text>
                         </View>
-                    </TouchableHighlight>
-                )
-            }
-            return null
+                        <View style={styles.touchItemLeft}>
+                            <Octicons name={'star'} size={18} style={{marginLeft: 6}}/>
+                            <Text>{stargazers_count}</Text>
+                        </View>
+                        <View style={styles.repoDesc}><Text style={styles.repoDescText}>{description}</Text></View>
+                        <View style={[styles.touchItemLeft, {justifyContent: 'space-between'}]}>
+                            {
+                                language ? (
+                                    <Text style={{
+                                        backgroundColor: '#e7f3ff',
+                                        padding: 4,
+                                        color: '#0366d6'
+                                    }}>{language}</Text>
+                                ) : <View/>
+                            }
+                            <Text>Updated {updated_at}</Text>
+                        </View>
+                    </View>
+                </TouchableHighlight>
+            )
+
         };
 
         keyExtractor = (item, index) => 'key-' + index;

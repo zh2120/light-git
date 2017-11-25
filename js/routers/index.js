@@ -5,7 +5,7 @@ import SplashScreen from 'react-native-splash-screen'
 import {connect} from "react-redux";
 
 import {Home, Search, SignIn, SignUp, User} from './user/'
-import {RepoHome, Readme, RepoDir, RepoIssues, RepoFile} from './repos/'
+import {RepoHome, Readme, RepoDir, RepoIssues, RepoFile, UserProList} from './repos/'
 import {getCheckedAuth} from "../reducers/userReducer";
 
 const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
@@ -17,7 +17,7 @@ const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
         borderBottomWidth: 0,
         borderBottomColor: null,
         backgroundColor: 'rgba(30,144,255,0.6)'
-    }
+    };
 
     return {
         ...navigationOptions,
@@ -37,8 +37,9 @@ const MainRouters = {
     RepoDir: {screen: RepoDir},
     RepoHome: {screen: RepoHome},
     RepoFile: {screen: RepoFile},
-    RepoIssues: {screen: RepoIssues}
-}
+    RepoIssues: {screen: RepoIssues},
+    UserProList: {screen: UserProList}
+};
 
 for (const key in MainRouters) {
     MainRouters[key].navigationOptions = navigationEnhancer

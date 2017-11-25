@@ -10,9 +10,8 @@ if (!__DEV__) {
 
 const {width, height} = Dimensions.get('window');
 
-global.dp = function (px, useHeight = false) {
-    return parseInt(px * (useHeight ? height / 667 : width / 375))
-};
+global.dp = (px, useHeight = false) => parseInt(px * (useHeight ? height / 667 : width / 375));
+
 global.vw = width;
 global.vh = height;
 
@@ -28,7 +27,7 @@ global.getParams = (params) => {
         Object.keys(params).map(key => paramsArray.push(key + '=' + params[key]));
         return '?' + paramsArray.join('&')
     }
-}
+};
 
 global.isEmpty = (o) => {
     if (o instanceof Object) {
@@ -37,7 +36,7 @@ global.isEmpty = (o) => {
         }
         return true
     }
-}
+};
 
 const base64hash = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 // btoa method

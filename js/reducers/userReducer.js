@@ -10,9 +10,9 @@ export const UserTypes = {
     USER_SIGNIN_ACCEPT: 'USER_SIGNIN_ACCEPT', //  登录接受
     USER_SIGNIN_DENIED: 'USER_SIGNIN_DENIED',  // 登录被拒绝
     GET_CHECK_AUTH: 'GET_CHECK_AUTH',
-    GET_REPO_LIST: 'GET_REPO_LIST', // 获取用户的仓库列表
-    REPO_LIST: 'REPO_LIST',
-    ERR_REPO_LIST: 'ERR_REPO_LIST', // 出错处理
+    GET_PRO_LIST: 'GET_PRO_LIST', // 获取用户的仓库列表
+    PRO_LIST: 'PRO_LIST',
+    ERR_PRO_LIST: 'ERR_PRO_LIST', // 出错处理
 };
 
 /**
@@ -60,25 +60,25 @@ export const getCheckedAuth = () => ({type: UserTypes.GET_CHECK_AUTH});
  * 获取指定用户名的仓库列表
  * @param username 指定用户名
  */
-export const getRepoList = ({username}) => ({type: UserTypes.GET_REPO_LIST, payload: {username}});
+export const getRepoList = ({username = ''}) => ({type: UserTypes.GET_PRO_LIST, payload: {username}});
 
 /**
  * 接受用户的仓库列表
  * @param list
  */
-export const repoList = (list) => ({type: UserTypes.REPO_LIST, payload: {list}});
+export const repoList = (list) => ({type: UserTypes.PRO_LIST, payload: {list}});
 
 /**
  * 出错
  */
-export const errRepoList = () => ({type: UserTypes.ERR_REPO_LIST})
+export const errRepoList = () => ({type: UserTypes.ERR_PRO_LIST})
 /**
  * 用户信息库
  * @param state
  * @param action
  * @returns {*}
  */
-export const userInfo = (state = {user: null, repoList: null}, {type, payload}) => {
+export const userInfo = (state = {user: null, proList: null}, {type, payload}) => {
     switch (type) {
         case UserTypes.USER_ACCEPT:
             return {...state, ...payload};
@@ -86,11 +86,11 @@ export const userInfo = (state = {user: null, repoList: null}, {type, payload}) 
         case UserTypes.CLEAR_USER:
             return {...state, user: null};
 
-        case UserTypes.REPO_LIST:
-            return {...state, repoList: payload.list};
+        case UserTypes.PRO_LIST:
+            return {...state, proList: payload.list};
 
-        case UserTypes.ERR_REPO_LIST:
-            return {...state, repoList: null};
+        case UserTypes.ERR_PRO_LIST:
+            return {...state, proList: null};
 
         default:
             return state;

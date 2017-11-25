@@ -34,19 +34,16 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
     class extends PureComponent {
         static navigationOptions = ({navigation}) => {
             const {params} = navigation.state;
-            return {
-                headerTitle: params && params.name
-            }
+            return {headerTitle: params && params.name}
         };
 
         constructor(props) {
             super(props);
             const {params} = props.navigation.state;
             this.state = {
-                navName: Code,
+                navName: '',
                 fullName: params ? params.fullName : ''
             };
-            this.hasMore = false;
             this.navBtns = [
                 {name: Code},
                 {name: Issues},
@@ -84,10 +81,11 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
         }
 
         componentDidMount() {
-            const {fullName, navName} = this.state;
+            const {fullName} = this.state;
 
             if (fullName) {
-                this.getNavContent(fullName, navName)
+                console.log(fullName)
+                this.getNavContent(fullName, Code)
             }
         }
 
@@ -108,7 +106,10 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
         /**
          * 行分隔线
          */
-        separator = () => <View style={styles.separator}/>;
+        separator = () => <View style={{
+            height: StyleSheet.hairlineWidth,
+            backgroundColor: 'rgba(10,10,10, 0.2)'
+        }}/>;
 
 
         /**
@@ -295,14 +296,10 @@ const styles = {
         flex: 1,
         height: '100%'
     },
-    contentRow: {flexDirection: 'row', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 16},
-    separator: {
-        height: StyleSheet.hairlineWidth,
-        backgroundColor: 'rgba(10,10,10, 0.2)'
-    },
     contentName: {marginLeft: 6},
-    issueBox: {flexDirection: 'row', alignItems: 'flex-start', marginTop: 10, paddingHorizontal: 16},
-    avatarBox: {width: 32, height: 32, borderRadius: 16},
     titleText: {fontSize: 16, color: '#333'},
-    issueDescBox: {flex: 1, marginHorizontal: 16}
+    issueDescBox: {flex: 1, marginHorizontal: 16},
+    avatarBox: {width: 32, height: 32, borderRadius: 16},
+    contentRow: {flexDirection: 'row', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 16},
+    issueBox: {flexDirection: 'row', alignItems: 'flex-start', marginTop: 10, paddingHorizontal: 16}
 };

@@ -109,16 +109,15 @@ export default connect(state => ({
                         <View style={[styles.logoRow, {justifyContent: 'space-around',}]}>
 
                             <TouchableHighlight underlayColor={underlayColor}
-                                                onPress={() => {
-                                                }}>
+                                                onPress={() => null}>
                                 <View style={styles.iconWrap}>
                                     <Ionicons name={'md-star-outline'} size={24} style={styles.icon}/>
                                     <Text style={styles.icon}>Stars</Text>
                                 </View>
                             </TouchableHighlight>
 
-                            <TouchableHighlight underlayColor={underlayColor} onPress={() => {
-                            }}>
+                            <TouchableHighlight underlayColor={underlayColor}
+                                                onPress={() => navigation.navigate('UserProList')}>
                                 <View style={styles.iconWrap}>
                                     <Ionicons name={'md-folder-open'} size={24} style={styles.icon}/>
                                     <Text style={styles.icon}>Repos</Text>
