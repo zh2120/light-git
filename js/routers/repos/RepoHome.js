@@ -84,7 +84,6 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
             const {fullName} = this.state;
 
             if (fullName) {
-                console.log(fullName)
                 this.getNavContent(fullName, Code)
             }
         }
@@ -234,7 +233,7 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
                 case Code:
                     const {content} = this.props;
                     // 内容为空，从云上下载
-                    if (!content) return <View style={{height: dp(250)}}><Loading/></View>
+                    if (!content) return <View style={{height: dp(250)}}><Loading/></View>;
 
                     return (
                         <FlatList
@@ -244,7 +243,7 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
                     );
                 case Issues:
                     const {issuesData} = this.props;
-                    if (!issuesData) return <View style={{height: dp(250)}}><Loading/></View>
+                    if (!issuesData) return <View style={{height: dp(250)}}><Loading/></View>;
 
                     return (
                         <FlatList

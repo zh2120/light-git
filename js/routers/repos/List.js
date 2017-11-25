@@ -75,16 +75,17 @@ export default connect(({userInfo}) => ({
             const {navigation} = this.props;
             const proItem = (
                 <View>
-                    <Text>{name}</Text>
-                    <Text>{description}</Text>
-                    <View>
-                        <Text>{language}</Text>
-                        <Text>{stargazers_count}</Text>
+                    <Text style={{color: '#0366d6', fontSize: 16}}>{name}</Text>
+                    <Text style={{marginVertical: 8}}>{description}</Text>
+                    <View style={{flexDirection: 'row'}}>
+                        <Text style={{color: '#333', marginRight: 12}}>{language}</Text>
+                        <Text>{' 🌟 ' + stargazers_count}</Text>
                     </View>
                 </View>
             );
             return (
-                <Button content={proItem} style={{height: dp(100), alignItems: 'flex-start'}}
+                <Button content={proItem}
+                        style={styles.btnRow}
                         onPress={() => navigation.navigate('RepoHome', {fullName: full_name, name: name})}/>
             )
         };
@@ -111,5 +112,12 @@ const styles = StyleSheet.create({
     wrap: {
         flex: 1,
         backgroundColor: '#fff'
+    },
+    btnRow: {
+        minHeight: dp(100),
+        alignItems: 'flex-start',
+        justifyContent: 'space-around',
+        paddingHorizontal: 14,
+        paddingVertical: 8
     }
 });
