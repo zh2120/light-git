@@ -59,7 +59,7 @@ export default (state = {getting: false, issues: null, issueBody: null, issueCom
             return {...state, issueComments: payload.comments};
 
         case IssueTypes.ERR_ISSUE_COMMENTS:
-            return {...state, issueComments: null};
+            return {...state, issueComments: null, issueBody: null};
 
         default:
             return state

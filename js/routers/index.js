@@ -6,6 +6,7 @@ import {connect} from "react-redux";
 
 import {Home, Search, SignIn, SignUp, User} from './user/'
 import {RepoHome, Readme, RepoDir, RepoIssues, RepoFile, UserProList} from './repos/'
+import {StarsList} from './activity/'
 import {getCheckedAuth} from "../reducers/userReducer";
 
 const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
@@ -38,7 +39,8 @@ const MainRouters = {
     RepoHome: {screen: RepoHome},
     RepoFile: {screen: RepoFile},
     RepoIssues: {screen: RepoIssues},
-    UserProList: {screen: UserProList}
+    UserProList: {screen: UserProList},
+    StarsList: {screen: StarsList}
 };
 
 for (const key in MainRouters) {

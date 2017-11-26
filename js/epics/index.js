@@ -4,7 +4,7 @@ import {searchRepoByQueryEpic} from './search/repoEpic'
 import {repoContentEpic, repoFileEpic} from './repo/homeEpic'
 import {issueEpic, issueBodyEpic, issueBodyCommentsEpic} from './repo/issueEpic'
 import {userSignInEpic, userInfoEpic, clearUserInfoEpic, proListEpic, checkAuthEpic} from './user/userEpic';
-import {starCountEpic} from './activity/starEpic'
+import {starCountEpic, starsEpic} from './activity/starEpic'
 export default combineEpics(
     issueEpic,
     issueBodyEpic,
@@ -13,6 +13,7 @@ export default combineEpics(
     userInfoEpic,
     repoFileEpic,
     starCountEpic,
+    starsEpic,
     userSignInEpic,
     repoContentEpic,
     clearUserInfoEpic,

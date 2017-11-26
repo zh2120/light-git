@@ -5,7 +5,7 @@ import storage from 'redux-persist/lib/storage'
 import rootReducer from './reducers'
 import rootEpic from './epics'
 import api from './utils/api'
-// todo 为依赖动态添加token
+
 const epicMiddleware = createEpicMiddleware(rootEpic, {
     dependencies: {get: api.get, put: api.put, post: api.post, patch: api.patch, delete: api.delete}
 });

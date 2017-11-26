@@ -68,7 +68,7 @@ export default connect(({userInfo, userSignInfo, starInfo}) => ({
 
 
         render() {
-            const {user, count} = this.props;
+            const {user, count, navigation} = this.props;
             if (!user) return null;
 
             const {login, avatar_url, name, email, public_repos, public_gists, followers, following} = user;
@@ -87,11 +87,9 @@ export default connect(({userInfo, userSignInfo, starInfo}) => ({
                     <View style={{backgroundColor: '#fff', alignItems: 'center'}}>
                         <Button
                             content={<UserRow title={'Repositories'} text={public_repos} iconName={'package'}/>}
-                            onPress={() => {
-                            }} style={styles.rowBox}/>
+                            onPress={() => navigation.navigate('UserProList')} style={styles.rowBox}/>
                         <Button content={<UserRow title={'Stared'} text={count} iconName={'star'}/>}
-                                onPress={() => {
-                                }} style={styles.rowBox}/>
+                                onPress={() => navigation.navigate('StarsList')} style={styles.rowBox}/>
                         <Button content={<UserRow title={'My gists'} text={public_gists} iconName={'list'}/>}
                                 onPress={() => {
                                 }} style={styles.rowBox}/>

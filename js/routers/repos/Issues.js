@@ -3,14 +3,13 @@ import {
     View,
     Image,
     Text,
-    FlatList,
     StyleSheet,
 } from 'react-native'
 import {connect} from 'react-redux'
 import {bindActions} from '../../reducers/comReducer'
 
 import {getIssueBody, getIssueBodyComments, errIssueComments} from '../../reducers/issueReducer'
-import Loading from '../../components/Loading';
+import {Loading, CList} from '../../components';
 
 export default connect(({issueInfo}) => ({
     issueBody: issueInfo.issueBody,
@@ -26,8 +25,8 @@ export default connect(({issueInfo}) => ({
             super(props);
             const {params} = props.navigation.state;
             this.state = {
-                number: params ? params.number : '124',
-                fullName: params ? params.fullName : 'crazycodeboy/react-native-splash-screen'
+                number: params ? params.number : '',
+                fullName: params ? params.fullName : ''
             }
         }
 
@@ -40,19 +39,13 @@ export default connect(({issueInfo}) => ({
         }
 
         componentWillUnmount() {
-            // this.props.errIssueComments()
+            this.props.errIssueComments()
         }
-
-        keyExtractor = (item, index) => 'issueComment' + index;
-        /**
-         * 行分隔线
-         */
-        separator = () => <View style={styles.separator}/>;
 
         renderCommentBody = () => {
 
             const {issueBody} = this.props;
-            if (isEmpty(issueBody)) return <View style={styles.empty}><Text>Loading</Text></View>;
+            if (!issueBody) return <View style={styles.empty}><Text>Loading</Text></View>;
 
             const {user, body, updated_at} = issueBody;
 
@@ -85,17 +78,14 @@ export default connect(({issueInfo}) => ({
         render() {
             const {issueComment} = this.props;
 
-            if (isEmpty(issueComment)) return <Loading/>;
+            if (!issueComment) return <Loading/>;
 
             return (
                 <View style={{flex: 1}}>
-                    <FlatList
-                        ListHeaderComponent={this.renderCommentBody}
-                        data={issueComment}
-                        keyExtractor={this.keyExtractor}
-                        ItemSeparatorComponent={this.separator}
-                        ListEmptyComponent={() => <View style={styles.empty}><Text>None</Text></View>}
-                        renderItem={this.renderComment}/>
+                    <CList data={issueComment}
+                           renderItem={this.renderComment}
+                           ListHeaderComponent={this.renderCommentBody}
+                           ListEmptyComponent={() => <View style={styles.empty}><Text>None</Text></View>}/>
                 </View>
             )
         }

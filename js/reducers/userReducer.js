@@ -59,8 +59,9 @@ export const getCheckedAuth = () => ({type: UserTypes.GET_CHECK_AUTH});
 /**
  * 获取指定用户名的仓库列表
  * @param username 指定用户名
+ * @param page
  */
-export const getRepoList = ({username = ''}) => ({type: UserTypes.GET_PRO_LIST, payload: {username}});
+export const getRepoList = ({username = '', page = 1}) => ({type: UserTypes.GET_PRO_LIST, payload: {username, page}});
 
 /**
  * 接受用户的仓库列表

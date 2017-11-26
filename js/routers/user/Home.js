@@ -110,7 +110,7 @@ export default connect(({userInfo, userSignInfo}) => ({
                         <View style={[styles.logoRow, {justifyContent: 'space-around',}]}>
 
                             <TouchableHighlight underlayColor={underlayColor} disabled={!signed}
-                                                onPress={() => null}>
+                                                onPress={() => navigation.navigate('StarsList')}>
                                 <View style={styles.iconWrap}>
                                     <Ionicons name={'md-star-outline'} size={24} style={styles.icon}/>
                                     <Text style={styles.icon}>Stars</Text>
