@@ -69,7 +69,7 @@ export const getDir = (dirs) => ({type: RepoTypes.DIR_CONTENT, payload: {dirs}})
 
 /**
  *
- * @param dirs 目录栈最后一个元素没删除，返回新的目录栈
+ * @param dirs 删除目录栈最后一个元素，返回新的目录栈
  */
 export const popDir = (dirs) => ({type: RepoTypes.DIR_POP, payload: {dirs}});
 

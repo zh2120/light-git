@@ -143,7 +143,7 @@ export const proListEpic = (action$, {getState}, {get}) => action$.ofType(UserTy
 
         return get(url, headers).map(({response}) => repoList(response))
             .catch(e => {
-                console.log(e)
+                console.log(e);
                 return Observable.of(putError('network timeout'))
             })
 

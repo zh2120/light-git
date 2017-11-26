@@ -1,21 +1,26 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {View, Text, ScrollView, TextInput, StyleSheet} from 'react-native'
+import {Text, ScrollView, StyleSheet} from 'react-native'
+import {Loading} from '../../components'
 import {openToast, bindActions} from '../../reducers/comReducer'
 import {fileContent, getFileDenied} from '../../reducers/repoReducer'
-import {Loading} from '../../components'
-export default connect(state => ({file: state.repoInfo.file}), bindActions({fileContent, openToast, getFileDenied}))(
+
+export default connect(({repoInfo}) => ({file: state.repoInfo.file}), bindActions({
+    fileContent,
+    openToast,
+    getFileDenied
+}))(
     class extends Component {
         static navigationOptions = ({navigation}) => {
-            const params = navigation.state.params
+            const params = navigation.state.params;
             return {
                 headerTitle: params && params.path,
                 headerBackTitle: null
             }
-        }
+        };
 
         constructor(props) {
-            super(props)
+            super(props);
             this.state = {
                 fullName: props.navigation.state.params.fullName || '',
                 path: props.navigation.state.params.path || ''
@@ -23,10 +28,10 @@ export default connect(state => ({file: state.repoInfo.file}), bindActions({file
         }
 
         componentDidMount() {
-            const {navigation, fileContent} = this.props
+            const {navigation, fileContent} = this.props;
 
             if (navigation.state.params) {
-                const {fullName, path} = navigation.state.params
+                const {fullName, path} = navigation.state.params;
 
                 fileContent({fullName, path})
             }
@@ -37,15 +42,13 @@ export default connect(state => ({file: state.repoInfo.file}), bindActions({file
         }
 
         render() {
-            const {file} = this.props
+            const {file} = this.props;
 
-            console.log(file)
-
-            if (isEmpty(file)) return <Loading />
+            if (isEmpty(file)) return <Loading/>;
 
             return (
                 <ScrollView contentContainerStyle={styles.wrap}>
-                    <Text style={{fontSize: 14, fontFamily: 'Arial', lineHeight: 22, color: '#333'}}>{file}</Text>
+                    <Text style={styles.fileText}>{file}</Text>
                 </ScrollView>
             )
         }
@@ -54,5 +57,6 @@ export default connect(state => ({file: state.repoInfo.file}), bindActions({file
 
 const styles = StyleSheet.create({
     wrap: {padding: 8},
-})
+    fileText: {fontSize: 14, fontFamily: 'Arial', lineHeight: 22, color: '#333'}
+});
 

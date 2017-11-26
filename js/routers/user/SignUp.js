@@ -7,7 +7,7 @@ import {
 export default class SignUp extends Component {
     static navigationOptions = {
         headerTitle: 'Sign Up'
-    }
+    };
 
     render() {
         return (

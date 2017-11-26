@@ -72,7 +72,7 @@ const transitions = {
             return {opacity, transform: [{translateX}]};
         },
     }),
-}
+};
 
 export const Navigator = StackNavigator(MainRouters, {
     headerMode: 'screen',
@@ -82,11 +82,11 @@ export const Navigator = StackNavigator(MainRouters, {
     ...transitions
 });
 
-export default connect(state => ({nav: state.nav, auth: state.userSignInfo.auth}))(
+export default connect(({nav, userSignInfo}) => ({nav: nav, auth: userSignInfo.auth}))(
     class extends PureComponent {
 
         componentWillMount() {
-            // todo 验证token的有效性
+            // 验证token的有效性
             const {dispatch, auth} = this.props;
             if (auth) {
                 dispatch(getCheckedAuth())

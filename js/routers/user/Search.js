@@ -43,7 +43,7 @@ const SearchHeader = connect(state => ({}), bindActions({searchRepo, openToast})
     class extends Component {
         constructor(props) {
             super(props);
-            const {params} = props.navigation.state
+            const {params} = props.navigation.state;
             this.state = {searchText: params ? params.searchText : ''}
         }
 
@@ -58,19 +58,19 @@ const SearchHeader = connect(state => ({}), bindActions({searchRepo, openToast})
         changeText = (text) => this.setState({searchText: text});
 
         searchSubmit = (searchText) => {
-            const {searchRepo, openToast} = this.props
+            const {searchRepo, openToast} = this.props;
             const params = {
                 q: searchText.replace(/^\s+|\s+$/g, ''),
                 sort: 'star'
-            }
+            };
             if (params.q.length > 0) {
-                const url = '/search/repositories' + getParams(params)
+                const url = '/search/repositories' + getParams(params);
 
                 return searchRepo({name: searchText, url});
             }
             return openToast('Input Content')
 
-        } // 当前页面递交搜索内容
+        }; // 当前页面递交搜索内容
 
         render() {
             const {searchText} = this.state;
@@ -112,10 +112,10 @@ const SearchHeader = connect(state => ({}), bindActions({searchRepo, openToast})
 );
 
 
-export default connect(state => ({
-    repos: state.searchInfo.repos,
-    history: state.searchInfo.history,
-    searching: state.searchInfo.searching
+export default connect(({searchInfo}) => ({
+    repos: searchInfo.repos,
+    history: searchInfo.history,
+    searching: searchInfo.searching
 }), bindActions({searchRepo}))(
     class extends Component {
         static navigationOptions = ({navigation}) => ({header: <SearchHeader navigation={navigation}/>});
@@ -186,7 +186,7 @@ export default connect(state => ({
                     <Text style={styles.touchItemText}>暂时还么有历史呢</Text>
                 </View>
             )
-        }
+        };
 
         renderReposItem = ({item, index}) => {
             if (!item) return null;
@@ -198,7 +198,7 @@ export default connect(state => ({
                 description,
                 stargazers_count,
             } = item;
-            const {navigation} = this.props
+            const {navigation} = this.props;
 
             return (
                 <TouchableHighlight
@@ -257,8 +257,7 @@ export default connect(state => ({
                                 sections={[ // 不同section渲染不同类型的子组件
                                     {data: effectiveHiStory, renderItem: this.renderHistoryItem, type: 'history'},
                                     {data: repos, renderItem: this.renderReposItem, type: 'repos'},
-                                ]}
-                            />
+                                ]}/>
                     }
                 </View>
             )

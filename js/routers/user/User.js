@@ -18,7 +18,7 @@ const UserRow = (props) => {
             </View>
         </View>
     )
-}
+};
 
 export default connect(({userInfo, userSignInfo, starInfo}) => ({
     user: userInfo.user,

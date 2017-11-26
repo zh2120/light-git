@@ -5,22 +5,22 @@ import {openToast, bindActions} from '../../reducers/comReducer'
 import {fileContent, getFileDenied} from '../../reducers/repoReducer'
 import {html, md, Loading} from '../../components'
 
-export default connect(state => ({readme: state.repoInfo.readme}), bindActions({
+export default connect(({repoInfo}) => ({readme: repoInfo.readme}), bindActions({
     fileContent,
     openToast,
     getFileDenied
 }))(
     class extends Component {
         static navigationOptions = ({navigation}) => {
-            const params = navigation.state.params
+            const params = navigation.state.params;
             return {
                 headerTitle: params && params.path,
                 headerBackTitle: null
             }
-        }
+        };
 
         constructor(props) {
-            super(props)
+            super(props);
             this.state = {
                 fullName: props.navigation.state.params.fullName || '',
                 path: props.navigation.state.params.path || ''
@@ -28,23 +28,23 @@ export default connect(state => ({readme: state.repoInfo.readme}), bindActions({
         }
 
         componentDidMount() {
-            const {navigation, fileContent} = this.props
+            const {navigation, fileContent} = this.props;
 
             if (navigation.state.params) {
-                const {fullName, path} = navigation.state.params
+                const {fullName, path} = navigation.state.params;
 
                 fileContent({fullName, path})
             }
         }
 
         componentWillUnmount() {
-            // this.props.getFileDenied() // 清除当前文件
+            this.props.getFileDenied() // 清除当前文件
         }
 
         render() {
-            const {readme} = this.props
+            const {readme} = this.props;
 
-            if (!readme) return <Loading />
+            if (!readme) return <Loading/>;
 
             return (
                 <View style={styles.wrap}>
@@ -59,5 +59,4 @@ export default connect(state => ({readme: state.repoInfo.readme}), bindActions({
 
 const styles = StyleSheet.create({
     wrap: {backgroundColor: 'red', flex: 1},
-})
-
+});

@@ -61,7 +61,8 @@ export default connect(({userSignInfo}) => ({auth: userSignInfo.auth}), bindActi
             // todo 账号过滤空格，回车等
             if (account && password) {
                 const auth = btoa(`${account}:${password}`);
-                openModal(<CAlert title={'In obtaining authorization！'}/>)
+                // 打开遮掩层
+                openModal(<CAlert title={'In obtaining authorization！'}/>);
                 return userSignIn(auth)
             }
             return openToast('Check Account or Password')
@@ -125,6 +126,4 @@ const styles = StyleSheet.create({
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: '#888',
     }
-})
-
-
+});

@@ -5,8 +5,6 @@ import {
     Text,
     FlatList,
     StyleSheet,
-    TouchableOpacity,
-    TouchableHighlight,
 } from 'react-native'
 import Octicons from 'react-native-vector-icons/Octicons'
 import {Button, Loading} from '../../components/index'

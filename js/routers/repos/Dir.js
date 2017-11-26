@@ -3,7 +3,6 @@ import {connect} from 'react-redux'
 import {
     View,
     Text,
-
     FlatList,
     StyleSheet,
     TouchableOpacity,
@@ -12,31 +11,28 @@ import Octicons from 'react-native-vector-icons/Octicons'
 import {openToast, bindActions, back} from '../../reducers/comReducer'
 import {fileContent, popDir, clearDir} from '../../reducers/repoReducer'
 import {Loading} from '../../components'
-export default connect(state => ({
-    readme: state.repoInfo.readme,
-    dirs: state.repoInfo.dirs,
-    nav: state.nav
+
+export default connect(({repoInfo, nav}) => ({
+    nav: nav,
+    dirs: repoInfo.dirs,
+    readme: repoInfo.readme,
 }), bindActions({fileContent, openToast, popDir, clearDir, back}))(
     class extends PureComponent {
         static navigationOptions = ({navigation}) => {
             const params = navigation.state.params;
-            return {
-                headerTitle: params && params.name
-            }
-        }
+            return {headerTitle: params && params.name}
+        };
 
         constructor(props) {
             super(props);
-            const {params} = props.navigation.state
-            this.state = {
-                fullName: params ? params.fullName : '',
-            }
-            this.dirIndex = -1 // 栈为空
+            const {params} = props.navigation.state;
+            this.state = {fullName: params ? params.fullName : ''};
+            this.dirIndex = -1; // 栈为空
             this.hasMore = false
         }
 
         componentWillMount() {
-            const {state} = this.props.navigation
+            const {state} = this.props.navigation;
             if (state.params) {
                 this.props.fileContent({fullName: state.params.fullName, path: state.params.path, type: 'dir'})
             }
@@ -50,14 +46,14 @@ export default connect(state => ({
             const {dirs} = this.props;
 
             if (dirs.length < nextProps.dirs.length && !this.hasMore) { // 目录栈增加
-                this.dirIndex = nextProps.dirs.length - 1
-                this.hasMore  = true
+                this.dirIndex = nextProps.dirs.length - 1;
+                this.hasMore = true
             }
         }
 
         componentWillUnmount() {
             const {dirs} = this.props;
-            dirs.pop()
+            dirs.pop();
             this.props.popDir(dirs)
         }
 
@@ -74,9 +70,9 @@ export default connect(state => ({
          * @returns {XML}
          */
         renderDir = ({item}) => {
-            const {type, path, name} = item
-            const {navigation} = this.props
-            const isDir = type === 'dir' // 是否是目录
+            const {type, path, name} = item;
+            const {navigation} = this.props;
+            const isDir = type === 'dir'; // 是否是目录
 
             // todo 添加分支的请求
 
@@ -104,7 +100,7 @@ export default connect(state => ({
         render() {
             const {dirs} = this.props;
 
-            if (this.dirIndex < 0) return <Loading />
+            if (this.dirIndex < 0) return <Loading/>;
 
             return (
                 <View style={styles.wrap}>

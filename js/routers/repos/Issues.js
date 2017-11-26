@@ -12,16 +12,14 @@ import {bindActions} from '../../reducers/comReducer'
 import {getIssueBody, getIssueBodyComments, errIssueComments} from '../../reducers/issueReducer'
 import Loading from '../../components/Loading';
 
-export default connect(state => ({
-    issueBody: state.issueInfo.issueBody,
-    issueComment: state.issueInfo.issueComments
+export default connect(({issueInfo}) => ({
+    issueBody: issueInfo.issueBody,
+    issueComment: issueInfo.issueComments
 }), bindActions({getIssueBody, getIssueBodyComments, errIssueComments}))(
     class extends Component {
         static navigationOptions = ({navigation}) => {
             const {params} = navigation.state;
-            return {
-                headerTitle: params && String(params.number)
-            }
+            return {headerTitle: params && String(params.number)}
         };
 
         constructor(props) {
@@ -53,10 +51,10 @@ export default connect(state => ({
 
         renderCommentBody = () => {
 
-            const {issueBody} = this.props
-            if (isEmpty(issueBody)) return <View style={styles.empty}><Text>Loading</Text></View>
+            const {issueBody} = this.props;
+            if (isEmpty(issueBody)) return <View style={styles.empty}><Text>Loading</Text></View>;
 
-            const {user, body, updated_at} = issueBody
+            const {user, body, updated_at} = issueBody;
 
             return (
                 <View style={styles.commentBox}>
@@ -67,10 +65,10 @@ export default connect(state => ({
                     </View>
                 </View>
             )
-        }
+        };
 
         renderComment = ({item}) => {
-            if (!item) return <View style={styles.empty}><Text>Loading</Text></View>
+            if (!item) return <View style={styles.empty}><Text>Loading</Text></View>;
             const {user, body, updated_at} = item;
 
             return (
@@ -87,7 +85,7 @@ export default connect(state => ({
         render() {
             const {issueComment} = this.props;
 
-            if (isEmpty(issueComment)) return <Loading/>
+            if (isEmpty(issueComment)) return <Loading/>;
 
             return (
                 <View style={{flex: 1}}>
