@@ -5,7 +5,7 @@ import {Loading} from '../../components'
 import {openToast, bindActions} from '../../reducers/comReducer'
 import {fileContent, getFileDenied} from '../../reducers/repoReducer'
 
-export default connect(({repoInfo}) => ({file: state.repoInfo.file}), bindActions({
+export default connect(({repoInfo}) => ({file: repoInfo.file}), bindActions({
     fileContent,
     openToast,
     getFileDenied
