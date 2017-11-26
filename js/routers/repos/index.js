@@ -3,7 +3,7 @@ import RepoFile from './File'
 import RepoIssues from './Issues'
 import Readme from './Readme'
 import RepoHome from './RepoHome'
-import UserProList from './List'
+import UserProList from './ProList'
 
 export {
     Readme,

@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
         paddingTop: 24,
         paddingHorizontal: 16,
         justifyContent: 'space-around',
-        height: 240,
+        height: 200,
         backgroundColor: 'rgba(30,144,255,0.6)'
     },
     logoRow: {

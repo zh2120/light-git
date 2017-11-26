@@ -4,7 +4,6 @@ import {
     View,
     Text,
     Image,
-    FlatList,
     StyleSheet,
     RefreshControl,
     TouchableOpacity,
@@ -12,7 +11,7 @@ import {
 } from 'react-native'
 import Octicons from 'react-native-vector-icons/Octicons'
 
-import {Button, Loading} from '../../components'
+import {Button, Loading, CList} from '../../components'
 import {repoContent, clearDir} from '../../reducers/repoReducer'
 import {getIssue} from '../../reducers/issueReducer'
 import {openModal, bindActions, back} from '../../reducers/comReducer'
@@ -28,8 +27,9 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
     dirs: repoInfo.dirs,
     readme: repoInfo.readme,
     content: repoInfo.content,
-    isRefreshing: repoInfo.getting,
-    issuesData: issueInfo.issues
+    codeRefreshing: repoInfo.getting,
+    issuesData: issueInfo.issues,
+    issueRefreshing: issueInfo.getting
 }), bindActions({repoContent, clearDir, back, openModal, getIssue}))(
     class extends PureComponent {
         static navigationOptions = ({navigation}) => {
@@ -51,33 +51,6 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
                 // {name: wiki},
                 // {name: Insights},
             ];
-
-            /**
-             * 列表通用属性ß
-             */
-            this.listProps = {
-                horizontal: false,
-                keyExtractor: this.keyExtractor,
-                refreshControl: <RefreshControl
-                    refreshing={this.props.isRefreshing}
-                    onRefresh={this.onRefreshing}
-                    tintColor="#ff0000"
-                    title="Loading..."
-                    titleColor="#00ff00"
-                    colors={['#0000ff', '#00ff00', '#ff0000',]}
-                    progressBackgroundColor="#fff"
-                />,
-                showsVerticalScrollIndicator: false,
-                ItemSeparatorComponent: this.separator,
-                contentContainerStyle: {paddingVertical: 14},
-                // 列表为空，
-                ListEmptyComponent: () => <View
-                    style={{
-                        height: dp(250),
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}><Text>Welcome！</Text></View>
-            };
         }
 
         componentDidMount() {
@@ -94,22 +67,6 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
             // 清理仓库主页
             this.props.clearDir()
         }
-
-        /**
-         * 返回每行key
-         * @param item 每行元素
-         * @param index 每行元素的索引
-         */
-        keyExtractor = (item, index) => 'dirORFile' + index;
-
-        /**
-         * 行分隔线
-         */
-        separator = () => <View style={{
-            height: StyleSheet.hairlineWidth,
-            backgroundColor: 'rgba(10,10,10, 0.2)'
-        }}/>;
-
 
         /**
          * 渲染导航栏
@@ -139,7 +96,7 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
         getNavContent = (fullName, type) => {
             const {getIssue, repoContent} = this.props;
             const url = '/repos/' + fullName + `/${type}` + getParams({ref: 'master', page: 1});
-            let press = () => null;
+            let press;
 
             switch (type) {
                 case Code:
@@ -156,13 +113,20 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
             return this.setState({navName: type})
         };
 
+        refreshController = (isRefreshing) => <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={this.onRefreshing}
+            tintColor="#ff0000"
+            title="Loading..."
+            titleColor="#00ff00"
+            colors={['#0000ff', '#00ff00', '#ff0000',]}
+            progressBackgroundColor="#fff"
+        />;
+
         onRefreshing = () => {
             const {fullName, navName} = this.state;
-            const {isRefreshing} = this.props;
 
-            if (!isRefreshing) {
-                this.getNavContent(fullName, navName)
-            }
+            return this.getNavContent(fullName, navName)
         };
 
         /**
@@ -231,25 +195,25 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
 
             switch (navName) {
                 case Code:
-                    const {content} = this.props;
+                    const {content, codeRefreshing} = this.props;
                     // 内容为空，从云上下载
                     if (!content) return <View style={{height: dp(250)}}><Loading/></View>;
 
                     return (
-                        <FlatList
+                        <CList
                             data={content}
                             renderItem={this.renderDirOrFile}
-                            {...this.listProps}/>
+                            refreshControl={this.refreshController(codeRefreshing)}/>
                     );
                 case Issues:
-                    const {issuesData} = this.props;
+                    const {issuesData, issueRefreshing} = this.props;
                     if (!issuesData) return <View style={{height: dp(250)}}><Loading/></View>;
 
                     return (
-                        <FlatList
+                        <CList
                             data={issuesData}
                             renderItem={this.renderIssues}
-                            {...this.listProps}/>
+                            refreshControl={this.refreshController(issueRefreshing)}/>
                     );
                 default:
                     return null;

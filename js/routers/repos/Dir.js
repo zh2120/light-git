@@ -3,14 +3,13 @@ import {connect} from 'react-redux'
 import {
     View,
     Text,
-    FlatList,
     StyleSheet,
     TouchableOpacity,
 } from 'react-native'
 import Octicons from 'react-native-vector-icons/Octicons'
 import {openToast, bindActions, back} from '../../reducers/comReducer'
 import {fileContent, popDir, clearDir} from '../../reducers/repoReducer'
-import {Loading} from '../../components'
+import {Loading, CList} from '../../components'
 
 export default connect(({repoInfo, nav}) => ({
     nav: nav,
@@ -58,13 +57,6 @@ export default connect(({repoInfo, nav}) => ({
         }
 
         /**
-         * 返回每行key
-         * @param item 每行元素
-         * @param index 每行元素的索引
-         */
-        keyExtractor = (item, index) => 'dir' + index;
-
-        /**
          * 渲染目录或者文件
          * @param item 每行元素
          * @returns {XML}
@@ -92,28 +84,17 @@ export default connect(({repoInfo, nav}) => ({
             )
         };
 
-        /**
-         * 行分隔线
-         */
-        separator = () => <View style={styles.separator}/>;
-
         render() {
             const {dirs} = this.props;
 
             if (this.dirIndex < 0) return <Loading/>;
 
             return (
-                <View style={styles.wrap}>
-                    <FlatList
-                        horizontal={false}
-                        data={dirs[this.dirIndex]}
-                        style={{width: vw, height: vh}}
-                        showsVerticalScrollIndicator={false}
-                        ItemSeparatorComponent={this.separator}
-                        contentContainerStyle={{padding: 14}}
-                        keyExtractor={this.keyExtractor}
-                        renderItem={this.renderDir}/>
-                </View>
+                <CList
+                    data={dirs[this.dirIndex]}
+                    style={{flex: 1}}
+                    contentContainerStyle={{padding: 14}}
+                    renderItem={this.renderDir}/>
             )
         }
     })

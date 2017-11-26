@@ -1,14 +1,11 @@
-/**
- * 自定义Alert, 以 C 开头
- */
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
 import {StyleSheet, View, Text} from 'react-native'
 import {bindActions, closeModal} from '../reducers/comReducer'
 import {Button} from '../components'
 
-export default connect(state => ({}), bindActions({closeModal}))(class extends Component {
+export default connect(state => ({}), bindActions({closeModal}))(class extends PureComponent {
 
     static propTypes = {
         title: PropTypes.string.isRequired,

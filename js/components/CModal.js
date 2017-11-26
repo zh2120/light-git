@@ -1,6 +1,3 @@
-/**
- * 自定义modal, 以 C 开头
- */
 import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
 import {StyleSheet, Modal, View, TouchableWithoutFeedback} from 'react-native'
