@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react'
 import {StackNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
-import {Easing, Animated, BackHandler} from 'react-native'
+import {Easing, Animated, BackHandler, NetInfo} from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import {connect} from "react-redux";
 
@@ -8,6 +8,7 @@ import {Home, Search, SignIn, SignUp, User} from './user/'
 import {RepoHome, Readme, RepoDir, RepoIssues, RepoFile, UserProList} from './repos/'
 import {StarsList} from './activity/'
 import {getCheckedAuth} from "../reducers/userReducer";
+import {putError} from "../reducers/comReducer";
 
 const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
     const defaultHeaderStyle = {
@@ -96,13 +97,18 @@ export default connect(({nav, userSignInfo}) => ({nav: nav, auth: userSignInfo.a
         }
 
         componentDidMount() {
+            // todo 网络连接的监听
             BackHandler.addEventListener("hardwareBackPress", this.onBackPress);
+            NetInfo.addEventListener('change', this.connectivityChange);
             SplashScreen.hide();
         }
 
         componentWillUnmount() {
             BackHandler.removeEventListener("hardwareBackPress", this.onBackPress);
+            NetInfo.removeEventListener('change', () => null);
         }
+
+        connectivityChange = () => this.props.dispatch(putError('网络断开了'));
 
         onBackPress = () => {
             const {dispatch, nav} = this.props;

@@ -43,6 +43,9 @@ export const userSignInEpic = (action$, {dispatch}, {put}) => action$.ofType(Use
                         // 重写
                         error$ = Observable.of(deleteAuth({id: err.id}));
                         break;
+                    case 422:
+                        error$ = Observable.of(putError('账号未进行邮箱，无法取得授权'));
+                        break;
                     default:
                         console.log('--> 超时', err);
                         error$ = Observable.of(putError('网络状态不佳，请稍后再试'));// 超时处理

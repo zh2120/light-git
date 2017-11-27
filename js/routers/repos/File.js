@@ -48,7 +48,7 @@ export default connect(({repoInfo}) => ({file: repoInfo.file}), bindActions({
 
             return (
                 <ScrollView contentContainerStyle={styles.wrap}>
-                    <Text style={styles.fileText}>{file}</Text>
+                    <Text style={styles.fileText} selectable={true}>{file}</Text>
                 </ScrollView>
             )
         }
