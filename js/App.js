@@ -20,11 +20,11 @@ import {Toast, CModal} from './components'
 
 const {persistor, store} = configureStore();
 
-const Loading = () => (<View style={styles.loadWrap}><Text style={{color: 'red'}}>恢复现场中...</Text></View>)
+const Loading = () => (<View style={styles.loadWrap}><Text style={{color: 'red'}}>恢复现场中...</Text></View>);
 
 const codePushOptions = {
-    checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
-    installMode: codePush.InstallMode.ON_NEXT_RESUME
+    checkFrequency: codePush.CheckFrequency.ON_APP_START,
+    installMode: codePush.InstallMode.ON_NEXT_RESTART
 };
 
 const App = () => (
@@ -55,4 +55,4 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent'
     },
     loadWrap: {flex: 1, justifyContent: 'center', alignItems: 'center'}
-})
+});
