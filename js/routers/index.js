@@ -99,13 +99,13 @@ export default connect(({nav, userSignInfo}) => ({nav: nav, auth: userSignInfo.a
         componentDidMount() {
             // todo 网络连接的监听
             BackHandler.addEventListener("hardwareBackPress", this.onBackPress);
-            NetInfo.addEventListener('change', this.connectivityChange);
+            NetInfo.addEventListener('connectionChange', this.connectivityChange);
             SplashScreen.hide();
         }
 
         componentWillUnmount() {
             BackHandler.removeEventListener("hardwareBackPress", this.onBackPress);
-            NetInfo.removeEventListener('change', () => null);
+            NetInfo.removeEventListener('connectionChange', () => null);
         }
 
         connectivityChange = () => this.props.dispatch(putError('网络断开了'));

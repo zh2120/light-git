@@ -46,17 +46,18 @@ export default connect(({repoInfo}) => ({readme: repoInfo.readme}), bindActions(
 
             if (!readme) return <Loading/>;
 
+            console.log('md(readme)', html(md(readme)))
+
             return (
-                <View style={styles.wrap}>
-                    <WebView
-                        userAgent={'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.75 Safari/537.36'}
-                        source={{html: html(md(readme))}}/>
-                </View>
+                <WebView
+                    style={styles.wrap}
+                    userAgent={'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.75 Safari/537.36'}
+                    source={{html: html(md(readme))}}/>
             )
         }
     }
 )
 
 const styles = StyleSheet.create({
-    wrap: {backgroundColor: 'red', flex: 1},
+    wrap: {flex: 1},
 });
