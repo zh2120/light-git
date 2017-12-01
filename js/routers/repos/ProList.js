@@ -69,7 +69,11 @@ export default connect(({userInfo}) => ({
             return (
                 <Button content={proItem}
                         style={styles.btnRow}
-                        onPress={() => navigation.navigate('RepoHome', {fullName: full_name, name: name})}/>
+                        onPress={() => navigation.navigate('RepoHome', {
+                            fullName: full_name,
+                            name: name,
+                            desc: description
+                        })}/>
             )
         };
 

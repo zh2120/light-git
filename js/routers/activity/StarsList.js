@@ -64,7 +64,7 @@ export default connect(({starInfo}) => ({
             return (
                 <Button content={proItem}
                         style={styles.btnRow}
-                        onPress={() => this.navigate('RepoHome', {fullName: full_name, name: name})}/>
+                        onPress={() => this.navigate('RepoHome', {fullName: full_name, name: name, desc: description})}/>
             )
         };
 

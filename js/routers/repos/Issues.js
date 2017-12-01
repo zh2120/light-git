@@ -83,6 +83,7 @@ export default connect(({issueInfo}) => ({
             return (
                 <View style={{flex: 1}}>
                     <CList data={issueComment}
+                           extraData={this.props}
                            renderItem={this.renderComment}
                            ListHeaderComponent={this.renderCommentBody}
                            ListEmptyComponent={() => <View style={styles.empty}><Text>None</Text></View>}/>

@@ -36,9 +36,7 @@ export default connect(({userInfo, userSignInfo, starInfo}) => ({
                 headerTitle: "github",
                 headerTitleStyle: {color: 'rgba(255,255,255,0.8)'},
                 headerBackTitleStyle: {color: 'rgba(255,255,255,0.8)'},
-                headerStyle: {
-                    backgroundColor: '#000'
-                },
+                headerStyle: {backgroundColor: '#333'},
                 headerRight: <Button content={<Text style={{color: '#fff'}}>sign out</Text>}
                                      onPress={() => params && params.signOut({id: params.id})}
                                      style={{height: 40, paddingHorizontal: 12}}/>

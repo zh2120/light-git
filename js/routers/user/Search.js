@@ -204,7 +204,7 @@ export default connect(({searchInfo}) => ({
                 <TouchableHighlight
                     key={`r-${index}`}
                     underlayColor={'rgba(100,100,100 ,0.1)'}
-                    onPress={() => navigation.navigate('RepoHome', {fullName: full_name, name: name})}>
+                    onPress={() => navigation.navigate('RepoHome', {fullName: full_name, name: name, desc: description})}>
                     <View style={styles.repoItem}>
                         <View style={styles.touchItemLeft}>
                             <Ionicons name={'ios-browsers-outline'} size={22}

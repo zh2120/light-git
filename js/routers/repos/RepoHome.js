@@ -34,7 +34,12 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
     class extends PureComponent {
         static navigationOptions = ({navigation}) => {
             const {params} = navigation.state;
-            return {headerTitle: params && params.name}
+            return {
+                headerTitle: params && params.name,
+                headerTitleStyle: {color: 'rgba(255,255,255,0.8)'},
+                headerBackTitleStyle: {color: 'rgba(255,255,255,0.8)'},
+                headerStyle: {backgroundColor: '#333'},
+            }
         };
 
         constructor(props) {
@@ -74,21 +79,32 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
          */
         renderNav = () => {
             const {navName, fullName} = this.state;
+            const {params} = this.props.navigation.state;
 
-            return this.navBtns.map((item, index) => {
-                const cur = navName === item.name;
-                return (
-                    <Button
-                        key={index}
-                        content={<Text style={{color: cur ? '#e36209' : '#333'}}>{item.name}</Text>}
-                        style={styles.navBtn}
-                        onPress={() => cur ? null : this.getNavContent(fullName, item.name)}/>
-                )
-            })
+            return (
+                <View style={styles.navBox}>
+                    {params.desc ? <Text style={styles.descText}>{params.desc}</Text> : null}
+                    <View style={{flexDirection: 'row', height: 40}}>
+                        {
+                            this.navBtns.map((item, index) => {
+                                const cur = navName === item.name;
+                                return (
+                                    <Button
+                                        key={index}
+                                        content={<Text
+                                            style={{color: cur ? '#fff' : 'rgba(255,255,255,0.7)'}}>{item.name}</Text>}
+                                        style={styles.navBtn}
+                                        onPress={() => cur ? null : this.getNavContent(fullName, item.name)}/>
+                                )
+                            })
+                        }
+                    </View>
+                </View>
+            )
         };
 
         /**
-         *
+         * 导航对应的业务逻辑选择
          * @param fullName
          * @param type contents | issues
          * @returns {*}
@@ -123,6 +139,31 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
             progressBackgroundColor="#fff"
         />;
 
+        renderListHeader = () => {
+            const {navName, fullName} = this.state;
+            return (
+                <View style={styles.navBox}>
+                    {
+                        this.navBtns.map((item, index) => {
+                            const cur = navName === item.name;
+                            return (
+                                <Button
+                                    key={index}
+                                    content={<Text
+                                        style={{color: cur ? '#fff' : 'rgba(255,255,255,0.7)'}}>{item.name}</Text>}
+                                    style={styles.navBtn}
+                                    onPress={() => cur ? null : this.getNavContent(fullName, item.name)}/>
+                            )
+                        })
+                    }
+                </View>
+            )
+        };
+
+        /**
+         * 下拉刷新
+         * @returns {*}
+         */
         onRefreshing = () => {
             const {fullName, navName} = this.state;
 
@@ -143,18 +184,16 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
 
             return (
                 <TouchableOpacity
+                    style={styles.contentRow}
                     onPress={() => isDir
                         ? navigation.navigate('RepoDir', {fullName: this.state.fullName, name, path})
                         : item.name === 'README.md'
                             ? navigation.navigate('Readme', {fullName: this.state.fullName, path, type})
                             : navigation.navigate('RepoFile', {fullName: this.state.fullName, path, type})}>
-
-                    <View style={styles.contentRow}>
-                        <Octicons name={isDir ? 'file-directory' : 'file'} size={24} style={{color: '#888'}}/>
-                        <Text style={styles.contentName}>
-                            {name}
-                        </Text>
-                    </View>
+                    <Octicons name={isDir ? 'file-directory' : 'file'} size={18} style={{color: '#0366d6', opacity: .7}}/>
+                    <Text style={styles.contentName}>
+                        {name}
+                    </Text>
                 </TouchableOpacity>
             )
         };
@@ -192,43 +231,44 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
          */
         renderNavContainer = () => {
             const {navName} = this.state;
+            let data, header = null, renderItem = () => null, refreshing = false;
 
             switch (navName) {
                 case Code:
-                    const {content, codeRefreshing} = this.props;
-                    // 内容为空，从云上下载
-                    if (!content) return <View style={{height: dp(250)}}><Loading/></View>;
-
-                    return (
-                        <CList
-                            data={content}
-                            renderItem={this.renderDirOrFile}
-                            refreshControl={this.refreshController(codeRefreshing)}/>
-                    );
+                    const {content, codeRefreshing, navigation} = this.props;
+                    // todo 分支选择
+                    header = () => {
+                        if (navigation.state.params.desc) {
+                            return <Text style={styles.descText}>{navigation.state.params.desc}</Text>
+                        }
+                        return null
+                    };
+                    data = content;
+                    renderItem = this.renderDirOrFile;
+                    refreshing = codeRefreshing;
+                    break;
                 case Issues:
                     const {issuesData, issueRefreshing} = this.props;
-                    if (!issuesData) return <View style={{height: dp(250)}}><Loading/></View>;
-
-                    return (
-                        <CList
-                            data={issuesData}
-                            renderItem={this.renderIssues}
-                            refreshControl={this.refreshController(issueRefreshing)}/>
-                    );
-                default:
-                    return null;
+                    data = issuesData;
+                    renderItem = this.renderIssues;
+                    refreshing = issueRefreshing;
             }
+
+            if (!data) return <View style={{height: dp(250)}}><Loading/></View>;
+            return (
+                <CList
+                    data={data}
+                    renderItem={renderItem}
+                    ListHeaderComponent={header}
+                    refreshControl={this.refreshController(refreshing)}/>
+            )
         };
 
         render() {
             return (
                 <View style={styles.wrap}>
-                    <View style={styles.navBox}>
-                        {this.renderNav()}
-                    </View>
-                    {
-                        this.renderNavContainer()
-                    }
+                    {this.renderListHeader()}
+                    {this.renderNavContainer()}
                 </View>
             )
         }
@@ -249,20 +289,21 @@ const styles = {
         borderWidth: StyleSheet.hairlineWidth
     },
     navBox: {
-        height: 36,
         width: '100%',
-        flexDirection: 'row',
+        height: 40,
         alignItems: 'center',
-        backgroundColor: '#f7f7f7'
+        backgroundColor: '#333',
+        flexDirection: 'row'
     },
     navBtn: {
         flex: 1,
         height: '100%'
     },
-    contentName: {marginLeft: 6},
+    descText: {marginVertical: 16, marginHorizontal: 12, color: '#333'},
+    contentName: {marginLeft: 6, color: '#0366d6'},
     titleText: {fontSize: 16, color: '#333'},
     issueDescBox: {flex: 1, marginHorizontal: 16},
     avatarBox: {width: 32, height: 32, borderRadius: 16},
-    contentRow: {flexDirection: 'row', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 16},
+    contentRow: {flexDirection: 'row', alignItems: 'center', paddingVertical: 12, paddingHorizontal: 16},
     issueBox: {flexDirection: 'row', alignItems: 'flex-start', marginTop: 10, paddingHorizontal: 16}
 };
