@@ -1,9 +1,7 @@
 import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
 import {StyleSheet, Modal, View, TouchableWithoutFeedback} from 'react-native'
-import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import {closeModal, bindActions} from '../reducers/comReducer'
-import {Button} from '../components'
 
 export default connect(state => ({ui: state.comInfo}), bindActions({closeModal}))((props) => {
     const {modalOpen, ele, maskingShow} = props.ui;

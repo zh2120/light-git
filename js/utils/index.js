@@ -3,8 +3,10 @@ import {Dimensions, Platform} from 'react-native'
 
 if (!__DEV__) {
     console = {
-        log: () => {},
-        error: () => {},
+        log: () => {
+        },
+        error: () => {
+        },
     }
 }
 
@@ -38,7 +40,31 @@ global.isEmpty = (o) => {
     }
 };
 
+global.timeFilter = (time) => {
+    const diff = Date.now() - Date.parse(time); // 从当前到指定的时间毫秒差
+    const min = 60000; // one minute
+    let formalTime, tmp;
+    if (diff < min) { // less than a minute
+        tmp = Math.floor(diff / 1000);
+        formalTime = tmp < 1 ? "a second" : tmp + " seconds"
+    } else if (diff < 3600000) { // less than an hour
+        tmp = Math.floor(diff / min);
+        formalTime = tmp < 1 ? "a minute" : tmp + " minutes"
+    } else if (diff < 86400000) { // less than a day
+        tmp = Math.floor(diff / 3600000);
+        formalTime = tmp < 1 ? "a day" : tmp + " days"
+    } else if (diff < 2592000000) { // less than a month
+        tmp = Math.floor(diff / 86400000);
+        formalTime = tmp < 1 ? "a month" : tmp + " months"
+    } else if (diff < 31104000000) {
+        tmp = Math.floor(diff / 2592000000);
+        formalTime = tmp < 1 ? "a year" : tmp + " years"
+    }
+    return formalTime + ' ago'
+};
+
 const base64hash = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
 // btoa method
 function btoa(s) {
     if (/([^\u0000-\u00ff])/.test(s)) {

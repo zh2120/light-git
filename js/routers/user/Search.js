@@ -226,7 +226,7 @@ export default connect(({searchInfo}) => ({
                                     }}>{language}</Text>
                                 ) : <View/>
                             }
-                            <Text>Updated {updated_at}</Text>
+                            <Text>Updated {timeFilter(updated_at)}</Text>
                         </View>
                     </View>
                 </TouchableHighlight>
