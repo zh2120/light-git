@@ -13,7 +13,7 @@ import Octicons from 'react-native-vector-icons/Octicons'
 
 import {Button, Loading, CList} from '../../components'
 import {repoContent, clearDir} from '../../reducers/repoReducer'
-import {getIssue} from '../../reducers/issueReducer'
+import {getIssue, errIssue} from '../../reducers/issueReducer'
 import {openModal, bindActions, back} from '../../reducers/comReducer'
 
 const pr = 'PR';
@@ -30,7 +30,7 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
     codeRefreshing: repoInfo.getting,
     issuesData: issueInfo.issues,
     issueRefreshing: issueInfo.getting
-}), bindActions({repoContent, clearDir, back, openModal, getIssue}))(
+}), bindActions({repoContent, clearDir, back, openModal, getIssue, errIssue}))(
     class extends PureComponent {
         static navigationOptions = ({navigation}) => {
             const {params} = navigation.state;
@@ -70,38 +70,10 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
 
         componentWillUnmount() {
             // 清理仓库主页
-            this.props.clearDir()
+            this.props.clearDir();
+            // 清理仓库的问题数据
+            this.props.errIssue()
         }
-
-        /**
-         * 渲染导航栏
-         * @returns {Array} 导航按钮组
-         */
-        renderNav = () => {
-            const {navName, fullName} = this.state;
-            const {params} = this.props.navigation.state;
-
-            return (
-                <View style={styles.navBox}>
-                    {params.desc ? <Text style={styles.descText}>{params.desc}</Text> : null}
-                    <View style={{flexDirection: 'row', height: 40}}>
-                        {
-                            this.navBtns.map((item, index) => {
-                                const cur = navName === item.name;
-                                return (
-                                    <Button
-                                        key={index}
-                                        content={<Text
-                                            style={{color: cur ? '#fff' : 'rgba(255,255,255,0.7)'}}>{item.name}</Text>}
-                                        style={styles.navBtn}
-                                        onPress={() => cur ? null : this.getNavContent(fullName, item.name)}/>
-                                )
-                            })
-                        }
-                    </View>
-                </View>
-            )
-        };
 
         /**
          * 导航对应的业务逻辑选择
@@ -190,7 +162,8 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
                         : item.name === 'README.md'
                             ? navigation.navigate('Readme', {fullName: this.state.fullName, path, type})
                             : navigation.navigate('RepoFile', {fullName: this.state.fullName, path, type})}>
-                    <Octicons name={isDir ? 'file-directory' : 'file'} size={18} style={{color: '#0366d6', opacity: .7}}/>
+                    <Octicons name={isDir ? 'file-directory' : 'file'} size={18}
+                              style={{color: '#0366d6', opacity: .7}}/>
                     <Text style={styles.contentName}>
                         {name}
                     </Text>
@@ -209,7 +182,7 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
             const {navigation} = this.props;
 
             return (
-                <TouchableHighlight onPress={() => navigation.navigate('RepoIssues', {fullName, number})}
+                <TouchableHighlight onPress={() => navigation.navigate('RepoIssues', {fullName, number,title})}
                                     underlayColor={'rgba(100,100,100 ,0.1)'}>
                     <View style={styles.issueBox}>
                         <View>

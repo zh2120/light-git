@@ -18,7 +18,7 @@ export default connect(({issueInfo}) => ({
     class extends Component {
         static navigationOptions = ({navigation}) => {
             const {params} = navigation.state;
-            return {headerTitle: params && String(params.number)}
+            return {headerTitle: params && String('#' + params.number + ' ' + params.title)}
         };
 
         constructor(props) {
@@ -42,50 +42,51 @@ export default connect(({issueInfo}) => ({
             this.props.errIssueComments()
         }
 
-        renderCommentBody = () => {
-
-            const {issueBody} = this.props;
-            if (!issueBody) return <View style={styles.empty}><Text>Loading</Text></View>;
-
-            const {user, body, updated_at} = issueBody;
-
-            return (
-                <View style={styles.commentBox}>
-                    <Image source={{uri: user.avatar_url}} style={styles.commentAvatar}/>
-                    <View style={{flex: 1, marginHorizontal: 12}}>
-                        <Text style={[styles.commentText, {}]}>{"<-- " + user.login + ' --> ' + updated_at}</Text>
-                        <Text style={[styles.commentText, {fontSize: 14, marginVertical: 6}]}>{body}</Text>
-                    </View>
-                </View>
-            )
-        };
-
+        /**
+         * 渲染评论
+         * @param item
+         * @returns {*}
+         */
         renderComment = ({item}) => {
-            if (!item) return <View style={styles.empty}><Text>Loading</Text></View>;
+            if (!item) return null ;
             const {user, body, updated_at} = item;
 
             return (
                 <View style={styles.commentBox}>
                     <Image source={{uri: user.avatar_url}} style={styles.commentAvatar}/>
                     <View style={{flex: 1, marginHorizontal: 12}}>
-                        <Text style={styles.commentText}>{"<-- " + user.login + ' --> ' + updated_at}</Text>
-                        <Text style={[styles.commentText, {fontSize: 14, marginVertical: 6}]}>{body}</Text>
+                        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                            <Text style={styles.commentText}>{"<-- " + user.login + ' --> '}</Text>
+                            <Text style={styles.commentText}>{updated_at}</Text>
+                        </View>
+                        <Text style={[styles.commentText, {fontSize: 14, marginVertical: 10}]}>{body}</Text>
                     </View>
                 </View>
             )
         };
 
-        render() {
-            const {issueComment} = this.props;
+        /**
+         * 整合评论主体和回复
+         * @returns {null}
+         */
+        renderIssues = () => {
+            const {issueBody, issueComment} = this.props;
+            if (!Array.isArray(issueComment)) return null;
+            // issueComment 必须是数组
+            issueComment.unshift(issueBody);
+            return issueComment
+        };
 
-            if (!issueComment) return <Loading/>;
+        render() {
+            const issueData = this.renderIssues();
+
+            if (!issueData) return <Loading/>;
 
             return (
                 <View style={{flex: 1}}>
-                    <CList data={issueComment}
+                    <CList data={issueData}
                            extraData={this.props}
                            renderItem={this.renderComment}
-                           ListHeaderComponent={this.renderCommentBody}
                            ListEmptyComponent={() => <View style={styles.empty}><Text>None</Text></View>}/>
                 </View>
             )
