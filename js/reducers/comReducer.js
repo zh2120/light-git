@@ -103,6 +103,8 @@ const initialState = (routerName) =>
 
 export const navReducer = (state = initialState(init), action) => {
     switch (action.type) {
+        case 'persist/REHYDRATE':
+            return {...state, config: require('../../config.json')};
         case 'Navigation/NAVIGATE':
             const {routes} = state;
 
@@ -128,11 +130,9 @@ export const navReducer = (state = initialState(init), action) => {
                 }
                 return item
             });
-
             return {...state, routes: nextRoutes};
-
         case 'Navigation/RESET':
-            return Navigator.router.getStateForAction(action);
+            return {...Navigator.router.getStateForAction(action), config: require('../../config.json')};
 
         default:
             return state

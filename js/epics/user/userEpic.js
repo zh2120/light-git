@@ -17,10 +17,10 @@ import {Observable} from 'rxjs/Rx'
  * @param dispatch
  * @param put
  */
-export const userSignInEpic = (action$, {dispatch}, {put}) => action$.ofType(UserTypes.USER_SIGNIN)
+export const userSignInEpic = (action$, {dispatch, getState}, {put}) => action$.ofType(UserTypes.USER_SIGNIN)
     .switchMap(({payload}) => {
         const {auth} = payload;
-        const {client_id, note, scopes, fingerprint, client_secret} = require('../../../config.json');
+        const {client_id, note, scopes, fingerprint, client_secret} = getState().nav.config;
         const url = '/authorizations/clients/' + client_id;
         const headers = {"Authorization": `Basic ${auth}`};
         const body = {note, scopes, fingerprint, client_secret};
@@ -114,7 +114,7 @@ export const clearUserInfoEpic = (action$, {dispatch, getState}, ajax) => action
 export const checkAuthEpic = (action$, {getState}, {get}) => action$.ofType(UserTypes.GET_CHECK_AUTH)
     .switchMap(() => {
         const {auth} = getState().userSignInfo;
-        const {client_id, client_secret} = require('../../../config.json');
+        const {client_id, client_secret} = getState().nav.config;
         const headers = {"Authorization": "Basic " + btoa(client_id + ':' + client_secret)};
         const url = `/applications/${client_id}/tokens/${auth.token}`;
 
