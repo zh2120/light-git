@@ -108,7 +108,7 @@ export default connect(({nav, userSignInfo}) => ({nav: nav, auth: userSignInfo.a
             NetInfo.removeEventListener('connectionChange', () => null);
         }
 
-        connectivityChange = () => this.props.dispatch(putError('网络断开了'));
+        connectivityChange = () => this.props.dispatch(putError('网络似乎出现了异常'));
 
         onBackPress = () => {
             const {dispatch, nav} = this.props;
