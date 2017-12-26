@@ -2,7 +2,7 @@ import './utils'
 import React from 'react';
 import {Provider} from 'react-redux'
 import codePush from "react-native-code-push";
-import {View, StyleSheet, StatusBar, Text} from 'react-native'
+import {View, StyleSheet, StatusBar, Text, AppRegistry} from 'react-native'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/catch'
 import 'rxjs/add/operator/switchMap'
@@ -16,10 +16,12 @@ import {PersistGate} from 'redux-persist/es/integration/react'
 
 import StacksInDrawer from './routers/index'
 import configureStore from './configStore'
-import {Toast, CModal} from './components'
+import {Toast, CModal, CWrapper} from './components'
+
 const {persistor, store} = configureStore();
 
 const Loading = () => (<View style={styles.loadWrap}><Text style={{color: 'red'}}>恢复现场中...</Text></View>);
+AppRegistry.setWrapperComponentProvider(() => CWrapper);
 
 const codePushOptions = {
     checkFrequency: codePush.CheckFrequency.ON_APP_START,

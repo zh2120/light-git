@@ -97,7 +97,7 @@ export default connect(({nav, userSignInfo}) => ({nav: nav, auth: userSignInfo.a
         }
 
         componentDidMount() {
-            // todo 网络连接的监听
+            // 网络连接的监听
             BackHandler.addEventListener("hardwareBackPress", this.onBackPress);
             NetInfo.addEventListener('connectionChange', this.connectivityChange);
             SplashScreen.hide();
