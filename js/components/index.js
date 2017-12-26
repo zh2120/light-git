@@ -1,10 +1,7 @@
-import Navigator from './Navigator'
-import Button from './Button'
-import Toast from './Toast'
-import CModal from './CModal'
-import CAlert from './CAlert'
-import CList from './CList'
-import Loading from './Loading'
-import md, {html} from './mark2html'
-
-export {Navigator, Button, Toast, md, html, CModal, Loading, CAlert, CList}
+export {default as Button} from './Button'
+export {default as Toast} from './Toast'
+export {default as md, html} from './mark2html'
+export {default as CModal} from './CModal'
+export {default as Loading} from './Loading'
+export {default as CAlert} from './CAlert'
+export {default as CList} from './CList'

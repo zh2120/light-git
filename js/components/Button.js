@@ -2,25 +2,24 @@ import React, {PureComponent} from 'react'
 import PropTypes from 'prop-types'
 import {View, Text, TouchableHighlight, TouchableNativeFeedback, StyleSheet} from 'react-native'
 
-class Button extends PureComponent {
+export default class Button extends PureComponent {
     static propTypes = {
         onPress: PropTypes.func,
         disabled: PropTypes.bool,
         content: PropTypes.any,
         icon: PropTypes.any,
         style: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
-    }
+    };
 
     static defaultProps = {
         content: (<Text>button</Text>),
         disabled: false,
         style: {},
-        onPress: () => {
-        }
-    }
+        onPress: () => {}
+    };
 
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {}
     }
 
@@ -72,5 +71,3 @@ const styles = StyleSheet.create({
         backgroundColor: '#dcdcdc'
     }
 })
-
-export default Button
