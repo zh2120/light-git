@@ -24,7 +24,7 @@ const searchStyles = StyleSheet.create({
         paddingTop: 24,
         paddingHorizontal: 8,
         alignItems: 'center',
-        backgroundColor: 'rgba(30,144,255,0.6)'
+        backgroundColor: '#333'
     },
     searchWrap: {
         flex: 1,

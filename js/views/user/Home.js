@@ -2,7 +2,6 @@ import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-
 import {openToast, bindActions, reset} from '../../reducers/comReducer'
 import {searchRepo} from '../../reducers/searchReducer'
 import {userSignAccept} from '../../reducers/userReducer'
@@ -145,7 +144,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         justifyContent: 'space-around',
         height: 200,
-        backgroundColor: 'rgba(30,144,255,0.6)'
+        backgroundColor: '#333'
     },
     logoRow: {
         height: 36,

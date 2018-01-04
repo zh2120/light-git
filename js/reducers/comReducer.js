@@ -1,6 +1,6 @@
 import {bindActionCreators} from 'redux';
 import {NavigationActions} from 'react-navigation'
-import {Navigator} from '../routers/'
+import {Navigator} from '../views/'
 
 export const ComTypes = {
     OPEN_TOAST: 'OPEN_TOAST', // 打开提示

@@ -12,19 +12,19 @@ import {putError} from "../reducers/comReducer";
 
 const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
     const defaultHeaderStyle = {
-        height: 64,
+        height: 72,
         elevation: 0,
         paddingTop: 24,
         shadowOpacity: 0,
         borderBottomWidth: 0,
         borderBottomColor: null,
-        backgroundColor: 'rgba(30,144,255,0.6)'
+        backgroundColor: '#333'
     };
 
     return {
         ...navigationOptions,
         gesturesEnabled: true,
-        headerTintColor: '#f7f7f7',
+        headerTintColor: '#ffffff',
         headerStyle: {...defaultHeaderStyle, ...navigationOptions.headerStyle}
     }
 };
