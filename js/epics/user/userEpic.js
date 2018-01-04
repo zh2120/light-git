@@ -14,10 +14,10 @@ import {Observable} from 'rxjs/Rx'
 /**
  * 正常获取用户授权
  * @param action$
- * @param dispatch
+ * @param getState
  * @param put
  */
-export const userSignInEpic = (action$, {dispatch, getState}, {put}) => action$.ofType(UserTypes.USER_SIGNIN)
+export const userSignInEpic = (action$, {getState}, {put}) => action$.ofType(UserTypes.USER_SIGNIN)
     .switchMap(({payload}) => {
         const {auth} = payload;
         const {client_id, note, scopes, fingerprint, client_secret} = getState().nav.config;
@@ -59,10 +59,10 @@ export const userSignInEpic = (action$, {dispatch, getState}, {put}) => action$.
 /**
  * 正常获取用户信息
  * @param action$
- * @param dispatch
+ * @param state
  * @param get
  */
-export const userInfoEpic = (action$, {dispatch}, {get}) => action$.ofType(UserTypes.USER_SIGNIN_ACCEPT)
+export const userInfoEpic = (action$, state, {get}) => action$.ofType(UserTypes.USER_SIGNIN_ACCEPT)
     .switchMap(({payload}) => {
         const {token} = payload.auth;
         const url = '/user';
@@ -77,11 +77,10 @@ export const userInfoEpic = (action$, {dispatch}, {get}) => action$.ofType(UserT
 /**
  * 清除用户信息
  * @param action$
- * @param dispatch
  * @param getState
  * @param ajax
  */
-export const clearUserInfoEpic = (action$, {dispatch, getState}, ajax) => action$.ofType(UserTypes.DELETE_AUTH)
+export const clearUserInfoEpic = (action$, {getState}, ajax) => action$.ofType(UserTypes.DELETE_AUTH)
     .mergeMap(({payload}) => {
         const {id} = payload;
         const url = `/authorizations/${id}`;
