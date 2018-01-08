@@ -12,6 +12,7 @@ import {
     Image,
     TextInput,
     StyleSheet,
+    WebView,
     TouchableOpacity,
     TouchableHighlight
 } from 'react-native'
@@ -107,7 +108,6 @@ export default connect(({userInfo, userSignInfo}) => ({
                         </TouchableOpacity>
 
                         <View style={[styles.logoRow, {justifyContent: 'space-around',}]}>
-
                             <TouchableHighlight underlayColor={underlayColor} disabled={!signed}
                                                 onPress={() => navigation.navigate('StarsList')}>
                                 <View style={styles.iconWrap}>
@@ -123,9 +123,11 @@ export default connect(({userInfo, userSignInfo}) => ({
                                     <Text style={styles.icon}>Repos</Text>
                                 </View>
                             </TouchableHighlight>
-
                         </View>
                     </View>
+                    <WebView
+                        source={{uri: 'http://localhost:8081/js/editor/index.html'}}
+                    />
                 </View>
             )
         }
