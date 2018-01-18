@@ -51,9 +51,9 @@ export default connect(({repoInfo, nav}) => ({
         }
 
         componentWillUnmount() {
-            const {dirs} = this.props;
+            const {dirs, popDir} = this.props;
             dirs.pop();
-            this.props.popDir(dirs)
+            popDir(dirs)
         }
 
         /**
