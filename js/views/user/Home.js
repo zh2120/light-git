@@ -13,9 +13,11 @@ import {
     TextInput,
     StyleSheet,
     WebView,
+    Button,
     TouchableOpacity,
     TouchableHighlight
 } from 'react-native'
+import CAlert from '../../components/CAlert2'
 
 const underlayColor = 'rgba(100,100,100 ,0.1)';
 
@@ -67,6 +69,14 @@ export default connect(({userInfo, userSignInfo}) => ({
                 return {searchText: ''}
             })
         };
+
+        show = ()=> {
+            CAlert.show({title: '123455'});
+        }
+
+        close = () => {
+            CAlert.close();
+        }
 
         render() {
             const {searchText} = this.state;
@@ -125,9 +135,8 @@ export default connect(({userInfo, userSignInfo}) => ({
                             </TouchableHighlight>
                         </View>
                     </View>
-                    <WebView
-                        source={{uri: 'http://localhost:8081/js/editor/index.html'}}
-                    />
+                    <Button title={'出现'} onPress={this.show}/>
+                    <Button title={'关闭'} onPress={this.close}/>
                 </View>
             )
         }

@@ -31,6 +31,12 @@ global.getParams = (params) => {
     }
 };
 
+global.isType = (type) => {
+    if (type === null) return "null";
+    if (type === undefined) return "undefined";
+    return Object.prototype.toString.call(type).slice(8, -1);
+};
+
 global.isEmpty = (o) => {
     if (o instanceof Object) {
         for (const i in o) {
