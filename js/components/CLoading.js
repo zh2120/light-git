@@ -1,14 +1,33 @@
 import React, {PureComponent} from 'react';
-import {StyleSheet, View, Text, Animated} from 'react-native'
+import {View, Animated, StyleSheet} from 'react-native'
+import PropTypes from 'prop-types';
+const {PI, abs, sin} = Math;
 
-const {sin, abs, cos} = Math;
+const cSin = (deg) => 2 * abs(sin(deg)) + 0.1;
 
-const cSin = (deg) => {
-    return 1 + 3 * abs(sin(deg))
-};
+const styles = StyleSheet.create({
+    box: {
+        flexDirection: 'row',
+        height: 60,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    block: {
+        width: 10,
+        height: 20,
+        backgroundColor: '#80B2FE',
+        marginHorizontal: 2
+    }
+});
 
 class Loading extends PureComponent {
-    load = [3, 2, 1];
+    static propTypes = {
+        duration: PropTypes.number,
+        style: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array]),
+        blockStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array])
+    };
+
+    load = [1, 1, 1];
     animation = new Animated.Value(0);
 
     componentDidMount() {
@@ -16,42 +35,38 @@ class Loading extends PureComponent {
     }
 
     startAnimation = () => {
+        const {duration} = this.props;
         this.animation.setValue(0);
         Animated.timing(this.animation, {
             toValue: 1,
-            duration: 3000,
+            duration: duration || 2000,
             useNativeDriver: true
         }).start(() => {
             this.startAnimation()
         })
-    }
+    };
 
     render() {
-
         const scaleYs = this.load.map((item, index) => {
-            const scaleY = index * Math.PI / 4;
-            // console.log(scaleY)
+            const scaleY = index * PI / 4;
             return this.animation.interpolate({
                 inputRange: [0, 0.25, 0.5, 0.75, 1],
-                // outputRange: [1,3, 1]
-                outputRange: [cSin(scaleY), cSin(Math.PI / 4 + scaleY), cSin(Math.PI / 2 + scaleY), cSin(Math.PI * 3 / 4 + scaleY), cSin(Math.PI + scaleY)]
+                outputRange: [cSin(scaleY), cSin(PI / 4 + scaleY), cSin(PI / 2 + scaleY), cSin(PI * 3 / 4 + scaleY), cSin(PI + scaleY)]
             })
         });
+        const {style, blockStyle} = this.props;
+
+        const vStyle = [styles.box].concat(isType(style) === 'Array' ? style : [style]);
+        const bStyle = [styles.block].concat(isType(blockStyle) === 'Array' ? blockStyle : [blockStyle]);
 
         return (
-            <View style={{flexDirection: 'row'}}>
+            <View style={vStyle}>
                 {
                     scaleYs.map((item, index) => {
                         return (
                             <Animated.View
                                 key={'Animated' + index}
-                                style={{
-                                    width: 10,
-                                    height: 10,
-                                    backgroundColor: '#80B2FE',
-                                    marginHorizontal: 2,
-                                    transform: [{scaleY: item}]
-                                }}/>
+                                style={[bStyle, {transform: [{scaleY: item}]}]}/>
                         )
                     })
                 }

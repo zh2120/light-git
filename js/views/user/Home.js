@@ -72,7 +72,7 @@ export default connect(({userInfo, userSignInfo}) => ({
         };
 
         show = () => {
-            CAlert.show('这就是提示', <Text>内容text</Text>);
+            CAlert.show('这就是提示',  <CLoading />);
         }
 
         close = () => {
