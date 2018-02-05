@@ -12,14 +12,15 @@ import {
     Image,
     TextInput,
     StyleSheet,
-    WebView,
     Button,
     TouchableOpacity,
     TouchableHighlight
 } from 'react-native'
-import CAlert from '../../components/CAlert2'
+import {CAlert, CLoading} from '../../components'
 
 const underlayColor = 'rgba(100,100,100 ,0.1)';
+
+
 
 export default connect(({userInfo, userSignInfo}) => ({
     user: userInfo.user,
@@ -70,8 +71,8 @@ export default connect(({userInfo, userSignInfo}) => ({
             })
         };
 
-        show = ()=> {
-            CAlert.show({title: '123455'});
+        show = () => {
+            CAlert.show('这就是提示', <Text>内容text</Text>);
         }
 
         close = () => {
@@ -137,6 +138,7 @@ export default connect(({userInfo, userSignInfo}) => ({
                     </View>
                     <Button title={'出现'} onPress={this.show}/>
                     <Button title={'关闭'} onPress={this.close}/>
+                    <CLoading />
                 </View>
             )
         }

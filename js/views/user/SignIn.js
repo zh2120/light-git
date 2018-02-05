@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import {connect} from 'react-redux'
 import Octicons from 'react-native-vector-icons/Octicons';
-import {Button, CAlert} from '../../components/'
+import {CButton, Button} from '../../components/'
 import {userSignIn, userSignAccept} from '../../reducers/userReducer'
 import {openToast, bindActions, reset, openModal} from '../../reducers/comReducer'
 
@@ -62,7 +62,7 @@ export default connect(({userSignInfo}) => ({auth: userSignInfo.auth}), bindActi
             if (account && password) {
                 const auth = btoa(`${account}:${password}`);
                 // 打开遮掩层
-                openModal(<CAlert title={'In obtaining authorization！'}/>);
+                // openModal(<CAlert title={'In obtaining authorization！'}/>);
                 return userSignIn(auth)
             }
             return openToast('Check Account or Password')
@@ -93,8 +93,9 @@ export default connect(({userSignInfo}) => ({auth: userSignInfo.auth}), bindActi
                         style={styles.textInput}
                         underlineColorAndroid={'transparent'}
                         onSubmitEditing={this.signInSubmit}/>
-                    <Button content={<Text>Authorized Login</Text>}
+                    <CButton title={'Authorized Login'}
                             style={styles.btnContent}
+                             disabled={!account || !password}
                             onPress={this.signInSubmit}/>
                 </View>
             )
@@ -119,10 +120,10 @@ const styles = StyleSheet.create({
         marginTop: 36,
     },
     btnContent: {
+        flex: 0,
         width: 200,
-        height: 36,
         marginTop: 24,
-        borderRadius: 2,
+        borderRadius: 4,
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: '#888',
     }

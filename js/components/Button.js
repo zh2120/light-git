@@ -48,9 +48,7 @@ export default class Button extends PureComponent {
                 disabled={disabled}
                 onPress={onPress}>
                 <View style={finalStyle}>
-                    {
-                        icon ? icon : null
-                    }
+                    {icon ? icon : null}
                     {content}
                 </View>
             </TouchableNativeFeedback>
