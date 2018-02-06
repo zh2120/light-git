@@ -23,15 +23,24 @@ const styles = StyleSheet.create({
 class Loading extends PureComponent {
     static propTypes = {
         duration: PropTypes.number,
+        count: PropTypes.number,
         style: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array]),
         blockStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array])
     };
 
-    load = [1, 1, 1];
+    constructor(props) {
+        super();
+        this.load = (new Array(props.count || 4)).fill(1)
+    }
     animation = new Animated.Value(0);
+    loading = true;
 
     componentDidMount() {
         this.startAnimation()
+    }
+
+    componentWillUnmount() {
+        this.load = false
     }
 
     startAnimation = () => {
@@ -42,7 +51,12 @@ class Loading extends PureComponent {
             duration: duration || 2000,
             useNativeDriver: true
         }).start(() => {
-            this.startAnimation()
+            console.log(12);
+            if (this.load) {
+                this.startAnimation()
+            } else {
+                this.animation = null
+            }
         })
     };
 

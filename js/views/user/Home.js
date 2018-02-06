@@ -72,7 +72,7 @@ export default connect(({userInfo, userSignInfo}) => ({
         };
 
         show = () => {
-            CAlert.show('这就是提示',  <CLoading />);
+            CAlert.show('这就是提示',  <CLoading />, [{text: 'OjbK'}]);
         }
 
         close = () => {
@@ -138,7 +138,7 @@ export default connect(({userInfo, userSignInfo}) => ({
                     </View>
                     <Button title={'出现'} onPress={this.show}/>
                     <Button title={'关闭'} onPress={this.close}/>
-                    <CLoading />
+                    {/*<CLoading />*/}
                 </View>
             )
         }
