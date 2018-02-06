@@ -16,7 +16,7 @@ export class CButton extends PureComponent {
         title: PropTypes.string.isRequired,
         style: PropTypes.oneOfType([PropTypes.number, PropTypes.object, PropTypes.array]),
         titleStyle: PropTypes.oneOfType([PropTypes.number, PropTypes.object, PropTypes.array])
-    }
+    };
 
     render() {
         const {title, onPress, style, titleStyle, disabled} = this.props;

@@ -65,9 +65,7 @@ class CLoading extends PureComponent {
         }
     };
 
-    close = () => {
-        this.setState({...this.initialState})
-    };
+    close = () => this.setState({...this.initialState});
 
     startAnimation = () => {
         const {duration} = this.props;
