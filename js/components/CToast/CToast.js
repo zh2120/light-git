@@ -33,7 +33,7 @@ class CToast extends PureComponent {
     state = {...this.initialState};
     animation = new Animated.Value(0);
 
-    open = (text) => {
+    open = (text = '') => {
         if (this.timer) clearTimeout(this.timer);
 
         return this.setState({visibility: true, text}, () => {

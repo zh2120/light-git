@@ -59,7 +59,7 @@ class CLoading extends PureComponent {
         this.load = false
     }
 
-    open = (text) => {
+    open = (text = '') => {
         if (!this.state.visibility) {
             this.setState({text, visibility: true}, this.startAnimation)
         }
