@@ -1,7 +1,6 @@
 import React, {PureComponent, Children} from 'react';
 import {StyleSheet, View, Text, Animated} from 'react-native'
-import AppWrapper from 'react-native-root-wrapper';
-import {CButton} from '../components'
+import {CButton} from '../index'
 
 const styles = StyleSheet.create({
     wrap: {
@@ -55,7 +54,7 @@ class CAlert extends PureComponent {
     state = {...this.initialState};
     animation = new Animated.Value(0);
 
-    open = (refTitle, refContent, refActions) => {
+    open(refTitle, refContent, refActions) {
         const {title, content, actions} = this.state;
         const newTitle = isType(refTitle) === 'String' && refTitle || title;
         const newContent = refContent || content;
@@ -64,13 +63,13 @@ class CAlert extends PureComponent {
         this.setState({visibility: true, title: newTitle, content: newContent, actions: newActions}, () => {
             Animated.timing(this.animation, {
                 toValue: 1,
-                duration: 150,
+                duration: 10,
                 useNativeDriver: true
             }).start()
         })
     };
 
-    close = (callback) => {
+    close(callback) {
         const {visibility} = this.state;
         if (visibility) {
             if (callback) {
@@ -131,21 +130,4 @@ class CAlert extends PureComponent {
     }
 }
 
-export default {
-    instance: null,
-    open: (title, content, actions) => {
-        if (!this.instance) {
-            (new AppWrapper(<CAlert
-                ref={re => (this.instance = re)}/>)).subScribe(() => this.instance.open(title, content, actions))
-        } else {
-            this.instance.open(title, content, actions)
-        }
-    },
-    close: () => {
-        if (this.instance) {
-            this.instance.close()
-        }
-
-    }
-}
-
+export default CAlert;

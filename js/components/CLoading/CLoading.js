@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {View, Animated, StyleSheet} from 'react-native'
+import React, {PureComponent} from 'react';
+import {View, Animated, StyleSheet, Text} from 'react-native'
 import PropTypes from 'prop-types';
 
 const {PI, abs, sin} = Math;
@@ -7,6 +7,24 @@ const {PI, abs, sin} = Math;
 const cSin = (deg) => 2 * abs(sin(deg)) + 0.1;
 
 const styles = StyleSheet.create({
+    wrap: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(21, 21, 21, 0.3)'
+    },
+    wBox: {
+        paddingVertical: 12,
+        width: 200,
+        backgroundColor: '#ffffff',
+        alignItems: 'center',
+        borderRadius: 4,
+        justifyContent: 'center'
+    },
     box: {
         flexDirection: 'row',
         height: 60,
@@ -21,7 +39,7 @@ const styles = StyleSheet.create({
     }
 });
 
-class CLoading extends Component {
+class CLoading extends PureComponent {
     static propTypes = {
         duration: PropTypes.number,
         count: PropTypes.number,
@@ -29,20 +47,27 @@ class CLoading extends Component {
         blockStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array])
     };
 
-    constructor(props) {
-        super();
-        this.load = (new Array(props.count || 3)).fill(1)
-    }
+    initialState = {text: '', visibility: false};
+
+    state = {...this.initialState};
+    load = (new Array(this.props.count || 3)).fill(1);
     animation = new Animated.Value(0);
     loading = true;
 
-    componentDidMount() {
-        this.startAnimation()
-    }
 
     componentWillUnmount() {
         this.load = false
     }
+
+    open = (text) => {
+        if (!this.state.visibility) {
+            this.setState({text, visibility: true}, this.startAnimation)
+        }
+    };
+
+    close = () => {
+        this.setState({...this.initialState})
+    };
 
     startAnimation = () => {
         const {duration} = this.props;
@@ -61,6 +86,9 @@ class CLoading extends Component {
     };
 
     render() {
+        const {text, visibility} = this.state;
+        if (!visibility) return null;
+
         const scaleYs = this.load.map((item, index) => {
             const scaleY = index * PI / 4;
             return this.animation.interpolate({
@@ -74,16 +102,21 @@ class CLoading extends Component {
         const bStyle = [styles.block].concat(isType(blockStyle) === 'Array' ? blockStyle : [blockStyle]);
 
         return (
-            <View style={vStyle}>
-                {
-                    scaleYs.map((item, index) => {
-                        return (
-                            <Animated.View
-                                key={'Animated' + index}
-                                style={[bStyle, {transform: [{scaleY: item}]}]}/>
-                        )
-                    })
-                }
+            <View style={styles.wrap}>
+                <View style={styles.wBox}>
+                    <View style={vStyle}>
+                        {
+                            scaleYs.map((item, index) => {
+                                return (
+                                    <Animated.View
+                                        key={'Animated' + index}
+                                        style={[bStyle, {transform: [{scaleY: item}]}]}/>
+                                )
+                            })
+                        }
+                    </View>
+                    <Text>{text}</Text>
+                </View>
             </View>
         )
     }

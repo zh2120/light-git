@@ -1,6 +1,5 @@
-import React, {PureComponent, Children} from 'react';
+import React, {PureComponent} from 'react';
 import {Animated, Text, StyleSheet, TouchableWithoutFeedback} from 'react-native'
-import AppWrapper from 'react-native-root-wrapper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const styles = StyleSheet.create({
@@ -35,10 +34,12 @@ class CToast extends PureComponent {
     animation = new Animated.Value(0);
 
     open = (text) => {
+        if (this.timer) clearTimeout(this.timer);
+
         return this.setState({visibility: true, text}, () => {
             Animated.timing(this.animation, {
                 toValue: 1,
-                duration: 300,
+                duration: 200,
                 useNativeDriver: true
             }).start(() => {
                 if (this.state.visibility) {
@@ -62,6 +63,7 @@ class CToast extends PureComponent {
         }
     };
 
+
     render() {
         const {visibility, text} = this.state;
 
@@ -72,9 +74,14 @@ class CToast extends PureComponent {
             outputRange: [0.1, 1]
         });
 
+        const translateX = this.animation.interpolate({
+            inputRange: [0, 1],
+            outputRange: [vw, 0]
+        });
+
         return (
             <TouchableWithoutFeedback onPress={this.close}>
-                <Animated.View style={[styles.common, {opacity: opacity}]}>
+                <Animated.View style={[styles.common, {opacity, transform: [{translateX}]}]}>
                     <Text style={styles.toastText}>{text}</Text>
                     <MaterialCommunityIcons style={{color: '#80B2FE', marginLeft: 10}} size={20}
                                             name={'circle-outline'}/>
@@ -84,15 +91,4 @@ class CToast extends PureComponent {
     }
 }
 
-
-export default {
-    instance: null,
-    open: (text) => {
-        if (!this.instance) {
-            (new AppWrapper(<CToast
-                ref={re => (this.instance = re)}/>)).subScribe(() => this.instance.open(text))
-        } else {
-            this.instance.open(text)
-        }
-    }
-}
+export default CToast;

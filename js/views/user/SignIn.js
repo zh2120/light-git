@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import {connect} from 'react-redux'
 import Octicons from 'react-native-vector-icons/Octicons';
-import {CButton, Button, CAlert, CLoading} from '../../components/'
+import {CButton, Button, CLoading} from '../../components/'
 import {userSignIn, userSignAccept} from '../../reducers/userReducer'
 import {openToast, bindActions, reset} from '../../reducers/comReducer'
 
@@ -67,7 +67,6 @@ export default connect(({userSignInfo}) => ({
             if (account && password) {
                 const auth = btoa(`${account}:${password}`);
                 // 打开遮掩层
-                // CAlert.open('Signing...', <CLoading/>);
                 CLoading.open('Signing...');
                 return userSignIn(auth)
             }

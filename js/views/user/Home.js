@@ -70,11 +70,11 @@ export default connect(({userInfo, userSignInfo}) => ({
         };
 
         show = () => {
-            CLoading.open('这就是提示', [{text: 'OjbK'}])
+            CLoading.open('加载')
         }
 
         close = () => {
-            CToast.open('1241412')
+            CToast.open('通知')
         }
 
         render() {
@@ -134,8 +134,8 @@ export default connect(({userInfo, userSignInfo}) => ({
                             </TouchableHighlight>
                         </View>
                     </View>
-                    <Button title={'出现'} onPress={this.show}/>
-                    <Button title={'关闭'} onPress={this.close}/>
+                    <Button title={'加载'} onPress={this.show}/>
+                    <Button title={'通知'} onPress={this.close}/>
                     {/*<CLoading />*/}
                 </View>
             )
