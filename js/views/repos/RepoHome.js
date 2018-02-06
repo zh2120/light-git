@@ -14,7 +14,7 @@ import Octicons from 'react-native-vector-icons/Octicons'
 import {Button, Loading, CList} from '../../components'
 import {repoContent, clearDir} from '../../reducers/repoReducer'
 import {getIssue, errIssue} from '../../reducers/issueReducer'
-import {openModal, bindActions, back} from '../../reducers/comReducer'
+import {bindActions, back} from '../../reducers/comReducer'
 
 const pr = 'PR';
 const wiki = 'Wiki';
@@ -30,7 +30,7 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
     codeRefreshing: repoInfo.getting,
     issuesData: issueInfo.issues,
     issueRefreshing: issueInfo.getting
-}), bindActions({repoContent, clearDir, back, openModal, getIssue, errIssue}))(
+}), bindActions({repoContent, clearDir, back, getIssue, errIssue}))(
     class extends PureComponent {
         static navigationOptions = ({navigation}) => {
             const {params} = navigation.state;
@@ -182,7 +182,7 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
             const {navigation} = this.props;
 
             return (
-                <TouchableHighlight onPress={() => navigation.navigate('RepoIssues', {fullName, number,title})}
+                <TouchableHighlight onPress={() => navigation.navigate('RepoIssues', {fullName, number, title})}
                                     underlayColor={'rgba(100,100,100 ,0.1)'}>
                     <View style={styles.issueBox}>
                         <View>

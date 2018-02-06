@@ -16,11 +16,9 @@ import {
     TouchableOpacity,
     TouchableHighlight
 } from 'react-native'
-import {CAlert, CLoading} from '../../components'
+import {CAlert, CLoading, CToast} from '../../components'
 
 const underlayColor = 'rgba(100,100,100 ,0.1)';
-
-
 
 export default connect(({userInfo, userSignInfo}) => ({
     user: userInfo.user,
@@ -72,11 +70,11 @@ export default connect(({userInfo, userSignInfo}) => ({
         };
 
         show = () => {
-            CAlert.show('这就是提示',  <CLoading />, [{text: 'OjbK'}]);
+            CLoading.open('这就是提示', [{text: 'OjbK'}])
         }
 
         close = () => {
-            CAlert.close();
+            CToast.open('1241412')
         }
 
         render() {

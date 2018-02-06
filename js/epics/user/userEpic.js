@@ -7,7 +7,7 @@ import {
     repoList,
     deleteAuth,
 } from '../../reducers/userReducer';
-import {openToast, putError, closeModal} from '../../reducers/comReducer';
+import {openToast, putError} from '../../reducers/comReducer';
 import {Observable} from 'rxjs/Rx'
 // Rewrite over
 /*.catch() 放到了 .mergeMap() 内部，AJAX 调用的后面;如果让错误到达 action$.ofType()，epic 会终止并且不会监听任何 actions。*/
@@ -50,7 +50,7 @@ export const userSignInEpic = (action$, {getState}, {put}) => action$.ofType(Use
                         console.log('--> 超时', err);
                         error$ = Observable.of(putError('网络状态不佳，请稍后再试'));// 超时处理
                 }
-                return error$.startWith(closeModal()).delay(10).startWith(userSignDenied()) // 最先完成进行数据清理
+                return error$.startWith(userSignDenied()) // 最先完成进行数据清理
             })
     })
 ;
@@ -70,7 +70,6 @@ export const userInfoEpic = (action$, state, {get}) => action$.ofType(UserTypes.
 
         return get(url, headers)
             .map(({response}) => getUserInfo(response))
-            .startWith(closeModal())
             .catch(err => Observable.of(userSignDenied()))
     });
 
@@ -91,17 +90,12 @@ export const clearUserInfoEpic = (action$, {getState}, ajax) => action$.ofType(U
 
         return ajax.delete(url, headers)
             .map(({status}) => {
-                throw {status} // 主动抛出错误
-            })
-            .startWith(clearUser()).delay(20).startWith(openToast('已退出授权'))
-            .catch(err => {
-                let err$ = Observable.of(putError('网络状态不佳，请稍后再试'));
-                console.log('err', err);
-                if (err.status === 204) {
-                    err$ = Observable.of(openToast('已退出授权')).startWith(clearUser()).delay(10).startWith(userSignDenied())
+                if (status === 204) {
+                    return userSignDenied()
                 }
-                return err$
             })
+            .concat(Observable.of(clearUser(), openToast('已退出授权')))
+            .catch(err => Observable.of(putError('网络状态不佳，请稍后再试')))
     });
 
 /**

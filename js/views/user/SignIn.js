@@ -7,16 +7,18 @@ import {
 } from 'react-native'
 import {connect} from 'react-redux'
 import Octicons from 'react-native-vector-icons/Octicons';
-import {CButton, Button} from '../../components/'
+import {CButton, Button, CAlert, CLoading} from '../../components/'
 import {userSignIn, userSignAccept} from '../../reducers/userReducer'
-import {openToast, bindActions, reset, openModal} from '../../reducers/comReducer'
+import {openToast, bindActions, reset} from '../../reducers/comReducer'
 
-export default connect(({userSignInfo}) => ({auth: userSignInfo.auth}), bindActions({
+export default connect(({userSignInfo}) => ({
+    auth: userSignInfo.auth,
+    pending: userSignInfo.signInPending
+}), bindActions({
     userSignIn,
     openToast,
     userSignAccept,
-    reset,
-    openModal
+    reset
 }))(
     class extends PureComponent {
         static navigationOptions = ({navigation}) => ({
@@ -42,12 +44,15 @@ export default connect(({userSignInfo}) => ({auth: userSignInfo.auth}), bindActi
         }
 
         componentWillReceiveProps(nextProps) {
-            const {auth} = this.props;
-            if (!auth && nextProps.auth) {
-                this.setState(() => {
-                    nextProps.reset('Home');
-                    return {account: '', password: ''}
-                })
+            const {auth, pending} = this.props;
+            if (pending && !nextProps.pending) {
+                CLoading.close();
+                if (!auth && nextProps.auth) {
+                    this.setState(() => {
+                        nextProps.reset('Home');
+                        return {account: '', password: ''}
+                    })
+                }
             }
         }
 
@@ -57,12 +62,13 @@ export default connect(({userSignInfo}) => ({auth: userSignInfo.auth}), bindActi
 
         signInSubmit = () => {
             const {account, password} = this.state;
-            const {userSignIn, openToast, openModal} = this.props;
+            const {userSignIn, openToast} = this.props;
             // todo 账号过滤空格，回车等
             if (account && password) {
                 const auth = btoa(`${account}:${password}`);
                 // 打开遮掩层
-                // openModal(<CAlert title={'In obtaining authorization！'}/>);
+                // CAlert.open('Signing...', <CLoading/>);
+                CLoading.open('Signing...');
                 return userSignIn(auth)
             }
             return openToast('Check Account or Password')
@@ -94,9 +100,9 @@ export default connect(({userSignInfo}) => ({auth: userSignInfo.auth}), bindActi
                         underlineColorAndroid={'transparent'}
                         onSubmitEditing={this.signInSubmit}/>
                     <CButton title={'Authorized Login'}
-                            style={styles.btnContent}
+                             style={styles.btnContent}
                              disabled={!account || !password}
-                            onPress={this.signInSubmit}/>
+                             onPress={this.signInSubmit}/>
                 </View>
             )
         }

@@ -1,6 +1,7 @@
-import React, {PureComponent} from 'react';
+import React, {Component} from 'react';
 import {View, Animated, StyleSheet} from 'react-native'
 import PropTypes from 'prop-types';
+
 const {PI, abs, sin} = Math;
 
 const cSin = (deg) => 2 * abs(sin(deg)) + 0.1;
@@ -20,7 +21,7 @@ const styles = StyleSheet.create({
     }
 });
 
-class Loading extends PureComponent {
+class CLoading extends Component {
     static propTypes = {
         duration: PropTypes.number,
         count: PropTypes.number,
@@ -30,7 +31,7 @@ class Loading extends PureComponent {
 
     constructor(props) {
         super();
-        this.load = (new Array(props.count || 4)).fill(1)
+        this.load = (new Array(props.count || 3)).fill(1)
     }
     animation = new Animated.Value(0);
     loading = true;
@@ -51,7 +52,6 @@ class Loading extends PureComponent {
             duration: duration || 2000,
             useNativeDriver: true
         }).start(() => {
-            console.log(12);
             if (this.load) {
                 this.startAnimation()
             } else {
@@ -89,4 +89,4 @@ class Loading extends PureComponent {
     }
 }
 
-export default Loading;
+export default CLoading;

@@ -1,4 +1,4 @@
-import React, {Component, Children} from 'react';
+import React, {PureComponent, Children} from 'react';
 import {StyleSheet, View, Text, Animated} from 'react-native'
 import AppWrapper from 'react-native-root-wrapper';
 import {CButton} from '../components'
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     }
 });
 
-class CAlert extends Component {
+class CAlert extends PureComponent {
     initialState = {
         visibility: false,
         title: '提示',
@@ -55,7 +55,7 @@ class CAlert extends Component {
     state = {...this.initialState};
     animation = new Animated.Value(0);
 
-    show = (refTitle, refContent, refActions) => {
+    open = (refTitle, refContent, refActions) => {
         const {title, content, actions} = this.state;
         const newTitle = isType(refTitle) === 'String' && refTitle || title;
         const newContent = refContent || content;
@@ -64,7 +64,7 @@ class CAlert extends Component {
         this.setState({visibility: true, title: newTitle, content: newContent, actions: newActions}, () => {
             Animated.timing(this.animation, {
                 toValue: 1,
-                duration: 100,
+                duration: 150,
                 useNativeDriver: true
             }).start()
         })
@@ -112,34 +112,33 @@ class CAlert extends Component {
 
     render() {
         const {visibility, title} = this.state;
+        if (!visibility) return null;
+
         const opacity = this.animation.interpolate({
             inputRange: [0, 1],
             outputRange: [0.1, 1]
         });
 
-        return visibility
-            ? (
-                <Animated.View style={[styles.wrap, {opacity}]}>
-                    <View style={styles.cBox}>
-                        <Text style={styles.text}>{title}</Text>
-                        {this.renderContent()}
-                        {this.renderActions()}
-                    </View>
-                </Animated.View>
-            )
-            : null
-
+        return (
+            <Animated.View style={[styles.wrap, {opacity}]}>
+                <View style={styles.cBox}>
+                    <Text style={styles.text}>{title}</Text>
+                    {this.renderContent()}
+                    {this.renderActions()}
+                </View>
+            </Animated.View>
+        )
     }
 }
 
 export default {
     instance: null,
-    show: (title, content, actions) => {
+    open: (title, content, actions) => {
         if (!this.instance) {
             (new AppWrapper(<CAlert
-                ref={re => (this.instance = re)}/>)).subScribe(() => this.instance.show(title, content, actions))
+                ref={re => (this.instance = re)}/>)).subScribe(() => this.instance.open(title, content, actions))
         } else {
-            this.instance.show(title, content, actions)
+            this.instance.open(title, content, actions)
         }
     },
     close: () => {

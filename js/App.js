@@ -5,6 +5,7 @@ import codePush from "react-native-code-push";
 import {View, StyleSheet, StatusBar, Text} from 'react-native'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/catch'
+import 'rxjs/add/operator/concat'
 import 'rxjs/add/operator/switchMap'
 import 'rxjs/add/operator/takeUntil'
 import 'rxjs/add/operator/filter'
@@ -40,7 +41,6 @@ const App = () => (
                     barStyle="default"/>
                 <StacksInDrawer/>
                 <Toast persistor={persistor}/>
-                <CModal/>
             </View>
         </PersistGate>
     </Provider>
