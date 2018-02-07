@@ -30,24 +30,21 @@ export default connect(({repoInfo, nav}) => ({
             this.hasMore = false
         }
 
-        componentWillMount() {
+        componentDidMount() {
             const {state} = this.props.navigation;
             if (state.params) {
                 this.props.fileContent({fullName: state.params.fullName, path: state.params.path, type: 'dir'})
             }
         }
 
-        componentDidMount() {
-
-        }
-
-        componentWillReceiveProps(nextProps) {
+        shouldComponentUpdate(nextProps) {
             const {dirs} = this.props;
 
             if (dirs.length < nextProps.dirs.length && !this.hasMore) { // 目录栈增加
                 this.dirIndex = nextProps.dirs.length - 1;
                 this.hasMore = true
             }
+            return true;
         }
 
         componentWillUnmount() {

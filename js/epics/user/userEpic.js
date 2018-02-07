@@ -91,10 +91,10 @@ export const clearUserInfoEpic = (action$, {getState}, ajax) => action$.ofType(U
         return ajax.delete(url, headers)
             .map(({status}) => {
                 if (status === 204) {
-                    return userSignDenied()
+                    return userSignDenied('已经退出授权')
                 }
             })
-            .concat(Observable.of(clearUser(), openToast('已退出授权')))
+            .concat(Observable.of(clearUser()))
             .catch(err => Observable.of(putError('网络状态不佳，请稍后再试')))
     });
 

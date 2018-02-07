@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react'
+import React, {Component} from 'react'
 import {
     View,
     Text,
@@ -7,20 +7,21 @@ import {
 } from 'react-native'
 import {connect} from 'react-redux'
 import Octicons from 'react-native-vector-icons/Octicons';
-import {CButton, Button, CLoading} from '../../components/'
+import {CButton, Button, CLoading, CToast} from '../../components/'
 import {userSignIn, userSignAccept} from '../../reducers/userReducer'
 import {openToast, bindActions, reset} from '../../reducers/comReducer'
 
 export default connect(({userSignInfo}) => ({
     auth: userSignInfo.auth,
-    pending: userSignInfo.signInPending
+    pending: userSignInfo.signInPending,
+    error: userSignInfo.error
 }), bindActions({
     userSignIn,
     openToast,
     userSignAccept,
     reset
 }))(
-    class extends PureComponent {
+    class extends Component {
         static navigationOptions = ({navigation}) => ({
             headerTitle: 'SignIn',
             headerRight: <Button content={<Text style={{color: '#ffffff'}}>Sign Up</Text>}
@@ -28,14 +29,10 @@ export default connect(({userSignInfo}) => ({
                                  style={{height: 40, paddingHorizontal: 12}}/>
         });
 
-        constructor(props) {
-            super(props);
-
-            this.state = {
-                account: '',
-                password: ''
-            }
-        }
+        state = {
+            account: '',
+            password: ''
+        };
 
         componentDidMount() {
             const {navigation} = this.props;
@@ -43,17 +40,20 @@ export default connect(({userSignInfo}) => ({
             navigation.setParams({goSignUp: () => navigation.navigate('SignUp')})
         }
 
-        componentWillReceiveProps(nextProps) {
+        shouldComponentUpdate(nextProps) {
             const {auth, pending} = this.props;
             if (pending && !nextProps.pending) {
                 CLoading.close();
-                if (!auth && nextProps.auth) {
-                    this.setState(() => {
-                        nextProps.reset('Home');
-                        return {account: '', password: ''}
-                    })
-                }
+                const {error} = nextProps;
+
+                if (error) CToast.open(error);
+                if (!auth && nextProps.auth) nextProps.reset('Home');
             }
+            return true;
+        }
+
+        componentWillUnmount() {
+            this.setState({account: '', password: ''})
         }
 
         account = (account) => this.setState({account: String(account)});

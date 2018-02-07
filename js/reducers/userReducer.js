@@ -32,7 +32,7 @@ export const userSignAccept = (auth) => ({type: UserTypes.USER_SIGNIN_ACCEPT, pa
 /**
  * 用户验证失败
  */
-export const userSignDenied = () => ({type: UserTypes.USER_SIGNIN_DENIED});
+export const userSignDenied = (error) => ({type: UserTypes.USER_SIGNIN_DENIED, payload: {error}});
 
 /**
  * 获取用户基本信息
@@ -72,7 +72,7 @@ export const repoList = (list) => ({type: UserTypes.PRO_LIST, payload: {list}});
 /**
  * 出错
  */
-export const errRepoList = () => ({type: UserTypes.ERR_PRO_LIST})
+export const errRepoList = () => ({type: UserTypes.ERR_PRO_LIST});
 /**
  * 用户信息库
  * @param state
@@ -104,7 +104,8 @@ export const userInfo = (state = {user: null, proList: null}, {type, payload}) =
  * @param action
  * @returns {*}
  */
-export const userSignInfo = (state = {signInPending: false, signed: false, auth: null}, {type, payload}) => {
+const initState = {signInPending: false, signed: false, auth: null, error: ''};
+export const userSignInfo = (state = initState, {type, payload}) => {
     switch (type) {
         case UserTypes.USER_SIGNIN:
             return {...state, signInPending: true, basic: payload.auth};
@@ -113,7 +114,7 @@ export const userSignInfo = (state = {signInPending: false, signed: false, auth:
             return {...state, signInPending: false, signed: true, ...payload};
 
         case UserTypes.USER_SIGNIN_DENIED:
-            return {...state, signInPending: false, signed: false, auth: null};
+            return {...initState, ...payload};
 
         default:
             return state

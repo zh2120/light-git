@@ -6,7 +6,6 @@ import {Button} from '../../components'
 import {bindActions, reset} from '../../reducers/comReducer'
 import {getRepoList, deleteAuth} from '../../reducers/userReducer'
 
-
 const UserRow = (props) => {
     const {title, text, iconName} = props;
     return (
@@ -52,16 +51,15 @@ export default connect(({userInfo, userSignInfo, starInfo}) => ({
             const {navigation, deleteAuth, auth} = this.props;
             if (auth) {
                 navigation.setParams({signOut: deleteAuth, id: auth.id})
-
             }
         }
 
-        componentWillReceiveProps(nextProps) {
+        shouldComponentUpdate(nextProps) {
             const {auth} = this.props;
 
-            if (auth && !nextProps.auth) { // 前一次auth存在，下一次不存在，则退出
-                nextProps.reset('Home')
-            }
+            // 前一次auth存在，下一次不存在，则退出
+            if (auth && !nextProps.auth) nextProps.reset('Home');
+            return true;
         }
 
 
