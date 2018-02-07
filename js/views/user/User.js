@@ -4,7 +4,7 @@ import {View, Text, StyleSheet, Image, ScrollView} from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
 import {Button, CAlert} from '../../components'
 import {bindActions, reset} from '../../reducers/comReducer'
-import {getRepoList, deleteAuth} from '../../reducers/userReducer'
+import {deleteAuth} from '../../reducers/userReducer'
 
 const UserRow = (props) => {
     const {title, text, iconName} = props;
@@ -25,7 +25,6 @@ export default connect(({userInfo, userSignInfo, starInfo}) => ({
     count: starInfo.count,
 }), bindActions({
     reset,
-    getRepoList,
     deleteAuth,
 }))(
     class extends Component {

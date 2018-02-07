@@ -5,9 +5,9 @@ import {
     userSignAccept,
     userSignDenied,
     repoList,
+    errRepoList,
     deleteAuth,
 } from '../../reducers/userReducer';
-import {openToast, putError} from '../../reducers/comReducer';
 import {Observable} from 'rxjs/Rx'
 // Rewrite over
 /*.catch() 放到了 .mergeMap() 内部，AJAX 调用的后面;如果让错误到达 action$.ofType()，epic 会终止并且不会监听任何 actions。*/
@@ -19,6 +19,7 @@ import {Observable} from 'rxjs/Rx'
  */
 
 const config = require('../../../config.json');
+const netWork = '这糟糕的网络，我也没的办法，重新试哈嘛';
 export const userSignInEpic = (action$, {getState}, {put}) => action$.ofType(UserTypes.USER_SIGNIN)
     .switchMap(({payload}) => {
         const {auth} = payload;
@@ -51,12 +52,11 @@ export const userSignInEpic = (action$, {getState}, {put}) => action$.ofType(Use
                         error = '账号还么有邮箱，拿不到github的授权';
                         break;
                     default:
-                        error = '这糟糕的网络，我也没的办法，重新试哈嘛';// 超时处理
+                        error = netWork;// 超时处理
                 }
                 return Observable.of(userSignDenied(error)) // 最先完成进行数据清理
             })
-    })
-;
+    });
 
 // todo 全局超时处理
 /**
@@ -73,7 +73,7 @@ export const userInfoEpic = (action$, state, {get}) => action$.ofType(UserTypes.
 
         return get(url, headers)
             .map(({response}) => getUserInfo(response))
-            .catch(err => Observable.of(userSignDenied()))
+            .catch(err => Observable.of(userSignDenied(netWork)))
     });
 
 /**
@@ -98,7 +98,7 @@ export const clearUserInfoEpic = (action$, {getState}, ajax) => action$.ofType(U
                 }
             })
             .concat(Observable.of(clearUser()))
-            .catch(err => Observable.of(userSignDenied()))
+            .catch(err => Observable.of(userSignDenied(netWork)))
     });
 
 /**
@@ -115,8 +115,8 @@ export const checkAuthEpic = (action$, {getState}, {get}) => action$.ofType(User
         const url = `/applications/${client_id}/tokens/${auth.token}`;
 
         return get(url, headers).map(() => ({type: 'Checked_Successfully'}))
-    }).catch(({status}) => {
-        return Observable.of(clearUser(), userSignDenied()) // 在清理用户信息之前，取消授权
+    }).catch(() => {
+        return Observable.of(clearUser(), userSignDenied(netWork)) // 在清理用户信息之前，取消授权
     });
 
 /**
@@ -140,10 +140,7 @@ export const proListEpic = (action$, {getState}, {get}) => action$.ofType(UserTy
         return get(url, headers).map(({response}) => repoList(response))
             .catch(e => {
                 console.log(e);
-                return Observable.of(putError('network timeout'))
+                return Observable.of(errRepoList(netWork))
             })
 
-    }).catch(e => {
-        console.log(e);
-        return Observable.of(putError('网络状态不佳，请稍后再试'))
     });

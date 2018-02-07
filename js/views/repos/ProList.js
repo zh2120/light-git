@@ -18,14 +18,8 @@ export default connect(({userInfo}) => ({
     class extends Component {
         static navigationOptions = ({headerTitle: 'Repositories'});
 
-        constructor(props) {
-            super(props);
-            this.state = {};
-        }
-
         componentDidMount() {
-            const {getRepoList} = this.props;
-            getRepoList({username: ''})
+            this.props.getRepoList({username: ''})
         }
 
         /**

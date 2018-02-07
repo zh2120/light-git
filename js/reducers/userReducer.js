@@ -72,26 +72,27 @@ export const repoList = (list) => ({type: UserTypes.PRO_LIST, payload: {list}});
 /**
  * 出错
  */
-export const errRepoList = () => ({type: UserTypes.ERR_PRO_LIST});
+export const errRepoList = (error) => ({type: UserTypes.ERR_PRO_LIST, payload: {error}});
 /**
  * 用户信息库
  * @param state
  * @param action
  * @returns {*}
  */
-export const userInfo = (state = {user: null, proList: null}, {type, payload}) => {
+const userState =  {user: null, proList: null, error: ''};
+export const userInfo = (state = userState, {type, payload}) => {
     switch (type) {
         case UserTypes.USER_ACCEPT:
-            return {...state, ...payload};
+            return {...userState, ...payload};
 
         case UserTypes.CLEAR_USER:
-            return {...state, user: null};
+            return {...userState};
 
         case UserTypes.PRO_LIST:
-            return {...state, proList: payload.list};
+            return {...userState, proList: payload.list};
 
         case UserTypes.ERR_PRO_LIST:
-            return {...state, proList: null};
+            return {...userState, ...payload};
 
         default:
             return state;
@@ -104,17 +105,17 @@ export const userInfo = (state = {user: null, proList: null}, {type, payload}) =
  * @param action
  * @returns {*}
  */
-const initState = {signInPending: false, signed: false, auth: null, error: ''};
-export const userSignInfo = (state = initState, {type, payload}) => {
+const signState = {signInPending: false, signed: false, auth: null, error: ''};
+export const userSignInfo = (state = signState, {type, payload}) => {
     switch (type) {
         case UserTypes.USER_SIGNIN:
-            return {...state, signInPending: true, basic: payload.auth};
+            return {...signState, signInPending: true, basic: payload.auth};
 
         case UserTypes.USER_SIGNIN_ACCEPT:
-            return {...state, signInPending: false, signed: true, error: '', ...payload};
+            return {...signState, signInPending: false, signed: true, ...payload};
 
         case UserTypes.USER_SIGNIN_DENIED:
-            return {...initState, ...payload};
+            return {...signState, ...payload};
 
         default:
             return state
