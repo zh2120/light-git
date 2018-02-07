@@ -1,6 +1,6 @@
-import React, {PureComponent} from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import {View, Text, TouchableHighlight, TouchableNativeFeedback, StyleSheet} from 'react-native'
+import { View, Text, TouchableHighlight, TouchableNativeFeedback, StyleSheet } from 'react-native'
 
 export default class Button extends PureComponent {
     static propTypes = {
@@ -8,14 +8,15 @@ export default class Button extends PureComponent {
         disabled: PropTypes.bool,
         content: PropTypes.any,
         icon: PropTypes.any,
-        style: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
+        style: PropTypes.oneOfType([ PropTypes.object, PropTypes.number ])
     };
 
     static defaultProps = {
         content: (<Text>button</Text>),
         disabled: false,
         style: {},
-        onPress: () => {}
+        onPress: () => {
+        }
     };
 
     constructor(props) {
@@ -24,8 +25,8 @@ export default class Button extends PureComponent {
     }
 
     render() {
-        const {content, style, onPress, disabled, icon} = this.props
-        const finalStyle = [styles.wrap, icon && styles.icon, disabled && styles.disable, style]
+        const { content, style, onPress, disabled, icon } = this.props
+        const finalStyle = [ styles.wrap, icon && styles.icon, disabled && styles.disable, style ]
         if (ios) {
             return (
                 <TouchableHighlight
@@ -33,7 +34,7 @@ export default class Button extends PureComponent {
                     disabled={disabled}
                     onPress={onPress}
                     style={finalStyle}>
-                    <View style={[icon && styles.icon]}>
+                    <View style={[ icon && styles.icon ]}>
                         {
                             icon ? icon : null
                         }

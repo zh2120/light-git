@@ -1,16 +1,16 @@
-import {SearchTypes, searchRepoResult, resetSearch} from '../../reducers/searchReducer';
-import {putError} from '../../reducers/comReducer';
-import {Observable} from 'rxjs/Rx'
+import { SearchTypes, searchRepoResult, resetSearch } from '../../reducers/searchReducer';
+import { putError } from '../../reducers/comReducer';
+import { Observable } from 'rxjs/Rx'
 
 // todo 清空搜索结果
-export function searchRepoByQueryEpic(action$, {getState}, {get}) {
+export function searchRepoByQueryEpic(action$, { getState }, { get }) {
     return action$.ofType(SearchTypes.SEARCH_REPO)
         .switchMap(action => {
-            const {url} = action.payload;
-            const {auth} = getState().userSignInfo;
+            const { url } = action.payload;
+            const { auth } = getState().userSignInfo;
             let headers = {};
             if (auth) {
-                headers = {"Authorization": `token ${auth.token}`}
+                headers = { "Authorization": `token ${auth.token}` }
             }
 
             return get(url, headers)

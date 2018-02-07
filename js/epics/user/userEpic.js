@@ -8,7 +8,7 @@ import {
     errRepoList,
     deleteAuth,
 } from '../../reducers/userReducer';
-import {Observable} from 'rxjs/Rx'
+import { Observable } from 'rxjs/Rx'
 // Rewrite over
 /*.catch() 放到了 .mergeMap() 内部，AJAX 调用的后面;如果让错误到达 action$.ofType()，epic 会终止并且不会监听任何 actions。*/
 /**
@@ -20,18 +20,18 @@ import {Observable} from 'rxjs/Rx'
 
 const config = require('../../../config.json');
 const netWork = '这糟糕的网络，我也没的办法，重新试哈嘛';
-export const userSignInEpic = (action$, {getState}, {put}) => action$.ofType(UserTypes.USER_SIGNIN)
-    .switchMap(({payload}) => {
-        const {auth} = payload;
-        const {client_id, note, scopes, fingerprint, client_secret} = config;
+export const userSignInEpic = (action$, { getState }, { put }) => action$.ofType(UserTypes.USER_SIGNIN)
+    .switchMap(({ payload }) => {
+        const { auth } = payload;
+        const { client_id, note, scopes, fingerprint, client_secret } = config;
         const url = '/authorizations/clients/' + client_id;
-        const headers = {"Authorization": `Basic ${auth}`};
-        const body = {note, scopes, fingerprint, client_secret};
+        const headers = { "Authorization": `Basic ${auth}` };
+        const body = { note, scopes, fingerprint, client_secret };
 
         return put(url, body, headers)
-            .map(({status, response}) => {
+            .map(({ status, response }) => {
                 // 重构登录逻辑 对201做正常处理，对200 抛出异常
-                if (status === 200) throw {status: 200, desc: 'Signature invalid', auth, id: response.id};
+                if (status === 200) throw { status: 200, desc: 'Signature invalid', auth, id: response.id };
                 return response
             })
             // 进入授权登录流程
@@ -65,14 +65,14 @@ export const userSignInEpic = (action$, {getState}, {put}) => action$.ofType(Use
  * @param state
  * @param get
  */
-export const userInfoEpic = (action$, state, {get}) => action$.ofType(UserTypes.USER_SIGNIN_ACCEPT)
-    .switchMap(({payload}) => {
-        const {token} = payload.auth;
+export const userInfoEpic = (action$, state, { get }) => action$.ofType(UserTypes.USER_SIGNIN_ACCEPT)
+    .switchMap(({ payload }) => {
+        const { token } = payload.auth;
         const url = '/user';
-        const headers = {"Authorization": `token ${token}`};
+        const headers = { "Authorization": `token ${token}` };
 
         return get(url, headers)
-            .map(({response}) => getUserInfo(response))
+            .map(({ response }) => getUserInfo(response))
             .catch(err => Observable.of(userSignDenied(netWork)))
     });
 
@@ -82,9 +82,9 @@ export const userInfoEpic = (action$, state, {get}) => action$.ofType(UserTypes.
  * @param getState
  * @param ajax
  */
-export const clearUserInfoEpic = (action$, {getState}, ajax) => action$.ofType(UserTypes.DELETE_AUTH)
-    .mergeMap(({payload}) => {
-        const {id} = payload;
+export const clearUserInfoEpic = (action$, { getState }, ajax) => action$.ofType(UserTypes.DELETE_AUTH)
+    .mergeMap(({ payload }) => {
+        const { id } = payload;
         const url = `/authorizations/${id}`;
         const auth = getState().userSignInfo.basic;
         const headers = {
@@ -92,7 +92,7 @@ export const clearUserInfoEpic = (action$, {getState}, ajax) => action$.ofType(U
         };
 
         return ajax.delete(url, headers)
-            .map(({status}) => {
+            .map(({ status }) => {
                 if (status === 204) {
                     return userSignDenied('已经退出其他设备的授权')
                 }
@@ -107,14 +107,14 @@ export const clearUserInfoEpic = (action$, {getState}, ajax) => action$.ofType(U
  * @param getState
  * @param get
  */
-export const checkAuthEpic = (action$, {getState}, {get}) => action$.ofType(UserTypes.GET_CHECK_AUTH)
+export const checkAuthEpic = (action$, { getState }, { get }) => action$.ofType(UserTypes.GET_CHECK_AUTH)
     .switchMap(() => {
-        const {auth} = getState().userSignInfo;
-        const {client_id, client_secret} = config;
-        const headers = {"Authorization": "Basic " + btoa(client_id + ':' + client_secret)};
+        const { auth } = getState().userSignInfo;
+        const { client_id, client_secret } = config;
+        const headers = { "Authorization": "Basic " + btoa(client_id + ':' + client_secret) };
         const url = `/applications/${client_id}/tokens/${auth.token}`;
 
-        return get(url, headers).map(() => ({type: 'Checked_Successfully'}))
+        return get(url, headers).map(() => ({ type: 'Checked_Successfully' }))
     }).catch(() => {
         return Observable.of(clearUser(), userSignDenied(netWork)) // 在清理用户信息之前，取消授权
     });
@@ -125,19 +125,19 @@ export const checkAuthEpic = (action$, {getState}, {get}) => action$.ofType(User
  * @param getState
  * @param get
  */
-export const proListEpic = (action$, {getState}, {get}) => action$.ofType(UserTypes.GET_PRO_LIST)
-    .switchMap(({payload}) => {
+export const proListEpic = (action$, { getState }, { get }) => action$.ofType(UserTypes.GET_PRO_LIST)
+    .switchMap(({ payload }) => {
         // todo 列表排序
-        const {username} = payload;
-        const {auth} = getState().userSignInfo;
-        const headers = {"Authorization": "token " + auth.token};
+        const { username } = payload;
+        const { auth } = getState().userSignInfo;
+        const headers = { "Authorization": "token " + auth.token };
 
-        let url = '/user/repos' + getParams({sort: 'pushed'});
+        let url = '/user/repos' + getParams({ sort: 'pushed' });
         if (username) {
-            url = `/users/${username}/repos${getParams({sort: 'pushed'})}`
+            url = `/users/${username}/repos${getParams({ sort: 'pushed' })}`
         }
 
-        return get(url, headers).map(({response}) => repoList(response))
+        return get(url, headers).map(({ response }) => repoList(response))
             .catch(e => {
                 console.log(e);
                 return Observable.of(errRepoList(netWork))

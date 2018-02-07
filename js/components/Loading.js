@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {View, StyleSheet, Animated} from 'react-native'
+import React, { Component } from 'react'
+import { View, StyleSheet, Animated } from 'react-native'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 const SimpleIcon = Animated.createAnimatedComponent(SimpleLineIcons);
@@ -9,13 +9,13 @@ export default class Loading extends Component {
     value = new Animated.Value(0);
 
     fade = this.value.interpolate({
-        inputRange: [0, 0.5, 1],
-        outputRange: [1, 0.5, 0.9],
+        inputRange: [ 0, 0.5, 1 ],
+        outputRange: [ 1, 0.5, 0.9 ],
     });
 
     scale = this.value.interpolate({
-        inputRange: [0, 0.5, 1],
-        outputRange: [1, 1.6, 1],
+        inputRange: [ 0, 0.5, 1 ],
+        outputRange: [ 1, 1.6, 1 ],
     });
 
     componentDidMount() {
@@ -34,13 +34,13 @@ export default class Loading extends Component {
     };
 
     render() {
-        const {name} = this.props;
+        const { name } = this.props;
         return (
             <View style={styles.wrap}>
                 <SimpleIcon
                     name={name || 'cloud-download'} size={32}
                     style={{
-                        opacity: this.fade, transform: [{scale: this.scale}],
+                        opacity: this.fade, transform: [ { scale: this.scale } ],
                         color: 'rgb(30,144,255)'
                     }}/>
             </View>

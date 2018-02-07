@@ -1,5 +1,5 @@
-import React, {PureComponent} from 'react';
-import {Animated, Text, StyleSheet, TouchableWithoutFeedback} from 'react-native'
+import React, { PureComponent } from 'react';
+import { Animated, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const styles = StyleSheet.create({
@@ -30,13 +30,13 @@ class CToast extends PureComponent {
         visibility: false,
         text: ''
     };
-    state = {...this.initialState};
+    state = { ...this.initialState };
     animation = new Animated.Value(0);
 
     open = (text = '') => {
         if (this.timer) clearTimeout(this.timer);
 
-        return this.setState({visibility: true, text}, () => {
+        return this.setState({ visibility: true, text }, () => {
             Animated.timing(this.animation, {
                 toValue: 1,
                 duration: 200,
@@ -50,7 +50,7 @@ class CToast extends PureComponent {
     };
 
     close = () => { // 延时关闭toast
-        const {visibility} = this.state;
+        const { visibility } = this.state;
         if (visibility) {
             Animated.timing(this.animation, {
                 toValue: 0,
@@ -58,32 +58,32 @@ class CToast extends PureComponent {
                 useNativeDriver: true
             }).start(() => {
                 if (this.timer) clearTimeout(this.timer);
-                this.setState({...this.initialState})
+                this.setState({ ...this.initialState })
             });
         }
     };
 
 
     render() {
-        const {visibility, text} = this.state;
+        const { visibility, text } = this.state;
 
         if (!visibility) return null;
 
         const opacity = this.animation.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0.1, 1]
+            inputRange: [ 0, 1 ],
+            outputRange: [ 0.1, 1 ]
         });
 
         const translateX = this.animation.interpolate({
-            inputRange: [0, 1],
-            outputRange: [vw, 0]
+            inputRange: [ 0, 1 ],
+            outputRange: [ vw, 0 ]
         });
 
         return (
             <TouchableWithoutFeedback onPress={this.close}>
-                <Animated.View style={[styles.common, {opacity, transform: [{translateX}]}]}>
+                <Animated.View style={[ styles.common, { opacity, transform: [ { translateX } ] } ]}>
                     <Text style={styles.toastText}>{text}</Text>
-                    <MaterialCommunityIcons style={{color: '#80B2FE', marginLeft: 10}} size={20}
+                    <MaterialCommunityIcons style={{ color: '#80B2FE', marginLeft: 10 }} size={20}
                                             name={'circle-outline'}/>
                 </Animated.View>
             </TouchableWithoutFeedback>

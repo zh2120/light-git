@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, Platform} from 'react-native'
+import { Dimensions, Platform } from 'react-native'
 
 if (!__DEV__) {
     console = {
@@ -10,7 +10,7 @@ if (!__DEV__) {
     }
 }
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 global.dp = (px, useHeight = false) => parseInt(px * (useHeight ? height / 667 : width / 375));
 

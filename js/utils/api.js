@@ -1,4 +1,4 @@
-import {ajax} from 'rxjs/observable/dom/ajax';
+import { ajax } from 'rxjs/observable/dom/ajax';
 
 function create(baseUrl) {
 
@@ -17,16 +17,16 @@ function create(baseUrl) {
                     timeout,
                     url: baseUrl + url,
                     method: apiArr[i],
-                    headers: {...defaultHeaders, ...headers}
+                    headers: { ...defaultHeaders, ...headers }
                 }, config));
             continue
         }
         api[apiArr[i].toLowerCase()] = (url, body, headers, config) =>
-            new ajax(Object.assign({}, {timeout, url: baseUrl + url}, {
+            new ajax(Object.assign({}, { timeout, url: baseUrl + url }, {
                     body: JSON.stringify(body),
                     ...config,
                     method: apiArr[i],
-                    headers: {...defaultHeaders, ...headers}
+                    headers: { ...defaultHeaders, ...headers }
                 })
             )
     }

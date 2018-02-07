@@ -1,6 +1,6 @@
-import React, {PureComponent, Children} from 'react';
-import {StyleSheet, View, Text, Animated} from 'react-native'
-import {CButton} from '../index'
+import React, { PureComponent, Children } from 'react';
+import { StyleSheet, View, Text, Animated } from 'react-native'
+import { CButton } from '../index'
 
 const styles = StyleSheet.create({
     wrap: {
@@ -51,16 +51,16 @@ class CAlert extends PureComponent {
         actions: [], //必须是数组
     };
 
-    state = {...this.initialState};
+    state = { ...this.initialState };
     animation = new Animated.Value(0);
 
     open(refTitle, refContent, refActions) {
-        const {title, content, actions} = this.state;
+        const { title, content, actions } = this.state;
         const newTitle = isType(refTitle) === 'String' && refTitle || title;
         const newContent = refContent || content;
         const newActions = isType(refActions) === 'Array' && refActions || actions;
 
-        this.setState({visibility: true, title: newTitle, content: newContent, actions: newActions}, () => {
+        this.setState({ visibility: true, title: newTitle, content: newContent, actions: newActions }, () => {
             Animated.timing(this.animation, {
                 toValue: 1,
                 duration: 10,
@@ -70,7 +70,7 @@ class CAlert extends PureComponent {
     };
 
     close(callback) {
-        const {visibility} = this.state;
+        const { visibility } = this.state;
         if (visibility) {
             if (callback) {
                 callback()
@@ -79,12 +79,12 @@ class CAlert extends PureComponent {
                 toValue: 0,
                 duration: 150,
                 useNativeDriver: true
-            }).start(() => this.setState({...this.initialState}))
+            }).start(() => this.setState({ ...this.initialState }))
         }
     };
 
     renderContent() {
-        const {content} = this.state;
+        const { content } = this.state;
         switch (isType(content)) {
             case 'String':
                 return (<Text style={styles.contentText}>{content}</Text>);
@@ -97,7 +97,7 @@ class CAlert extends PureComponent {
     }
 
     renderActions = () => {
-        const {actions} = this.state;
+        const { actions } = this.state;
         return isEmpty(actions)
             ? null
             : (<View style={styles.btnBox}>
@@ -110,16 +110,16 @@ class CAlert extends PureComponent {
     };
 
     render() {
-        const {visibility, title} = this.state;
+        const { visibility, title } = this.state;
         if (!visibility) return null;
 
         const opacity = this.animation.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0.1, 1]
+            inputRange: [ 0, 1 ],
+            outputRange: [ 0.1, 1 ]
         });
 
         return (
-            <Animated.View style={[styles.wrap, {opacity}]}>
+            <Animated.View style={[ styles.wrap, { opacity } ]}>
                 <View style={styles.cBox}>
                     <Text style={styles.text}>{title}</Text>
                     {this.renderContent()}

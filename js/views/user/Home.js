@@ -12,11 +12,9 @@ import {
     Image,
     TextInput,
     StyleSheet,
-    Button,
     TouchableOpacity,
     TouchableHighlight
 } from 'react-native'
-import {CAlert, CLoading, CToast} from '../../components'
 
 const underlayColor = 'rgba(100,100,100 ,0.1)';
 
@@ -68,14 +66,6 @@ export default connect(({userInfo, userSignInfo}) => ({
                 return {searchText: ''}
             })
         };
-
-        show = () => {
-            CLoading.open('加载')
-        }
-
-        close = () => {
-            CToast.open('通知')
-        }
 
         render() {
             const {searchText} = this.state;
@@ -134,9 +124,6 @@ export default connect(({userInfo, userSignInfo}) => ({
                             </TouchableHighlight>
                         </View>
                     </View>
-                    <Button title={'加载'} onPress={this.show}/>
-                    <Button title={'通知'} onPress={this.close}/>
-                    {/*<CLoading />*/}
                 </View>
             )
         }

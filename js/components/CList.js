@@ -1,6 +1,6 @@
-import React, {PureComponent} from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import {StyleSheet, View, Text, FlatList} from 'react-native'
+import { StyleSheet, View, Text, FlatList } from 'react-native'
 
 export default class CList extends PureComponent {
     static propTypes = {

@@ -1,8 +1,8 @@
-import React, {PureComponent} from 'react';
-import {View, Animated, StyleSheet, Text} from 'react-native'
+import React, { PureComponent } from 'react';
+import { View, Animated, StyleSheet, Text } from 'react-native'
 import PropTypes from 'prop-types';
 
-const {PI, abs, sin} = Math;
+const { PI, abs, sin } = Math;
 
 const cSin = (deg) => 2 * abs(sin(deg)) + 0.1;
 
@@ -44,20 +44,20 @@ class CLoading extends PureComponent {
         only: PropTypes.bool,
         duration: PropTypes.number,
         count: PropTypes.number,
-        style: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array]),
-        blockStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array])
+        style: PropTypes.oneOfType([ PropTypes.object, PropTypes.number, PropTypes.array ]),
+        blockStyle: PropTypes.oneOfType([ PropTypes.object, PropTypes.number, PropTypes.array ])
     };
 
-    initialState = {text: '', visibility: false};
+    initialState = { text: '', visibility: false };
 
-    state = {...this.initialState};
+    state = { ...this.initialState };
     load = (new Array(this.props.count || 3)).fill(1);
     animation = new Animated.Value(0);
     loading = true;
 
     componentDidMount() {
-        if(!this.props.only) {
-            this.setState({visibility: true},  this.startAnimation)
+        if (!this.props.only) {
+            this.setState({ visibility: true }, this.startAnimation)
         }
     }
 
@@ -68,14 +68,14 @@ class CLoading extends PureComponent {
 
     open = (text = '') => {
         if (!this.state.visibility) {
-            this.setState({text, visibility: true}, this.startAnimation)
+            this.setState({ text, visibility: true }, this.startAnimation)
         }
     };
 
-    close = () => this.setState({...this.initialState});
+    close = () => this.setState({ ...this.initialState });
 
     startAnimation = () => {
-        const {duration} = this.props;
+        const { duration } = this.props;
         this.animation.setValue(0);
         Animated.timing(this.animation, {
             toValue: 1,
@@ -91,23 +91,23 @@ class CLoading extends PureComponent {
     };
 
     render() {
-        const {text, visibility} = this.state;
+        const { text, visibility } = this.state;
         if (!visibility) return null;
 
         const scaleYs = this.load.map((item, index) => {
             const scaleY = index * PI / 4;
             return this.animation.interpolate({
-                inputRange: [0, 0.25, 0.5, 0.75, 1],
-                outputRange: [cSin(scaleY), cSin(PI / 4 + scaleY), cSin(PI / 2 + scaleY), cSin(PI * 3 / 4 + scaleY), cSin(PI + scaleY)]
+                inputRange: [ 0, 0.25, 0.5, 0.75, 1 ],
+                outputRange: [ cSin(scaleY), cSin(PI / 4 + scaleY), cSin(PI / 2 + scaleY), cSin(PI * 3 / 4 + scaleY), cSin(PI + scaleY) ]
             })
         });
-        const {style, blockStyle, only} = this.props;
+        const { style, blockStyle, only } = this.props;
 
-        const vStyle = [styles.box].concat(isType(style) === 'Array' ? style : [style]);
-        const bStyle = [styles.block].concat(isType(blockStyle) === 'Array' ? blockStyle : [blockStyle]);
+        const vStyle = [ styles.box ].concat(isType(style) === 'Array' ? style : [ style ]);
+        const bStyle = [ styles.block ].concat(isType(blockStyle) === 'Array' ? blockStyle : [ blockStyle ]);
 
         return (
-            <View style={[styles.wrap, only ? {backgroundColor: 'rgba(21, 21, 21, 0.3)'} : null]}>
+            <View style={[ styles.wrap, only ? { backgroundColor: 'rgba(21, 21, 21, 0.3)' } : null ]}>
                 <View style={styles.wBox}>
                     <View style={vStyle}>
                         {
@@ -115,7 +115,7 @@ class CLoading extends PureComponent {
                                 return (
                                     <Animated.View
                                         key={'Animated' + index}
-                                        style={[bStyle, {transform: [{scaleY: item}]}]}/>
+                                        style={[ bStyle, { transform: [ { scaleY: item } ] } ]}/>
                                 )
                             })
                         }

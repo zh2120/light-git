@@ -7,21 +7,21 @@ import {
     getRepoContent,
     getRepoContentDenied,
 } from '../../reducers/repoReducer';
-import {putError} from '../../reducers/comReducer';
-import {Observable} from 'rxjs/Rx'
+import { putError } from '../../reducers/comReducer';
+import { Observable } from 'rxjs/Rx'
 
 export const repoListEpic = () => {
 };
 
 // todo 点击请求,防止抖动
 // 请求主仓库目录内容
-export const repoContentEpic = (action$, {getState, dispatch}, {get}) => action$.ofType(RepoTypes.REPO_HOME)
-    .switchMap(({payload}) => {
-        const {url} = payload;
-        const {auth} = getState().userSignInfo;
+export const repoContentEpic = (action$, { getState, dispatch }, { get }) => action$.ofType(RepoTypes.REPO_HOME)
+    .switchMap(({ payload }) => {
+        const { url } = payload;
+        const { auth } = getState().userSignInfo;
         let headers = {};
         if (auth) {
-            headers = {"Authorization": `token ${auth.token}`};
+            headers = { "Authorization": `token ${auth.token}` };
         }
 
         return get(url, headers)
@@ -46,16 +46,16 @@ export const repoContentEpic = (action$, {getState, dispatch}, {get}) => action$
     });
 
 // todo 点击请求,防止抖动
-export const repoFileEpic = (action$, {getState, dispatch}, {get}) => action$.ofType(RepoTypes.FILE)
-    .switchMap(({payload}) => {
-        const {fullName, path, ref, type} = payload;
-        const {auth} = getState().userSignInfo;
-        let headers = {"Accept": "application/vnd.github.v3.raw"};
+export const repoFileEpic = (action$, { getState, dispatch }, { get }) => action$.ofType(RepoTypes.FILE)
+    .switchMap(({ payload }) => {
+        const { fullName, path, ref, type } = payload;
+        const { auth } = getState().userSignInfo;
+        let headers = { "Accept": "application/vnd.github.v3.raw" };
         if (auth) {
-            headers = {...headers, "Authorization": `token ${auth.token}`};
+            headers = { ...headers, "Authorization": `token ${auth.token}` };
         }
-        const url = '/repos/' + fullName + '/contents/' + path + getParams({ref});
-        const apiConfig = type === 'dir' ? {} : {"responseType": "text"}; // 不是目录，请求文件内容
+        const url = '/repos/' + fullName + '/contents/' + path + getParams({ ref });
+        const apiConfig = type === 'dir' ? {} : { "responseType": "text" }; // 不是目录，请求文件内容
         // todo 某些文件只有json格式
         return get(url, headers, apiConfig)
             .map(res => res.response || res)

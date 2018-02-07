@@ -1,15 +1,6 @@
-import RepoDir from './Dir'
-import RepoFile from './File'
-import RepoIssues from './Issues'
-import Readme from './Readme'
-import RepoHome from './RepoHome'
-import UserProList from './ProList'
-
-export {
-    Readme,
-    RepoHome,
-    RepoDir,
-    RepoFile,
-    RepoIssues,
-    UserProList
-}
+export { default as RepoDir } from './Dir'
+export { default as RepoFile } from './File'
+export { default as RepoIssues } from './Issues'
+export { default as Readme } from './Readme'
+export { default as RepoHome } from './RepoHome'
+export { default as UserProList } from './ProList'

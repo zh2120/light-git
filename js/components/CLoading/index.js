@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import React, { PureComponent } from 'react';
 import AppWrapper from 'react-native-root-wrapper'
 import CLoading from './CLoading'
 
@@ -13,7 +13,7 @@ export default {
         }
     },
     close() {
-        if (this.instance){
+        if (this.instance) {
             this.instance.close();
         }
     }

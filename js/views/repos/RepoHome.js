@@ -1,5 +1,5 @@
-import React, {PureComponent} from 'react'
-import {connect} from 'react-redux'
+import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
 import {
     View,
     Text,
@@ -11,10 +11,10 @@ import {
 } from 'react-native'
 import Octicons from 'react-native-vector-icons/Octicons'
 
-import {Button, Loading, CList} from '../../components'
-import {repoContent, clearDir} from '../../reducers/repoReducer'
-import {getIssue, errIssue} from '../../reducers/issueReducer'
-import {bindActions, back} from '../../reducers/comReducer'
+import { Button, Loading, CList } from '../../components'
+import { repoContent, clearDir } from '../../reducers/repoReducer'
+import { getIssue, errIssue } from '../../reducers/issueReducer'
+import { bindActions, back } from '../../reducers/comReducer'
 
 const pr = 'PR';
 const wiki = 'Wiki';
@@ -22,7 +22,7 @@ const Code = 'contents';
 const Issues = 'issues';
 const Insights = 'insights';
 
-export default connect(({nav, repoInfo, issueInfo}) => ({
+export default connect(({ nav, repoInfo, issueInfo }) => ({
     nav: nav,
     dirs: repoInfo.dirs,
     readme: repoInfo.readme,
@@ -30,28 +30,28 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
     codeRefreshing: repoInfo.getting,
     issuesData: issueInfo.issues,
     issueRefreshing: issueInfo.getting
-}), bindActions({repoContent, clearDir, back, getIssue, errIssue}))(
+}), bindActions({ repoContent, clearDir, back, getIssue, errIssue }))(
     class extends PureComponent {
-        static navigationOptions = ({navigation}) => {
-            const {params} = navigation.state;
+        static navigationOptions = ({ navigation }) => {
+            const { params } = navigation.state;
             return {
                 headerTitle: params && params.name,
-                headerTitleStyle: {color: '#ffffff'},
-                headerBackTitleStyle: {color: '#ffffff'},
-                headerStyle: {backgroundColor: '#333333'},
+                headerTitleStyle: { color: '#ffffff' },
+                headerBackTitleStyle: { color: '#ffffff' },
+                headerStyle: { backgroundColor: '#333333' },
             }
         };
 
         constructor(props) {
             super(props);
-            const {params} = props.navigation.state;
+            const { params } = props.navigation.state;
             this.state = {
                 navName: '',
                 fullName: params ? params.fullName : ''
             };
             this.navBtns = [
-                {name: Code},
-                {name: Issues},
+                { name: Code },
+                { name: Issues },
                 // {name: pr},
                 // {name: wiki},
                 // {name: Insights},
@@ -59,7 +59,7 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
         }
 
         componentDidMount() {
-            const {fullName} = this.state;
+            const { fullName } = this.state;
 
             if (fullName) {
                 this.getNavContent(fullName, Code)
@@ -82,8 +82,8 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
          * @returns {*}
          */
         getNavContent = (fullName, type) => {
-            const {getIssue, repoContent} = this.props;
-            const url = '/repos/' + fullName + `/${type}` + getParams({ref: 'master', page: 1});
+            const { getIssue, repoContent } = this.props;
+            const url = '/repos/' + fullName + `/${type}` + getParams({ ref: 'master', page: 1 });
             let press;
 
             switch (type) {
@@ -98,7 +98,7 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
             if (this.state.navName === type) return null;
 
             press(url); // 不同按钮之间的切换，才请求数据
-            return this.setState({navName: type})
+            return this.setState({ navName: type })
         };
 
         refreshController = (isRefreshing) => <RefreshControl
@@ -112,7 +112,7 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
         />;
 
         renderListHeader = () => {
-            const {navName, fullName} = this.state;
+            const { navName, fullName } = this.state;
             return (
                 <View style={styles.navBox}>
                     {
@@ -122,7 +122,7 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
                                 <Button
                                     key={index}
                                     content={<Text
-                                        style={{color: cur ? '#ffffff' : 'rgba(255,255,255,0.7)'}}>{item.name}</Text>}
+                                        style={{ color: cur ? '#ffffff' : 'rgba(255,255,255,0.7)' }}>{item.name}</Text>}
                                     style={styles.navBtn}
                                     onPress={() => cur ? null : this.getNavContent(fullName, item.name)}/>
                             )
@@ -137,7 +137,7 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
          * @returns {*}
          */
         onRefreshing = () => {
-            const {fullName, navName} = this.state;
+            const { fullName, navName } = this.state;
 
             return this.getNavContent(fullName, navName)
         };
@@ -147,9 +147,9 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
          * @param item 每行元素
          * @returns {XML}
          */
-        renderDirOrFile = ({item}) => {
-            const {type, path, name} = item;
-            const {navigation} = this.props;
+        renderDirOrFile = ({ item }) => {
+            const { type, path, name } = item;
+            const { navigation } = this.props;
             const isDir = type === 'dir'; // 是否是目录
 
             // todo 添加分支的请求
@@ -158,12 +158,12 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
                 <TouchableOpacity
                     style={styles.contentRow}
                     onPress={() => isDir
-                        ? navigation.navigate('RepoDir', {fullName: this.state.fullName, name, path})
+                        ? navigation.navigate('RepoDir', { fullName: this.state.fullName, name, path })
                         : item.name === 'README.md'
-                            ? navigation.navigate('Readme', {fullName: this.state.fullName, path, type})
-                            : navigation.navigate('RepoFile', {fullName: this.state.fullName, path, type})}>
+                            ? navigation.navigate('Readme', { fullName: this.state.fullName, path, type })
+                            : navigation.navigate('RepoFile', { fullName: this.state.fullName, path, type })}>
                     <Octicons name={isDir ? 'file-directory' : 'file'} size={18}
-                              style={{color: '#0366d6', opacity: .7}}/>
+                              style={{ color: '#0366d6', opacity: .7 }}/>
                     <Text style={styles.contentName}>
                         {name}
                     </Text>
@@ -176,18 +176,18 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
          * @param item
          * @returns {XML}
          */
-        renderIssues = ({item}) => {
-            const {title, user, comments, number} = item;
-            const {fullName} = this.state;
-            const {navigation} = this.props;
+        renderIssues = ({ item }) => {
+            const { title, user, comments, number } = item;
+            const { fullName } = this.state;
+            const { navigation } = this.props;
 
             return (
-                <TouchableHighlight onPress={() => navigation.navigate('RepoIssues', {fullName, number, title})}
+                <TouchableHighlight onPress={() => navigation.navigate('RepoIssues', { fullName, number, title })}
                                     underlayColor={'rgba(100,100,100 ,0.1)'}>
                     <View style={styles.issueBox}>
                         <View>
-                            <Text style={{color: '#333'}}>{'#' + number}</Text>
-                            <Image source={{uri: user.avatar_url}} style={styles.avatarBox}/>
+                            <Text style={{ color: '#333' }}>{'#' + number}</Text>
+                            <Image source={{ uri: user.avatar_url }} style={styles.avatarBox}/>
                         </View>
                         <View style={styles.issueDescBox}>
                             <Text style={styles.titleText}>{title}</Text>
@@ -203,12 +203,12 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
          * @returns {XML}
          */
         renderNavContainer = () => {
-            const {navName} = this.state;
+            const { navName } = this.state;
             let data, header = null, renderItem = () => null, refreshing = false;
 
             switch (navName) {
                 case Code:
-                    const {content, codeRefreshing, navigation} = this.props;
+                    const { content, codeRefreshing, navigation } = this.props;
                     // todo 分支选择
                     header = () => {
                         if (navigation.state.params.desc) {
@@ -221,13 +221,13 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
                     refreshing = codeRefreshing;
                     break;
                 case Issues:
-                    const {issuesData, issueRefreshing} = this.props;
+                    const { issuesData, issueRefreshing } = this.props;
                     data = issuesData;
                     renderItem = this.renderIssues;
                     refreshing = issueRefreshing;
             }
 
-            if (!data) return <View style={{height: dp(250)}}><Loading/></View>;
+            if (!data) return <View style={{ height: dp(250) }}><Loading/></View>;
             return (
                 <CList
                     data={data}
@@ -248,7 +248,7 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
     })
 
 const styles = {
-    wrap: {flex: 1, backgroundColor: '#ffffff'},
+    wrap: { flex: 1, backgroundColor: '#ffffff' },
     starWrap: {
         flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
         marginVertical: 12
@@ -272,11 +272,11 @@ const styles = {
         flex: 1,
         height: '100%'
     },
-    descText: {marginVertical: 16, marginHorizontal: 12, color: '#333'},
-    contentName: {marginLeft: 6, color: '#0366d6'},
-    titleText: {fontSize: 16, color: '#333'},
-    issueDescBox: {flex: 1, marginHorizontal: 16},
-    avatarBox: {width: 32, height: 32, borderRadius: 16},
-    contentRow: {flexDirection: 'row', alignItems: 'center', paddingVertical: 12, paddingHorizontal: 16},
-    issueBox: {flexDirection: 'row', alignItems: 'flex-start', marginTop: 10, paddingHorizontal: 16}
+    descText: { marginVertical: 16, marginHorizontal: 12, color: '#333' },
+    contentName: { marginLeft: 6, color: '#0366d6' },
+    titleText: { fontSize: 16, color: '#333' },
+    issueDescBox: { flex: 1, marginHorizontal: 16 },
+    avatarBox: { width: 32, height: 32, borderRadius: 16 },
+    contentRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 12, paddingHorizontal: 16 },
+    issueBox: { flexDirection: 'row', alignItems: 'flex-start', marginTop: 10, paddingHorizontal: 16 }
 };

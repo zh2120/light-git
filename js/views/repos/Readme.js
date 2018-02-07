@@ -1,17 +1,17 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {View, StyleSheet, WebView} from 'react-native'
-import {openToast, bindActions} from '../../reducers/comReducer'
-import {fileContent, getFileDenied} from '../../reducers/repoReducer'
-import {html, md, Loading} from '../../components'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { View, StyleSheet, WebView } from 'react-native'
+import { openToast, bindActions } from '../../reducers/comReducer'
+import { fileContent, getFileDenied } from '../../reducers/repoReducer'
+import { html, md, Loading } from '../../components'
 
-export default connect(({repoInfo}) => ({readme: repoInfo.readme}), bindActions({
+export default connect(({ repoInfo }) => ({ readme: repoInfo.readme }), bindActions({
     fileContent,
     openToast,
     getFileDenied
 }))(
     class extends Component {
-        static navigationOptions = ({navigation}) => {
+        static navigationOptions = ({ navigation }) => {
             const params = navigation.state.params;
             return {
                 headerTitle: params && params.path,
@@ -28,12 +28,12 @@ export default connect(({repoInfo}) => ({readme: repoInfo.readme}), bindActions(
         }
 
         componentDidMount() {
-            const {navigation, fileContent} = this.props;
+            const { navigation, fileContent } = this.props;
 
             if (navigation.state.params) {
-                const {fullName, path} = navigation.state.params;
+                const { fullName, path } = navigation.state.params;
 
-                fileContent({fullName, path})
+                fileContent({ fullName, path })
             }
         }
 
@@ -42,7 +42,7 @@ export default connect(({repoInfo}) => ({readme: repoInfo.readme}), bindActions(
         }
 
         render() {
-            const {readme} = this.props;
+            const { readme } = this.props;
 
             if (!readme) return <Loading/>;
 
@@ -52,12 +52,12 @@ export default connect(({repoInfo}) => ({readme: repoInfo.readme}), bindActions(
                 <WebView
                     style={styles.wrap}
                     userAgent={'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.75 Safari/537.36'}
-                    source={{html: html(md(readme))}}/>
+                    source={{ html: html(md(readme)) }}/>
             )
         }
     }
 )
 
 const styles = StyleSheet.create({
-    wrap: {flex: 1},
+    wrap: { flex: 1 },
 });

@@ -11,7 +11,7 @@ import {Button, Loading, CList} from '../../components/index'
 import {bindActions} from '../../reducers/comReducer'
 import {getRepoList} from '../../reducers/userReducer'
 
-export default connect(({userInfo}) => ({
+export default connect(({ userInfo}) => ({
     publicPros: userInfo.public_repos,
     proList: userInfo.proList,
 }), bindActions({getRepoList}))(

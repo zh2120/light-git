@@ -1,7 +1,6 @@
-import Home from './Home'
-import Search from './Search'
-import SignUp from './SignUp'
-import SignIn from './SignIn'
-import User from './User'
+export { default as Home } from './Home'
+export { default as Search } from './Search'
+export { default as SignUp } from './SignUp'
+export { default as SignIn } from './SignIn'
+export { default as User } from './User'
 
-export {Home, Search, SignUp, SignIn, User}

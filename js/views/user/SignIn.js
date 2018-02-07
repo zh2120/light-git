@@ -1,17 +1,17 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import {
     View,
     Text,
     TextInput,
     StyleSheet,
 } from 'react-native'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import Octicons from 'react-native-vector-icons/Octicons';
-import {CButton, Button, CLoading, CToast} from '../../components/'
-import {userSignIn, userSignAccept} from '../../reducers/userReducer'
-import {bindActions, reset} from '../../reducers/comReducer'
+import { CButton, Button, CLoading, CToast } from '../../components/'
+import { userSignIn, userSignAccept } from '../../reducers/userReducer'
+import { bindActions, reset } from '../../reducers/comReducer'
 
-export default connect(({userSignInfo}) => ({
+export default connect(({ userSignInfo }) => ({
     auth: userSignInfo.auth,
     pending: userSignInfo.signInPending,
     error: userSignInfo.error
@@ -21,11 +21,11 @@ export default connect(({userSignInfo}) => ({
     reset
 }))(
     class extends Component {
-        static navigationOptions = ({navigation}) => ({
+        static navigationOptions = ({ navigation }) => ({
             headerTitle: 'SignIn',
-            headerRight: <Button content={<Text style={{color: '#ffffff'}}>Sign Up</Text>}
+            headerRight: <Button content={<Text style={{ color: '#ffffff' }}>Sign Up</Text>}
                                  onPress={() => navigation.state.params && navigation.state.params.goSignUp()}
-                                 style={{height: 40, paddingHorizontal: 12}}/>
+                                 style={{ height: 40, paddingHorizontal: 12 }}/>
         });
 
         state = {
@@ -34,16 +34,16 @@ export default connect(({userSignInfo}) => ({
         };
 
         componentDidMount() {
-            const {navigation} = this.props;
+            const { navigation } = this.props;
             //  setParams
-            navigation.setParams({goSignUp: () => navigation.navigate('SignUp')})
+            navigation.setParams({ goSignUp: () => navigation.navigate('SignUp') })
         }
 
         shouldComponentUpdate(nextProps) {
-            const {auth, pending} = this.props;
+            const { auth, pending } = this.props;
             if (pending && !nextProps.pending) {
                 CLoading.close();
-                const {error, reset} = nextProps;
+                const { error, reset } = nextProps;
 
                 if (error) CToast.open(error);
                 if (!auth && nextProps.auth) reset('Home');
@@ -52,16 +52,16 @@ export default connect(({userSignInfo}) => ({
         }
 
         componentWillUnmount() {
-            this.setState({account: '', password: ''})
+            this.setState({ account: '', password: '' })
         }
 
-        account = (account) => this.setState({account: String(account)});
+        account = (account) => this.setState({ account: String(account) });
 
-        password = (password) => this.setState({password: String(password)});
+        password = (password) => this.setState({ password: String(password) });
 
         signInSubmit = () => {
-            const {account, password} = this.state;
-            const {userSignIn} = this.props;
+            const { account, password } = this.state;
+            const { userSignIn } = this.props;
             // todo 账号过滤空格，回车等
             if (account && password) {
                 const auth = btoa(`${account}:${password}`);
@@ -72,12 +72,12 @@ export default connect(({userSignInfo}) => ({
         };
 
         render() {
-            const {account, password} = this.state;
+            const { account, password } = this.state;
             // 键盘遮掩
             // 如果登录中，延迟过高，中途用户退出，登录状态还没有重置，再次打开App 无法登录，需要遮掩层，无法操作
             return (
                 <View style={styles.container}>
-                    <Octicons name={'mark-github'} size={60} style={{marginBottom: 24}}/>
+                    <Octicons name={'mark-github'} size={60} style={{ marginBottom: 24 }}/>
                     <TextInput
                         value={account}
                         placeholder="UserName or Email"

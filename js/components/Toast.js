@@ -1,14 +1,14 @@
-import React, {PureComponent} from 'react'
-import {connect} from 'react-redux'
-import {Animated, Text, StyleSheet, Easing, TouchableWithoutFeedback} from 'react-native'
+import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
+import { Animated, Text, StyleSheet, Easing, TouchableWithoutFeedback } from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import {closeToast, bindActions} from '../reducers/comReducer'
+import { closeToast, bindActions } from '../reducers/comReducer'
 
 
 export default connect(state => ({
     signed: state.userSignInfo.signed,
     comInfo: state.comInfo
-}), bindActions({closeToast}))(
+}), bindActions({ closeToast }))(
     class extends PureComponent {
         constructor(props) {
             super(props)
@@ -18,7 +18,7 @@ export default connect(state => ({
         }
 
         componentWillMount() {
-            const {opacity} = this.state;
+            const { opacity } = this.state;
             this.animationOpen = Animated.timing(opacity, {
                 toValue: 1,
                 duration: 300,
@@ -43,7 +43,7 @@ export default connect(state => ({
         }
 
         componentDidMount() {
-            const {signed, persistor} = this.props;
+            const { signed, persistor } = this.props;
 
             if (!signed) {
                 // console.log('persistor.purge')
@@ -59,17 +59,17 @@ export default connect(state => ({
         };
 
         render() {
-            const {toastOpened, text, success} = this.props.comInfo
+            const { toastOpened, text, success } = this.props.comInfo
 
             if (!toastOpened) return null;
 
-            const {opacity} = this.state;
+            const { opacity } = this.state;
 
             return (
                 <TouchableWithoutFeedback onPress={this.props.closeToast}>
-                    <Animated.View style={[styles.common, {opacity: opacity}]}>
+                    <Animated.View style={[ styles.common, { opacity: opacity } ]}>
                         <Text style={styles.toastText}>{text}</Text>
-                        <MaterialCommunityIcons style={{color: success ? '#ffffff' : 'red', marginLeft: 10}} size={20}
+                        <MaterialCommunityIcons style={{ color: success ? '#ffffff' : 'red', marginLeft: 10 }} size={20}
                                                 name={success ? 'checkbox-marked-circle-outline' : 'sword-cross'}/>
                     </Animated.View>
                 </TouchableWithoutFeedback>

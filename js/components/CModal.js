@@ -1,10 +1,10 @@
-import React, {PureComponent} from 'react'
-import {connect} from 'react-redux'
-import {StyleSheet, Modal, View, TouchableWithoutFeedback} from 'react-native'
-import {closeModal, bindActions} from '../reducers/comReducer'
+import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
+import { StyleSheet, Modal, View, TouchableWithoutFeedback } from 'react-native'
+import { closeModal, bindActions } from '../reducers/comReducer'
 
-export default connect(state => ({ui: state.comInfo}), bindActions({closeModal}))((props) => {
-    const {modalOpen, ele, maskingShow} = props.ui;
+export default connect(state => ({ ui: state.comInfo }), bindActions({ closeModal }))((props) => {
+    const { modalOpen, ele, maskingShow } = props.ui;
     if (!modalOpen) return null;
 
     return (
@@ -22,7 +22,7 @@ export default connect(state => ({ui: state.comInfo}), bindActions({closeModal})
                             </TouchableWithoutFeedback>)
                         : null
                 }
-                <View style={{flex: 1, padding: 24}}>{ele}</View>
+                <View style={{ flex: 1, padding: 24 }}>{ele}</View>
             </View>
         </Modal>
     )

@@ -1,5 +1,1 @@
-import StarsList from './StarsList'
-
-export {
-    StarsList
-}
+export { default as StarsList } from './StarsList'

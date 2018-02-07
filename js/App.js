@@ -1,8 +1,8 @@
 import './utils'
 import React from 'react';
-import {Provider} from 'react-redux'
+import { Provider } from 'react-redux'
 import codePush from "react-native-code-push";
-import {View, StyleSheet, StatusBar, Text} from 'react-native'
+import { View, StyleSheet, StatusBar, Text } from 'react-native'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/catch'
 import 'rxjs/add/operator/concat'
@@ -13,15 +13,14 @@ import 'rxjs/add/operator/reduce'
 import 'rxjs/add/operator/mergeMap'
 import 'rxjs/add/operator/startWith'
 import 'rxjs/add/operator/delay'
-import {PersistGate} from 'redux-persist/es/integration/react'
+import { PersistGate } from 'redux-persist/es/integration/react'
 
 import StacksInDrawer from './views/index'
 import configureStore from './configStore'
-import {Toast, CModal} from './components'
 
-const {persistor, store} = configureStore();
+const { persistor, store } = configureStore();
 
-const Loading = () => (<View style={styles.loadWrap}><Text style={{color: 'red'}}>恢复现场中...</Text></View>);
+const Loading = () => (<View style={styles.loadWrap}><Text style={{ color: 'red' }}>恢复现场中...</Text></View>);
 
 const codePushOptions = {
     checkFrequency: codePush.CheckFrequency.ON_APP_START,
@@ -40,7 +39,6 @@ const App = () => (
                     backgroundColor="rgba(11, 11, 11, 0.4)"
                     barStyle="default"/>
                 <StacksInDrawer/>
-                <Toast persistor={persistor}/>
             </View>
         </PersistGate>
     </Provider>
@@ -54,5 +52,5 @@ const styles = StyleSheet.create({
         position: 'relative',
         backgroundColor: 'transparent'
     },
-    loadWrap: {flex: 1, justifyContent: 'center', alignItems: 'center'}
+    loadWrap: { flex: 1, justifyContent: 'center', alignItems: 'center' }
 });

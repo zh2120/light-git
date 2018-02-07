@@ -1,16 +1,16 @@
-import React, {PureComponent} from 'react'
-import {StackNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
-import {Easing, Animated, BackHandler, NetInfo} from 'react-native'
+import React, { PureComponent } from 'react'
+import { StackNavigator, NavigationActions, addNavigationHelpers } from 'react-navigation';
+import { Easing, Animated, BackHandler, NetInfo } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 
-import {Home, Search, SignIn, SignUp, User} from './user/'
-import {RepoHome, Readme, RepoDir, RepoIssues, RepoFile, UserProList} from './repos/'
-import {StarsList} from './activity/'
-import {getCheckedAuth} from "../reducers/userReducer";
-import {putError} from "../reducers/comReducer";
+import { Home, Search, SignIn, SignUp, User } from './user/'
+import { RepoHome, Readme, RepoDir, RepoIssues, RepoFile, UserProList } from './repos/'
+import { StarsList } from './activity/'
+import { getCheckedAuth } from "../reducers/userReducer";
+import { putError } from "../reducers/comReducer";
 
-const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
+const navigationEnhancer = ({ navigation, navigationOptions, screenProps }) => {
     const defaultHeaderStyle = {
         height: 72,
         elevation: 0,
@@ -25,23 +25,23 @@ const navigationEnhancer = ({navigation, navigationOptions, screenProps}) => {
         ...navigationOptions,
         gesturesEnabled: true,
         headerTintColor: '#ffffff',
-        headerStyle: {...defaultHeaderStyle, ...navigationOptions.headerStyle}
+        headerStyle: { ...defaultHeaderStyle, ...navigationOptions.headerStyle }
     }
 };
 
 const MainRouters = {
-    Home: {screen: Home},
-    User: {screen: User},
-    Search: {screen: Search},
-    SignIn: {screen: SignIn},
-    SignUp: {screen: SignUp},
-    Readme: {screen: Readme},
-    RepoDir: {screen: RepoDir},
-    RepoHome: {screen: RepoHome},
-    RepoFile: {screen: RepoFile},
-    RepoIssues: {screen: RepoIssues},
-    UserProList: {screen: UserProList},
-    StarsList: {screen: StarsList}
+    Home: { screen: Home },
+    User: { screen: User },
+    Search: { screen: Search },
+    SignIn: { screen: SignIn },
+    SignUp: { screen: SignUp },
+    Readme: { screen: Readme },
+    RepoDir: { screen: RepoDir },
+    RepoHome: { screen: RepoHome },
+    RepoFile: { screen: RepoFile },
+    RepoIssues: { screen: RepoIssues },
+    UserProList: { screen: UserProList },
+    StarsList: { screen: StarsList }
 };
 
 for (const key in MainRouters) {
@@ -59,8 +59,8 @@ const transitions = {
             easing: Easing.out(Easing.poly(4)),
         },
         screenInterpolator: sceneProps => {
-            const {layout, position, scene} = sceneProps;
-            const {index} = scene;
+            const { layout, position, scene } = sceneProps;
+            const { index } = scene;
             const width = layout.initWidth;
             const translateX = position.interpolate({
                 inputRange: [index - 1, index, index + 1],
@@ -72,7 +72,7 @@ const transitions = {
                 outputRange: [0, 1, 1],
             });
 
-            return {opacity, transform: [{translateX}]};
+            return { opacity, transform: [{ translateX }] };
         },
     }),
 };
@@ -85,12 +85,12 @@ export const Navigator = StackNavigator(MainRouters, {
     ...transitions
 });
 
-export default connect(({nav, userSignInfo}) => ({nav: nav, auth: userSignInfo.auth}))(
+export default connect(({ nav, userSignInfo }) => ({ nav: nav, auth: userSignInfo.auth }))(
     class extends PureComponent {
 
         componentWillMount() {
             // 验证token的有效性
-            const {dispatch, auth} = this.props;
+            const { dispatch, auth } = this.props;
             if (auth) {
                 dispatch(getCheckedAuth())
             }
@@ -111,7 +111,7 @@ export default connect(({nav, userSignInfo}) => ({nav: nav, auth: userSignInfo.a
         connectivityChange = () => this.props.dispatch(putError('网络似乎出现了异常'));
 
         onBackPress = () => {
-            const {dispatch, nav} = this.props;
+            const { dispatch, nav } = this.props;
 
             if (nav.index === 0) {
                 return false;
@@ -121,9 +121,9 @@ export default connect(({nav, userSignInfo}) => ({nav: nav, auth: userSignInfo.a
         };
 
         render() {
-            const {dispatch, nav} = this.props;
+            const { dispatch, nav } = this.props;
 
-            return <Navigator navigation={addNavigationHelpers({dispatch, state: nav})}/>
+            return <Navigator navigation={addNavigationHelpers({ dispatch, state: nav })}/>
         }
     }
 );
