@@ -86,16 +86,16 @@ const userState = { user: null, proList: null, error: '' };
 export const userInfo = (state = userState, { type, payload }) => {
     switch (type) {
         case UserTypes.USER_ACCEPT:
-            return { ...userState, ...payload };
+            return { ...state, ...payload, error: '' };
 
         case UserTypes.CLEAR_USER:
             return { ...userState };
 
         case UserTypes.PRO_LIST:
-            return { ...userState, proList: payload.list };
+            return { ...state, proList: payload.list, error: '' };
 
         case UserTypes.ERR_PRO_LIST:
-            return { ...userState, ...payload };
+            return { ...state, ...payload };
 
         default:
             return state;
@@ -112,10 +112,10 @@ const signState = { signInPending: false, signed: false, auth: null, error: '' }
 export const userSignInfo = (state = signState, { type, payload }) => {
     switch (type) {
         case UserTypes.USER_SIGNIN:
-            return { ...signState, signInPending: true, basic: payload.auth };
+            return { ...state, signInPending: true, basic: payload.auth };
 
         case UserTypes.USER_SIGNIN_ACCEPT:
-            return { ...signState, signInPending: false, signed: true, ...payload };
+            return { ...state, signInPending: false, signed: true, error: '', ...payload };
 
         case UserTypes.USER_SIGNIN_DENIED:
             return { ...signState, ...payload };
