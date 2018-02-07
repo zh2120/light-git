@@ -7,6 +7,7 @@ import {
     repoList,
     errRepoList,
     deleteAuth,
+    userSignIn,
 } from '../../reducers/userReducer';
 import { Observable } from 'rxjs/Rx'
 // Rewrite over
@@ -31,7 +32,7 @@ export const userSignInEpic = (action$, { getState }, { put }) => action$.ofType
         return put(url, body, headers)
             .map(({ status, response }) => {
                 // 重构登录逻辑 对201做正常处理，对200 抛出异常
-                if (status === 200) throw { status: 200, desc: 'Signature invalid', auth, id: response.id };
+                if (status === 200) throw { status: 200, desc: '已经注销其他设备的授权，重新授权本设备', auth, id: response.id };
                 return response
             })
             // 进入授权登录流程
@@ -45,6 +46,8 @@ export const userSignInEpic = (action$, { getState }, { put }) => action$.ofType
                         break;
                     case 200:
                         // 重写
+                        toast(err.desc);
+                        // return Observable.of(deleteAuth(err.id), userSignIn(auth));
                         return Observable.of(deleteAuth(err.id));
                         break;
                     case 422:
@@ -121,8 +124,12 @@ export const checkAuthEpic = (action$, { getState }, { get }) => action$.ofType(
         const url = `/applications/${client_id}/tokens/${auth.token}`;
 
         return get(url, headers).map(() => ({ type: 'Checked_Successfully' }))
-    }).catch(() => {
-        toast(netWork);
+    }).catch(({ status }) => {
+        if (status === 404) {
+            toast('其他设备已经注销授权')
+        } else {
+            toast(netWork)
+        }
         return Observable.of(clearUser(), userSignDenied()) // 在清理用户信息之前，取消授权
     });
 
