@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
         left: 0,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'rgba(21, 21, 21, 0.3)'
+
     },
     wBox: {
         paddingVertical: 12,
@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
 
 class CLoading extends PureComponent {
     static propTypes = {
+        only: PropTypes.bool,
         duration: PropTypes.number,
         count: PropTypes.number,
         style: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array]),
@@ -54,8 +55,14 @@ class CLoading extends PureComponent {
     animation = new Animated.Value(0);
     loading = true;
 
+    componentDidMount() {
+        if(!this.props.only) {
+            this.setState({visibility: true},  this.startAnimation)
+        }
+    }
 
     componentWillUnmount() {
+        this.close();
         this.load = false
     }
 
@@ -94,13 +101,13 @@ class CLoading extends PureComponent {
                 outputRange: [cSin(scaleY), cSin(PI / 4 + scaleY), cSin(PI / 2 + scaleY), cSin(PI * 3 / 4 + scaleY), cSin(PI + scaleY)]
             })
         });
-        const {style, blockStyle} = this.props;
+        const {style, blockStyle, only} = this.props;
 
         const vStyle = [styles.box].concat(isType(style) === 'Array' ? style : [style]);
         const bStyle = [styles.block].concat(isType(blockStyle) === 'Array' ? blockStyle : [blockStyle]);
 
         return (
-            <View style={styles.wrap}>
+            <View style={[styles.wrap, only ? {backgroundColor: 'rgba(21, 21, 21, 0.3)'} : null]}>
                 <View style={styles.wBox}>
                     <View style={vStyle}>
                         {

@@ -7,7 +7,7 @@ export default {
     open(text) {
         if (!this.instance) {
             (new AppWrapper(<CLoading
-                ref={re => (this.instance = re)}/>)).subScribe(() => this.instance.open(text))
+                ref={re => (this.instance = re)} only={true}/>)).subScribe(() => this.instance.open(text))
         } else {
             this.instance.open(text)
         }

@@ -36,9 +36,9 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
             const {params} = navigation.state;
             return {
                 headerTitle: params && params.name,
-                headerTitleStyle: {color: 'rgba(255,255,255,0.8)'},
-                headerBackTitleStyle: {color: 'rgba(255,255,255,0.8)'},
-                headerStyle: {backgroundColor: '#333'},
+                headerTitleStyle: {color: '#ffffff'},
+                headerBackTitleStyle: {color: '#ffffff'},
+                headerStyle: {backgroundColor: '#333333'},
             }
         };
 
