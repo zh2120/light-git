@@ -100,7 +100,7 @@ export default connect(({repoInfo, nav}) => ({
     })
 
 const styles = StyleSheet.create({
-    wrap: {flex: 1, backgroundColor: '#fff'},
+    wrap: {flex: 1, backgroundColor: '#ffffff'},
     starWrap: {
         flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
         marginVertical: 12

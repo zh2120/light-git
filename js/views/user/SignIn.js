@@ -23,7 +23,7 @@ export default connect(({userSignInfo}) => ({
     class extends PureComponent {
         static navigationOptions = ({navigation}) => ({
             headerTitle: 'SignIn',
-            headerRight: <Button content={<Text style={{color: '#fff'}}>Sign Up</Text>}
+            headerRight: <Button content={<Text style={{color: '#ffffff'}}>Sign Up</Text>}
                                  onPress={() => navigation.state.params && navigation.state.params.goSignUp()}
                                  style={{height: 40, paddingHorizontal: 12}}/>
         });
@@ -111,7 +111,7 @@ export default connect(({userSignInfo}) => ({
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#ffffff',
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: -54

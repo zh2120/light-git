@@ -18,12 +18,12 @@ export default connect(state => ({
         }
 
         componentWillMount() {
-            const {opacity} = this.state
+            const {opacity} = this.state;
             this.animationOpen = Animated.timing(opacity, {
                 toValue: 1,
                 duration: 300,
                 easing: Easing.out(Easing.poly(4))
-            })
+            });
             this.animationClose = Animated.timing(opacity, {
                 toValue: 0,
                 duration: 700,
@@ -36,14 +36,14 @@ export default connect(state => ({
         componentWillReceiveProps(nextProps) {
             if (nextProps.comInfo.toastOpened) {
                 this.animationOpen.start(() => {
-                    this.timer && clearTimeout(this.timer)
+                    this.timer && clearTimeout(this.timer);
                     this.timer = setTimeout(() => this.close(), 3000) // 3s 后触发关闭toast
                 })
             }
         }
 
         componentDidMount() {
-            const {signed, persistor} = this.props
+            const {signed, persistor} = this.props;
 
             if (!signed) {
                 // console.log('persistor.purge')
@@ -53,23 +53,23 @@ export default connect(state => ({
 
         close = () => { // 延时关闭toast
             this.animationClose.start(() => {
-                this.timer && clearTimeout(this.timer)
+                this.timer && clearTimeout(this.timer);
                 this.props.closeToast()
             }) // 关闭toast，清除定时器
-        }
+        };
 
         render() {
             const {toastOpened, text, success} = this.props.comInfo
 
-            if (!toastOpened) return null
+            if (!toastOpened) return null;
 
-            const {opacity} = this.state
+            const {opacity} = this.state;
 
             return (
                 <TouchableWithoutFeedback onPress={this.props.closeToast}>
                     <Animated.View style={[styles.common, {opacity: opacity}]}>
                         <Text style={styles.toastText}>{text}</Text>
-                        <MaterialCommunityIcons style={{color: success ? '#fff' : 'red', marginLeft: 10}} size={20}
+                        <MaterialCommunityIcons style={{color: success ? '#ffffff' : 'red', marginLeft: 10}} size={20}
                                                 name={success ? 'checkbox-marked-circle-outline' : 'sword-cross'}/>
                     </Animated.View>
                 </TouchableWithoutFeedback>
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 20
     },
     toastText: {
-        color: '#fff',
+        color: '#ffffff',
         fontSize: 14
     }
 })

@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
         left: 0,
         alignItems: 'center',
         justifyContent: 'center',
-
+        backgroundColor: '#ffffff'
     },
     wBox: {
         paddingVertical: 12,

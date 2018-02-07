@@ -37,7 +37,7 @@ export default connect(({userInfo, userSignInfo, starInfo}) => ({
                 headerTitleStyle: {color: 'rgba(255,255,255,0.8)'},
                 headerBackTitleStyle: {color: 'rgba(255,255,255,0.8)'},
                 headerStyle: {backgroundColor: '#333'},
-                headerRight: <Button content={<Text style={{color: '#fff'}}>sign out</Text>}
+                headerRight: <Button content={<Text style={{color: '#ffffff'}}>sign out</Text>}
                                      onPress={() => params && params.signOut({id: params.id})}
                                      style={{height: 40, paddingHorizontal: 12}}/>
             }
@@ -82,7 +82,7 @@ export default connect(({userInfo, userSignInfo, starInfo}) => ({
                         </View>
                     </View>
                     <View style={{height: 12, backgroundColor: '#ededed',}}/>
-                    <View style={{backgroundColor: '#fff', alignItems: 'center'}}>
+                    <View style={{backgroundColor: '#ffffff', alignItems: 'center'}}>
                         <Button
                             content={<UserRow title={'Repositories'} text={public_repos} iconName={'package'}/>}
                             onPress={() => navigation.navigate('UserProList')} style={styles.rowBox}/>
@@ -123,13 +123,13 @@ const styles = {
         paddingVertical: 10,
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        backgroundColor: '#fff',
+        backgroundColor: '#ffffff',
     },
     rowBox: {
         height: 44,
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        backgroundColor: '#fff',
+        backgroundColor: '#ffffff',
     },
     avatarBox: {
         width: dp(48),
@@ -156,6 +156,6 @@ const styles = {
     },
     container: {
         flex: 1,
-        backgroundColor: '#fff'
+        backgroundColor: '#ffffff'
     }
 };

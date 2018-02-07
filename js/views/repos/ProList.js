@@ -96,7 +96,7 @@ export default connect(({userInfo}) => ({
 const styles = StyleSheet.create({
     wrap: {
         flex: 1,
-        backgroundColor: '#fff'
+        backgroundColor: '#ffffff'
     },
     btnRow: {
         alignItems: 'flex-start',

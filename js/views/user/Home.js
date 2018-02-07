@@ -45,7 +45,7 @@ export default connect(({userInfo, userSignInfo}) => ({
                     return navigation.navigate('User', {name: user.login})
                 };
             } else {
-                avatar = <EvilIcons name={'user'} size={36} style={{color: '#fff', padding: 2}}/>;
+                avatar = <EvilIcons name={'user'} size={36} style={{color: '#ffffff', padding: 2}}/>;
                 onPress = () => navigation.navigate('SignIn')
             }
 
@@ -171,17 +171,17 @@ const styles = StyleSheet.create({
     },
     icon: {
         marginTop: 4,
-        color: '#fff'
+        color: '#ffffff'
     },
     logoText: {
         fontSize: 24,
         textAlign: 'left',
-        color: '#fff'
+        color: '#ffffff'
     },
     searchWrap: {
         height: 36,
         flexDirection: 'row',
-        backgroundColor: '#fff',
+        backgroundColor: '#ffffff',
         alignItems: 'center'
     },
     searchIcon: {

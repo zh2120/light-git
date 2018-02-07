@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingHorizontal: 12,
         paddingVertical: 8,
-        backgroundColor: '#fff'
+        backgroundColor: '#ffffff'
     },
     commentAvatar: {width: 32, height: 32, borderRadius: 16},
     commentText: {fontSize: 12, color: '#333'},

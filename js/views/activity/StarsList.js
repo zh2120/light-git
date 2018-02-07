@@ -64,7 +64,11 @@ export default connect(({starInfo}) => ({
             return (
                 <Button content={proItem}
                         style={styles.btnRow}
-                        onPress={() => this.navigate('RepoHome', {fullName: full_name, name: name, desc: description})}/>
+                        onPress={() => this.navigate('RepoHome', {
+                            fullName: full_name,
+                            name: name,
+                            desc: description
+                        })}/>
             )
         };
 
@@ -83,7 +87,7 @@ export default connect(({starInfo}) => ({
         render() {
             const {stars} = this.props;
             if (!stars) {
-                return <View style={{height: dp(250)}}><Loading/></View>
+                return <Loading/>
             }
 
             return (
@@ -100,7 +104,7 @@ export default connect(({starInfo}) => ({
 
 const styles = StyleSheet.create({
     wrap: {
-        backgroundColor: '#fff'
+        backgroundColor: '#ffffff'
     },
     btnRow: {
         alignItems: 'flex-start',

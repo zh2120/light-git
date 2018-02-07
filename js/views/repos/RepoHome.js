@@ -108,7 +108,7 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
             title="Loading..."
             titleColor="#00ff00"
             colors={['#0000ff', '#00ff00', '#ff0000',]}
-            progressBackgroundColor="#fff"
+            progressBackgroundColor="#ffffff"
         />;
 
         renderListHeader = () => {
@@ -122,7 +122,7 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
                                 <Button
                                     key={index}
                                     content={<Text
-                                        style={{color: cur ? '#fff' : 'rgba(255,255,255,0.7)'}}>{item.name}</Text>}
+                                        style={{color: cur ? '#ffffff' : 'rgba(255,255,255,0.7)'}}>{item.name}</Text>}
                                     style={styles.navBtn}
                                     onPress={() => cur ? null : this.getNavContent(fullName, item.name)}/>
                             )
@@ -248,7 +248,7 @@ export default connect(({nav, repoInfo, issueInfo}) => ({
     })
 
 const styles = {
-    wrap: {flex: 1, backgroundColor: '#fff'},
+    wrap: {flex: 1, backgroundColor: '#ffffff'},
     starWrap: {
         flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
         marginVertical: 12

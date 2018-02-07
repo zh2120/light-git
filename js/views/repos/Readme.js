@@ -46,7 +46,7 @@ export default connect(({repoInfo}) => ({readme: repoInfo.readme}), bindActions(
 
             if (!readme) return <Loading/>;
 
-            console.log('md(readme)', html(md(readme)))
+            console.log('md(readme)', html(md(readme)));
 
             return (
                 <WebView

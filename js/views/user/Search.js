@@ -31,7 +31,7 @@ const searchStyles = StyleSheet.create({
         height: 30,
         borderRadius: 2,
         flexDirection: 'row',
-        backgroundColor: '#fff',
+        backgroundColor: '#ffffff',
         alignItems: 'center'
     },
     textInput: {flex: 1, padding: 0, marginHorizontal: 4},
@@ -103,7 +103,7 @@ const SearchHeader = connect(state => ({}), bindActions({searchRepo, openToast})
                         }
                     </View>
                     <Button style={searchStyles.cancel}
-                            content={<Text style={{color: '#fff'}}>cancel</Text>}
+                            content={<Text style={{color: '#ffffff'}}>cancel</Text>}
                             onPress={() => navigation.goBack()}/>
                 </View>
             )
@@ -242,7 +242,7 @@ export default connect(({searchInfo}) => ({
             const effectiveHiStory = recordOpen ? history : []; // 可用的历史，隐藏或者展示
 
             return (
-                <View style={{backgroundColor: '#fff', flex: 1,}}>
+                <View style={{backgroundColor: '#ffffff', flex: 1,}}>
                     {
                         searching
                             ? <Loading name={'cursor'}/>
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
         paddingBottom: 14,
         paddingHorizontal: 12,
         marginBottom: 8,
-        backgroundColor: '#fff',
+        backgroundColor: '#ffffff',
         justifyContent: 'space-between',
         borderBottomColor: 'rgba(10,10,10, 0.6)',
         borderBottomWidth: StyleSheet.hairlineWidth,
