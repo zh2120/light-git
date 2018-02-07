@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {View, Text, StyleSheet, Image, ScrollView} from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
-import {Button} from '../../components'
+import {Button, CAlert} from '../../components'
 import {bindActions, reset} from '../../reducers/comReducer'
 import {getRepoList, deleteAuth} from '../../reducers/userReducer'
 
@@ -22,7 +22,7 @@ const UserRow = (props) => {
 export default connect(({userInfo, userSignInfo, starInfo}) => ({
     user: userInfo.user,
     auth: userSignInfo.auth,
-    count: starInfo.count
+    count: starInfo.count,
 }), bindActions({
     reset,
     getRepoList,
@@ -37,20 +37,15 @@ export default connect(({userInfo, userSignInfo, starInfo}) => ({
                 headerBackTitleStyle: {color: 'rgba(255,255,255,0.8)'},
                 headerStyle: {backgroundColor: '#333'},
                 headerRight: <Button content={<Text style={{color: '#ffffff'}}>sign out</Text>}
-                                     onPress={() => params && params.signOut({id: params.id})}
+                                     onPress={() => params && params.signOut()}
                                      style={{height: 40, paddingHorizontal: 12}}/>
             }
         };
 
-        constructor(props) {
-            super(props);
-            this.state = {}
-        }
-
         componentDidMount() {
-            const {navigation, deleteAuth, auth} = this.props;
+            const {navigation, auth} = this.props;
             if (auth) {
-                navigation.setParams({signOut: deleteAuth, id: auth.id})
+                navigation.setParams({signOut: this.signOut})
             }
         }
 
@@ -58,10 +53,22 @@ export default connect(({userInfo, userSignInfo, starInfo}) => ({
             const {auth} = this.props;
 
             // 前一次auth存在，下一次不存在，则退出
-            if (auth && !nextProps.auth) nextProps.reset('Home');
+            if (auth && !nextProps.auth) {
+                nextProps.reset('Home');
+            }
             return true;
         }
 
+        signOut = () => {
+            const {deleteAuth, auth} = this.props;
+            CAlert.open('注销当前账号', '注销后，每个小时将会请求次数限制到60', [
+                {
+                    text: '确认',
+                    onPress: () => deleteAuth(auth.id)
+                },
+                {text: '取消'}
+            ])
+        };
 
         render() {
             const {user, count, navigation} = this.props;

@@ -17,10 +17,12 @@ import {Observable} from 'rxjs/Rx'
  * @param getState
  * @param put
  */
+
+const config = require('../../../config.json');
 export const userSignInEpic = (action$, {getState}, {put}) => action$.ofType(UserTypes.USER_SIGNIN)
     .switchMap(({payload}) => {
         const {auth} = payload;
-        const {client_id, note, scopes, fingerprint, client_secret} = getState().nav.config;
+        const {client_id, note, scopes, fingerprint, client_secret} = config;
         const url = '/authorizations/clients/' + client_id;
         const headers = {"Authorization": `Basic ${auth}`};
         const body = {note, scopes, fingerprint, client_secret};
@@ -34,23 +36,24 @@ export const userSignInEpic = (action$, {getState}, {put}) => action$.ofType(Use
             // 进入授权登录流程
             .map(auth => userSignAccept(auth))
             .catch(err => {
-                let error$;
+                let error;
                 switch (err.status) {
                     case 401: // 验证账户或者密码有误，被拒绝 -> 重置状态
-                        error$ = Observable.of(putError('Invalid Username or password')); //发起UI错误提示
+                        // error$ = Observable.of(userSignDenied('Invalid Username or password')); //发起UI错误提示
+                        error = '用户名或者密码无效，核对一哈嘛';
                         break;
                     case 200:
                         // 重写
-                        error$ = Observable.of(deleteAuth({id: err.id}));
+                        console.log('200 =>>', err);
+                        return Observable.of(deleteAuth(err.id));
                         break;
                     case 422:
-                        error$ = Observable.of(putError('账号未进行邮箱，无法取得授权'));
+                        error = '账号还么有邮箱，拿不到github的授权';
                         break;
                     default:
-                        console.log('--> 超时', err);
-                        error$ = Observable.of(putError('网络状态不佳，请稍后再试'));// 超时处理
+                        error = '这糟糕的网络，我也没的办法，重新试哈嘛';// 超时处理
                 }
-                return error$.startWith(userSignDenied()) // 最先完成进行数据清理
+                return Observable.of(userSignDenied(error)) // 最先完成进行数据清理
             })
     })
 ;
@@ -91,11 +94,11 @@ export const clearUserInfoEpic = (action$, {getState}, ajax) => action$.ofType(U
         return ajax.delete(url, headers)
             .map(({status}) => {
                 if (status === 204) {
-                    return userSignDenied('已经退出授权')
+                    return userSignDenied('已经退出其他设备的授权')
                 }
             })
             .concat(Observable.of(clearUser()))
-            .catch(err => Observable.of(putError('网络状态不佳，请稍后再试')))
+            .catch(err => Observable.of(userSignDenied()))
     });
 
 /**
@@ -107,16 +110,13 @@ export const clearUserInfoEpic = (action$, {getState}, ajax) => action$.ofType(U
 export const checkAuthEpic = (action$, {getState}, {get}) => action$.ofType(UserTypes.GET_CHECK_AUTH)
     .switchMap(() => {
         const {auth} = getState().userSignInfo;
-        const {client_id, client_secret} = getState().nav.config;
+        const {client_id, client_secret} = config;
         const headers = {"Authorization": "Basic " + btoa(client_id + ':' + client_secret)};
         const url = `/applications/${client_id}/tokens/${auth.token}`;
 
         return get(url, headers).map(() => ({type: 'Checked_Successfully'}))
     }).catch(({status}) => {
-        if (status === 404) {
-            return Observable.of(clearUser()).startWith(userSignDenied()) // 在清理用户信息之前，取消授权
-        }
-        return Observable.of(putError('网络状态不佳，请稍后再试'))
+        return Observable.of(clearUser(), userSignDenied()) // 在清理用户信息之前，取消授权
     });
 
 /**

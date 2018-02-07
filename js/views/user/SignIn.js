@@ -9,7 +9,7 @@ import {connect} from 'react-redux'
 import Octicons from 'react-native-vector-icons/Octicons';
 import {CButton, Button, CLoading, CToast} from '../../components/'
 import {userSignIn, userSignAccept} from '../../reducers/userReducer'
-import {openToast, bindActions, reset} from '../../reducers/comReducer'
+import {bindActions, reset} from '../../reducers/comReducer'
 
 export default connect(({userSignInfo}) => ({
     auth: userSignInfo.auth,
@@ -17,7 +17,6 @@ export default connect(({userSignInfo}) => ({
     error: userSignInfo.error
 }), bindActions({
     userSignIn,
-    openToast,
     userSignAccept,
     reset
 }))(
@@ -44,10 +43,10 @@ export default connect(({userSignInfo}) => ({
             const {auth, pending} = this.props;
             if (pending && !nextProps.pending) {
                 CLoading.close();
-                const {error} = nextProps;
+                const {error, reset} = nextProps;
 
                 if (error) CToast.open(error);
-                if (!auth && nextProps.auth) nextProps.reset('Home');
+                if (!auth && nextProps.auth) reset('Home');
             }
             return true;
         }
@@ -62,7 +61,7 @@ export default connect(({userSignInfo}) => ({
 
         signInSubmit = () => {
             const {account, password} = this.state;
-            const {userSignIn, openToast} = this.props;
+            const {userSignIn} = this.props;
             // todo 账号过滤空格，回车等
             if (account && password) {
                 const auth = btoa(`${account}:${password}`);
@@ -70,7 +69,6 @@ export default connect(({userSignInfo}) => ({
                 CLoading.open('Signing...');
                 return userSignIn(auth)
             }
-            return openToast('Check Account or Password')
         };
 
         render() {

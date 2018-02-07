@@ -44,7 +44,7 @@ export const getUserInfo = (user) => ({type: UserTypes.USER_ACCEPT, payload: {us
  * 删除授权
  * @param id 用户ID
  */
-export const deleteAuth = ({id}) => ({type: UserTypes.DELETE_AUTH, payload: {id}});
+export const deleteAuth = (id) => ({type: UserTypes.DELETE_AUTH, payload: {id}});
 
 /**
  * 清空用户信息
@@ -111,7 +111,7 @@ export const userSignInfo = (state = initState, {type, payload}) => {
             return {...state, signInPending: true, basic: payload.auth};
 
         case UserTypes.USER_SIGNIN_ACCEPT:
-            return {...state, signInPending: false, signed: true, ...payload};
+            return {...state, signInPending: false, signed: true, error: '', ...payload};
 
         case UserTypes.USER_SIGNIN_DENIED:
             return {...initState, ...payload};

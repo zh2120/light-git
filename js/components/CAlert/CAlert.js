@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
         borderTopWidth: StyleSheet.hairlineWidth,
     },
     contentText: {
-        paddingVertical: 8,
+        marginBottom: 10
     }
 });
 

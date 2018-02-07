@@ -103,8 +103,6 @@ const initialState = (routerName) =>
 
 export const navReducer = (state = initialState(init), action) => {
     switch (action.type) {
-        case 'persist/REHYDRATE':
-            return {...state, config: require('../../config.json')};
         case 'Navigation/NAVIGATE':
             const {routes} = state;
 
