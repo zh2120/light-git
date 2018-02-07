@@ -41,7 +41,6 @@ export default connect(({ userSignInfo }) => ({
 
         shouldComponentUpdate(nextProps) {
             const { auth, pending } = this.props;
-            console.log(1234);
             if (pending && !nextProps.pending) {
                 CLoading.close();
                 const { error, reset } = nextProps;

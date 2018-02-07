@@ -74,7 +74,7 @@ export default connect(({ userInfo}) => ({
         render() {
             const {proList} = this.props;
             if (!proList) {
-                return <View style={{height: dp(250)}}><Loading/></View>
+                return <Loading/>
             }
 
             return (
