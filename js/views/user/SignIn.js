@@ -7,14 +7,13 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import Octicons from 'react-native-vector-icons/Octicons';
-import { CButton, Button, CLoading, CToast } from '../../components/'
+import { CButton, Button, CLoading } from '../../components/'
 import { userSignIn, userSignAccept } from '../../reducers/userReducer'
 import { bindActions, reset } from '../../reducers/comReducer'
 
 export default connect(({ userSignInfo }) => ({
     auth: userSignInfo.auth,
     pending: userSignInfo.signInPending,
-    error: userSignInfo.error
 }), bindActions({
     userSignIn,
     userSignAccept,
@@ -43,10 +42,7 @@ export default connect(({ userSignInfo }) => ({
             const { auth, pending } = this.props;
             if (pending && !nextProps.pending) {
                 CLoading.close();
-                const { error, reset } = nextProps;
-
-                if (error) CToast.open(error);
-                if (!auth && nextProps.auth) reset('Home');
+                if (!auth && nextProps.auth) nextProps.reset('Home');
             }
             return true;
         }

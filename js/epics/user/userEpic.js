@@ -45,7 +45,6 @@ export const userSignInEpic = (action$, { getState }, { put }) => action$.ofType
                         break;
                     case 200:
                         // 重写
-                        console.log('200 =>>', err);
                         return Observable.of(deleteAuth(err.id));
                         break;
                     case 422:
@@ -54,7 +53,8 @@ export const userSignInEpic = (action$, { getState }, { put }) => action$.ofType
                     default:
                         error = netWork;// 超时处理
                 }
-                return Observable.of(userSignDenied(error)) // 最先完成进行数据清理
+                toast(error);
+                return Observable.of(userSignDenied()) // 最先完成进行数据清理
             })
     });
 
@@ -73,7 +73,10 @@ export const userInfoEpic = (action$, state, { get }) => action$.ofType(UserType
 
         return get(url, headers)
             .map(({ response }) => getUserInfo(response))
-            .catch(err => Observable.of(userSignDenied(netWork)))
+            .catch(err => {
+                toast(netWork);
+                return Observable.of(userSignDenied())
+            })
     });
 
 /**
@@ -94,11 +97,14 @@ export const clearUserInfoEpic = (action$, { getState }, ajax) => action$.ofType
         return ajax.delete(url, headers)
             .map(({ status }) => {
                 if (status === 204) {
-                    return userSignDenied('已经退出其他设备的授权')
+                    return userSignDenied()
                 }
             })
             .concat(Observable.of(clearUser()))
-            .catch(err => Observable.of(userSignDenied(netWork)))
+            .catch(err => {
+                toast(netWork);
+                return Observable.of(userSignDenied())
+            })
     });
 
 /**
@@ -116,7 +122,8 @@ export const checkAuthEpic = (action$, { getState }, { get }) => action$.ofType(
 
         return get(url, headers).map(() => ({ type: 'Checked_Successfully' }))
     }).catch(() => {
-        return Observable.of(clearUser(), userSignDenied(netWork)) // 在清理用户信息之前，取消授权
+        toast(netWork);
+        return Observable.of(clearUser(), userSignDenied()) // 在清理用户信息之前，取消授权
     });
 
 /**
@@ -140,7 +147,8 @@ export const proListEpic = (action$, { getState }, { get }) => action$.ofType(Us
         return get(url, headers).map(({ response }) => repoList(response))
             .catch(e => {
                 console.log(e);
-                return Observable.of(errRepoList(netWork))
+                toast(netWork);
+                return Observable.of(errRepoList())
             })
 
     });

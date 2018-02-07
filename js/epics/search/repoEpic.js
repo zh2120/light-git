@@ -17,7 +17,8 @@ export function searchRepoByQueryEpic(action$, { getState }, { get }) {
                 .map(res => res.response || res)
                 .map(repos => searchRepoResult(repos.items || [])) // 返回正确结果
                 .catch(e => {
-                    return Observable.of(putError('网络状况不佳，请稍后在试')).startWith(resetSearch())
+                    toast('网络不好，谅解一哈噻');
+                    return Observable.of(resetSearch())
                 })
         })
 }
