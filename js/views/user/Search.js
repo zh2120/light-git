@@ -15,7 +15,7 @@ import Octicons from 'react-native-vector-icons/Octicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Button, Loading } from '../../components/'
 import { bindActions, openToast } from '../../reducers/comReducer'
-import { searchRepo } from '../../reducers/searchReducer'
+import { searchRepo, resetSearch } from '../../reducers/searchReducer'
 
 const searchStyles = StyleSheet.create({
     wrap: {
@@ -116,7 +116,7 @@ export default connect(({ searchInfo }) => ({
     repos: searchInfo.repos,
     history: searchInfo.history,
     searching: searchInfo.searching
-}), bindActions({ searchRepo }))(
+}), bindActions({ searchRepo, resetSearch }))(
     class extends Component {
         static navigationOptions = ({ navigation }) => ({ header: <SearchHeader navigation={navigation}/> });
 
@@ -136,6 +136,7 @@ export default connect(({ searchInfo }) => ({
         renderSectionHeader = ({ section }) => { // 分段头
             let title, leftIconName, rightIconName, clear;
             const { recordOpen } = this.state;
+            const {resetSearch } = this.props;
 
             if (section.type === 'history') {
                 title = 'History';
@@ -147,7 +148,7 @@ export default connect(({ searchInfo }) => ({
                 title = 'Results';
                 leftIconName = 'paperclip';
                 rightIconName = 'broom';
-                clear = () => null
+                clear = resetSearch
             }
 
 

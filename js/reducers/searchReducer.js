@@ -34,7 +34,7 @@ export default (state = searchState, { type, payload }) => {
 
         case SearchTypes.SEARCH_REPO_RESET:
             // todo repos 没有进行任何的搜索历史
-            return { ...state, searching: false, repos: [] };
+            return { ...searchState };
 
         default:
             return state
