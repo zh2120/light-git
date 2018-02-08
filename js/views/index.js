@@ -52,14 +52,14 @@ for (const key in MainRouters) {
  * 页面切换动画配置
  */
 const transitions = {
-    transitionConfig: () => ({
+    transitionConfig: (transitionProps, prevTransitionProps) => ({
         transitionSpec: {
             duration: 300,
             timing: Animated.timing,
             easing: Easing.out(Easing.poly(4)),
         },
         screenInterpolator: sceneProps => {
-            const { layout, position, scene } = sceneProps;
+            const { layout, position, scene, progress } = sceneProps;
             const { index } = scene;
             const width = layout.initWidth;
             const translateX = position.interpolate({
@@ -67,14 +67,19 @@ const transitions = {
                 outputRange: [width, 0, 0],
             });
 
-            const opacity = position.interpolate({
-                inputRange: [index - 1, index - 0.99, index],
-                outputRange: [0, 1, 1],
+            const scale = position.interpolate({
+                inputRange: [index - 1, index, index + 1],
+                outputRange: [1, 1, 0.9],
             });
 
-            return { opacity, transform: [{ translateX }] };
-        },
-    }),
+            const opacity = position.interpolate({
+                inputRange: [index - 1, index, index + 0.999, index + 1],
+                outputRange: [0, 1, 0.3, 0],
+            });
+
+            return { opacity, transform: [{ translateX }, { scale }] };
+        }
+    })
 };
 
 export const Navigator = StackNavigator(MainRouters, {
