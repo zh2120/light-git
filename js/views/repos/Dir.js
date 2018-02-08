@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
     View,
@@ -16,7 +16,7 @@ export default connect(({ repoInfo, nav }) => ({
     dirs: repoInfo.dirs,
     readme: repoInfo.readme,
 }), bindActions({ fileContent, openToast, popDir, clearDir, back }))(
-    class extends PureComponent {
+    class extends Component {
         static navigationOptions = ({ navigation }) => {
             const params = navigation.state.params;
             return { headerTitle: params && params.name }

@@ -70,18 +70,18 @@ class CToast extends PureComponent {
         if (!visibility) return null;
 
         const opacity = this.animation.interpolate({
-            inputRange: [ 0, 1 ],
-            outputRange: [ 0.1, 1 ]
+            inputRange: [0, 1],
+            outputRange: [0.1, 1]
         });
 
         const translateX = this.animation.interpolate({
-            inputRange: [ 0, 1 ],
-            outputRange: [ vw, 0 ]
+            inputRange: [0, 1],
+            outputRange: [vw, 0]
         });
 
         return (
             <TouchableWithoutFeedback onPress={this.close}>
-                <Animated.View style={[ styles.common, { opacity, transform: [ { translateX } ] } ]}>
+                <Animated.View style={[styles.common, { opacity, transform: [{ translateX }] }]}>
                     <Text style={styles.toastText}>{text}</Text>
                     <MaterialCommunityIcons style={{ color: '#80B2FE', marginLeft: 10 }} size={20}
                                             name={'circle-outline'}/>

@@ -44,8 +44,8 @@ class CLoading extends PureComponent {
         only: PropTypes.bool,
         duration: PropTypes.number,
         count: PropTypes.number,
-        style: PropTypes.oneOfType([ PropTypes.object, PropTypes.number, PropTypes.array ]),
-        blockStyle: PropTypes.oneOfType([ PropTypes.object, PropTypes.number, PropTypes.array ])
+        style: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array]),
+        blockStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array])
     };
 
     initialState = { text: '', visibility: false };
@@ -53,26 +53,20 @@ class CLoading extends PureComponent {
     state = { ...this.initialState };
     load = (new Array(this.props.count || 3)).fill(1);
     animation = new Animated.Value(0);
-    loading = true;
 
     componentDidMount() {
-        if (!this.props.only) {
-            this.setState({ visibility: true }, this.startAnimation)
+        if (!this.props.only) { // 单独使用
+            this.open()
         }
     }
 
     componentWillUnmount() {
         this.close();
-        this.load = false
     }
 
-    open = (text = '') => {
-        if (!this.state.visibility) {
-            this.setState({ text, visibility: true }, this.startAnimation)
-        }
-    };
+    open = (text = '') => !this.state.visibility && this.setState({ visibility: true, text }, this.startAnimation);
 
-    close = () => this.setState({ ...this.initialState });
+    close = () => this.state.visibility && this.setState({ ...this.initialState });
 
     startAnimation = () => {
         const { duration } = this.props;
@@ -81,13 +75,7 @@ class CLoading extends PureComponent {
             toValue: 1,
             duration: duration || 2000,
             useNativeDriver: true
-        }).start(() => {
-            if (this.load) {
-                this.startAnimation()
-            } else {
-                this.animation = null
-            }
-        })
+        }).start(() => this.state.visibility && this.startAnimation())
     };
 
     render() {
@@ -97,27 +85,24 @@ class CLoading extends PureComponent {
         const scaleYs = this.load.map((item, index) => {
             const scaleY = index * PI / 4;
             return this.animation.interpolate({
-                inputRange: [ 0, 0.25, 0.5, 0.75, 1 ],
-                outputRange: [ cSin(scaleY), cSin(PI / 4 + scaleY), cSin(PI / 2 + scaleY), cSin(PI * 3 / 4 + scaleY), cSin(PI + scaleY) ]
+                inputRange: [0, 0.25, 0.5, 0.75, 1],
+                outputRange: [cSin(scaleY), cSin(PI / 4 + scaleY), cSin(PI / 2 + scaleY), cSin(PI * 3 / 4 + scaleY), cSin(PI + scaleY)]
             })
         });
         const { style, blockStyle, only } = this.props;
 
-        const vStyle = [ styles.box ].concat(isType(style) === 'Array' ? style : [ style ]);
-        const bStyle = [ styles.block ].concat(isType(blockStyle) === 'Array' ? blockStyle : [ blockStyle ]);
+        const vStyle = [styles.box].concat(isType(style) === 'Array' ? style : [style]);
+        const bStyle = [styles.block].concat(isType(blockStyle) === 'Array' ? blockStyle : [blockStyle]);
 
         return (
-            <View style={[ styles.wrap, only ? { backgroundColor: 'rgba(21, 21, 21, 0.3)' } : null ]}>
+            <View style={[styles.wrap, only ? { backgroundColor: 'rgba(21, 21, 21, 0.3)' } : null]}>
                 <View style={styles.wBox}>
                     <View style={vStyle}>
                         {
-                            scaleYs.map((item, index) => {
-                                return (
-                                    <Animated.View
-                                        key={'Animated' + index}
-                                        style={[ bStyle, { transform: [ { scaleY: item } ] } ]}/>
-                                )
-                            })
+                            scaleYs.map((item, index) => (<Animated.View
+                                key={'Animated' + index}
+                                style={[bStyle, { transform: [{ scaleY: item }] }]}/>)
+                            )
                         }
                     </View>
                     <Text>{text}</Text>

@@ -48,6 +48,8 @@ export default connect(({ userSignInfo }) => ({
         }
 
         componentWillUnmount() {
+            // todo 网络延迟较高的情况，用户退出当前页，应该取消获取授权
+            CLoading.close();
             this.setState({ account: '', password: '' })
         }
 
@@ -117,6 +119,7 @@ const styles = StyleSheet.create({
         borderColor: '#888',
         borderRadius: 2,
         marginTop: 36,
+        fontSize: 16
     },
     btnContent: {
         flex: 0,
