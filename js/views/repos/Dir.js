@@ -71,7 +71,7 @@ export default connect(({ repoInfo, nav }) => ({
                         : navigation.navigate('RepoFile', { fullName: this.state.fullName, path, type })}>
 
                     <View style={styles.contentRow}>
-                        <Icon name={isDir ? 'file' : 'file-directory'} size={24} color={'#888888'}/>
+                        <Icon name={isDir ? 'folder': 'file' } size={24}/>
                         <Text style={styles.contentName}>
                             {name}
                         </Text>

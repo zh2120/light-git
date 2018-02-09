@@ -16,7 +16,7 @@ export default class Icon extends Component {
                 width={size}
                 height={size}
                 svgXmlData={svgXmlData}
-                fill={color || '#f00'}
+                fill={color}
                 style={style}
             />
         )

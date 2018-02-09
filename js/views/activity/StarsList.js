@@ -40,7 +40,7 @@ export default connect(({ starInfo }) => ({
             const proItem = (
                 <View style={{ flexDirection: 'row' }}>
                     <Icon name={'ios-browsers-outline'} size={22}
-                              style={{ color: '#0366d6', marginRight: 10 }}/>
+                              style={{ marginRight: 10 }}/>
 
                     <View>
                         <Text style={{ color: '#0366d6', fontSize: 16, marginBottom: 4 }}>{name}</Text>

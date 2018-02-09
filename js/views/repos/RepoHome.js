@@ -160,7 +160,7 @@ export default connect(({ nav, repoInfo, issueInfo }) => ({
                         : item.name === 'README.md'
                             ? navigation.navigate('Readme', { fullName: this.state.fullName, path, type })
                             : navigation.navigate('RepoFile', { fullName: this.state.fullName, path, type })}>
-                    <Icon name={isDir ? 'file':'file-directory'} size={18} color={'#0366d6'}
+                    <Icon name={isDir ? 'folder' : 'file'} size={18}
                           style={{ opacity: 0.7 }}/>
                     <Text style={styles.contentName}>{name}</Text>
                 </TouchableOpacity>

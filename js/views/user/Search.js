@@ -136,12 +136,12 @@ export default connect(({ searchInfo }) => ({
             if (section.type === 'history') {
                 title = 'History';
                 leftIconName = 'tag';
-                rightIconName = recordOpen ? 'chevron-double-up' : 'chevron-double-down';
+                rightIconName = recordOpen ? 'fold' : 'unfold';
                 clear = () => this.setState({ recordOpen: !recordOpen })
             }
             if (section.type === 'repos') {
                 title = 'Results';
-                leftIconName = 'paperclip';
+                leftIconName = 'history';
                 rightIconName = 'broom';
                 clear = resetSearch
             }
