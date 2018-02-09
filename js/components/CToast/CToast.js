@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Animated, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native'
-import {Icon} from '../../components'
+import { Icon } from '../../components'
 
 const styles = StyleSheet.create({
     common: {
@@ -32,37 +32,34 @@ class CToast extends PureComponent {
     };
     state = { ...this.initialState };
     animation = new Animated.Value(0);
+    openFlag = false;
 
     open = (text = '') => {
         if (this.timer) clearTimeout(this.timer);
-
+        this.openFlag = true;
         return this.setState({ visibility: true, text }, () => {
-            Animated.timing(this.animation, {
-                toValue: 1,
-                duration: 200,
-                useNativeDriver: true
-            }).start(() => {
-                if (this.state.visibility) {
-                    this.timer = setTimeout(this.close, 3000)
-                }
-            })
+            this.start(() => this.timer = setTimeout(this.close, 3000))
         })
     };
 
     close = () => { // 延时关闭toast
         const { visibility } = this.state;
         if (visibility) {
-            Animated.timing(this.animation, {
-                toValue: 0,
-                duration: 300,
-                useNativeDriver: true
-            }).start(() => {
+            this.openFlag = false;
+            this.start(() => {
                 if (this.timer) clearTimeout(this.timer);
                 this.setState({ ...this.initialState })
             });
         }
     };
 
+    start = (callback) => {
+        Animated.timing(this.animation, {
+            toValue: this.openFlag ? 1 : 0,
+            duration: 300,
+            useNativeDriver: true
+        }).start(() => callback && callback());
+    };
 
     render() {
         const { visibility, text } = this.state;
@@ -83,8 +80,8 @@ class CToast extends PureComponent {
             <TouchableWithoutFeedback onPress={this.close}>
                 <Animated.View style={[styles.common, { opacity, transform: [{ translateX }] }]}>
                     <Text style={styles.toastText}>{text}</Text>
-                    <Icon style={{ color: '#80B2FE', marginLeft: 10 }} size={20}
-                                            name={'circle'}/>
+                    <Icon style={{ marginLeft: 10 }} size={20}
+                          name={'circle'}/>
                 </Animated.View>
             </TouchableWithoutFeedback>
         )
