@@ -53,34 +53,32 @@ class CAlert extends PureComponent {
 
     state = { ...this.initialState };
     animation = new Animated.Value(0);
+    flag = false;
 
     open(refTitle, refContent, refActions) {
         const { title, content, actions } = this.state;
         const newTitle = isType(refTitle) === 'String' && refTitle || title;
         const newContent = refContent || content;
         const newActions = isType(refActions) === 'Array' && refActions || actions;
-
-        this.setState({ visibility: true, title: newTitle, content: newContent, actions: newActions }, () => {
-            Animated.timing(this.animation, {
-                toValue: 1,
-                duration: 10,
-                useNativeDriver: true
-            }).start()
-        })
+        this.flag = true;
+        this.setState({ visibility: true, title: newTitle, content: newContent, actions: newActions }, this.start)
     };
 
     close(callback) {
         const { visibility } = this.state;
         if (visibility) {
-            if (callback) {
-                callback()
-            }
-            Animated.timing(this.animation, {
-                toValue: 0,
-                duration: 150,
-                useNativeDriver: true
-            }).start(() => this.setState({ ...this.initialState }))
+            this.flag = false;
+            if (callback) callback();
+            this.start(() => this.setState({ ...this.initialState }))
         }
+    };
+
+    start = (callback) => {
+        Animated.timing(this.animation, {
+            toValue: this.flag ? 1 : 0,
+            duration: 150,
+            useNativeDriver: true
+        }).start(() => callback && callback())
     };
 
     renderContent() {
