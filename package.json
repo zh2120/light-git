@@ -1,11 +1,11 @@
 {
 	"name": "gitapp",
-	"version": "1.1.5",
+	"version": "1.2.5",
 	"private": true,
 	"scripts": {
 		"start": "node node_modules/react-native/local-cli/cli.js start",
 		"install-and": "cd android && ./gradlew installRelease",
-		"code-push-and": "code-push release-react LightG android --t 1.1.5 --dev false --d Production --m true",
+		"code-push-and": "code-push release-react LightG android --t 1.2.5 --dev false --d Production --m true",
 		"test": "jest",
 		"build-svg": "node js/scripts/getSvg"
 	},
