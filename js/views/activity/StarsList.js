@@ -5,8 +5,7 @@ import {
     Text,
     StyleSheet,
 } from 'react-native'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import { Button, Loading, CList } from '../../components/index'
+import { Button, Loading, CList, Icon } from '../../components/'
 import { bindActions } from '../../reducers/comReducer'
 import { getStars, getStarCount } from '../../reducers/activityReducer'
 
@@ -40,7 +39,7 @@ export default connect(({ starInfo }) => ({
             const { full_name, name, description, language, stargazers_count } = item;
             const proItem = (
                 <View style={{ flexDirection: 'row' }}>
-                    <Ionicons name={'ios-browsers-outline'} size={22}
+                    <Icon name={'ios-browsers-outline'} size={22}
                               style={{ color: '#0366d6', marginRight: 10 }}/>
 
                     <View>

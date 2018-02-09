@@ -1,7 +1,5 @@
 import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
-import EvilIcons from 'react-native-vector-icons/EvilIcons'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import {openToast, bindActions, reset} from '../../reducers/comReducer'
 import {searchRepo} from '../../reducers/searchReducer'
 import {userSignAccept} from '../../reducers/userReducer'
@@ -15,6 +13,7 @@ import {
     TouchableOpacity,
     TouchableHighlight
 } from 'react-native'
+import {Icon} from '../../components';
 
 const underlayColor = 'rgba(100,100,100 ,0.1)';
 
@@ -43,7 +42,7 @@ export default connect(({userInfo, userSignInfo}) => ({
                     return navigation.navigate('User', {name: user.login})
                 };
             } else {
-                avatar = <EvilIcons name={'user'} size={36} style={{color: '#ffffff', padding: 2}}/>;
+                avatar = <Icon name={'user'} size={36} style={{ padding: 2}}/>;
                 onPress = () => navigation.navigate('SignIn')
             }
 
@@ -95,14 +94,14 @@ export default connect(({userInfo, userSignInfo}) => ({
                                     <TouchableOpacity
                                         disabled={true}
                                         onPress={() => this.setState({searchText: ''})}>
-                                        <Ionicons size={20} name={'ios-close-circle-outline'} style={{marginRight: 8}}/>
+                                        <Icon size={20} name={'close'} style={{marginRight: 8}}/>
                                     </TouchableOpacity>
                                 ) : null
                             }
                             <TouchableOpacity
                                 disabled={true}
                                 onPress={() => this.goSearch()}>
-                                <EvilIcons name={'search'} size={24} style={styles.searchIcon}/>
+                                <Icon name={'search'} size={24} style={styles.searchIcon}/>
                             </TouchableOpacity>
                         </TouchableOpacity>
 
@@ -110,16 +109,16 @@ export default connect(({userInfo, userSignInfo}) => ({
                             <TouchableHighlight underlayColor={underlayColor} disabled={!signed}
                                                 onPress={() => navigation.navigate('StarsList')}>
                                 <View style={styles.iconWrap}>
-                                    <Ionicons name={'md-star-outline'} size={24} style={styles.icon}/>
-                                    <Text style={styles.icon}>Stars</Text>
+                                    <Icon name={'star'} size={24}/>
+                                    <Text style={styles.iconText}>Stars</Text>
                                 </View>
                             </TouchableHighlight>
 
                             <TouchableHighlight underlayColor={underlayColor} disabled={!signed}
                                                 onPress={() => navigation.navigate('UserProList')}>
                                 <View style={styles.iconWrap}>
-                                    <Ionicons name={'md-folder-open'} size={24} style={styles.icon}/>
-                                    <Text style={styles.icon}>Repos</Text>
+                                    <Icon name={'repo'} size={24}/>
+                                    <Text style={styles.iconText}>Repos</Text>
                                 </View>
                             </TouchableHighlight>
                         </View>
@@ -156,7 +155,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    icon: {
+    iconText: {
         marginTop: 4,
         color: '#ffffff'
     },

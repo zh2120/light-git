@@ -1,6 +1,5 @@
 import { bindActionCreators } from 'redux';
 import { NavigationActions } from 'react-navigation'
-import { Navigator } from '../views/'
 
 export const ComTypes = {
     OPEN_TOAST: 'OPEN_TOAST', // 打开提示
@@ -24,12 +23,6 @@ export const back = (routeName) => ({ type: 'Navigation/BACK', routeName });
  * @param text
  */
 export const openToast = (text) => ({ type: ComTypes.OPEN_TOAST, payload: { text } });
-
-/**
- * 关闭通知
- * @returns {{type}}
- */
-export const closeToast = () => ({ type: ComTypes.CLOSE_TOAST });
 
 /**
  * 通知错误信息
@@ -96,43 +89,3 @@ export default (state = {
             return state
     }
 }
-
-const init = 'Home';
-const initialState = (routerName) =>
-    Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams(routerName));
-
-export const navReducer = (state = initialState(init), action) => {
-    switch (action.type) {
-        case 'Navigation/NAVIGATE':
-            const { routes } = state;
-
-            if (action.routeName !== 'RepoDir' && routes[ routes.length - 1 ].routeName === action.routeName) return state;
-
-            return Navigator.router.getStateForAction(action, state);
-        case 'Navigation/BACK':
-            if (action.routeName) {
-                // 寻找栈里，已经存在的场景索引
-                const i = state.routes.findIndex(item => item.routeName === action.routeName);
-
-                // 返回从栈底到指定的路由
-                return { index: i, routes: state.routes.slice(0, i + 1) }
-            }
-            // 返回上一层
-            if (state.index > 0) return { index: state.index - 1, routes: state.routes.slice(0, state.index) };
-            return initialState(init);
-
-        case 'Navigation/SET_PARAMS':
-            const nextRoutes = state.routes.map((item) => {
-                if (item.key === action.key) { // 对当前页面，设置参数
-                    return { ...item, params: { ...item.params, ...action.params } }
-                }
-                return item
-            });
-            return { ...state, routes: nextRoutes };
-        case 'Navigation/RESET':
-            return { ...Navigator.router.getStateForAction(action), config: require('../../config.json') };
-
-        default:
-            return state
-    }
-};

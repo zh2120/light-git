@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Animated, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import {Icon} from '../../components'
 
 const styles = StyleSheet.create({
     common: {
@@ -83,8 +83,8 @@ class CToast extends PureComponent {
             <TouchableWithoutFeedback onPress={this.close}>
                 <Animated.View style={[styles.common, { opacity, transform: [{ translateX }] }]}>
                     <Text style={styles.toastText}>{text}</Text>
-                    <MaterialCommunityIcons style={{ color: '#80B2FE', marginLeft: 10 }} size={20}
-                                            name={'circle-outline'}/>
+                    <Icon style={{ color: '#80B2FE', marginLeft: 10 }} size={20}
+                                            name={'circle'}/>
                 </Animated.View>
             </TouchableWithoutFeedback>
         )

@@ -6,10 +6,9 @@ import {
     StyleSheet,
     TouchableOpacity,
 } from 'react-native'
-import Octicons from 'react-native-vector-icons/Octicons'
 import { openToast, bindActions, back } from '../../reducers/comReducer'
 import { fileContent, popDir, clearDir } from '../../reducers/repoReducer'
-import { Loading, CList } from '../../components'
+import { Loading, CList, Icon } from '../../components'
 
 export default connect(({ repoInfo, nav }) => ({
     nav: nav,
@@ -72,7 +71,7 @@ export default connect(({ repoInfo, nav }) => ({
                         : navigation.navigate('RepoFile', { fullName: this.state.fullName, path, type })}>
 
                     <View style={styles.contentRow}>
-                        <Octicons name={isDir ? 'file-directory' : 'file'} size={24} style={{ color: '#888' }}/>
+                        <Icon name={isDir ? 'file' : 'file-directory'} size={24} color={'#888888'}/>
                         <Text style={styles.contentName}>
                             {name}
                         </Text>

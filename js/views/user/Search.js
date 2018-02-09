@@ -9,11 +9,7 @@ import {
     TouchableOpacity,
     TouchableHighlight,
 } from 'react-native'
-import EvilIcons from 'react-native-vector-icons/EvilIcons'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import Octicons from 'react-native-vector-icons/Octicons'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { Button, Loading } from '../../components/'
+import { Button, Loading, Icon } from '../../components/'
 import { bindActions, openToast } from '../../reducers/comReducer'
 import { searchRepo, resetSearch } from '../../reducers/searchReducer'
 
@@ -35,7 +31,7 @@ const searchStyles = StyleSheet.create({
         alignItems: 'center'
     },
     textInput: { flex: 1, padding: 0, marginHorizontal: 4 },
-    searchIcon: { color: '#000', marginHorizontal: 5, alignItems: 'center' },
+    searchIcon: { marginHorizontal: 5, alignItems: 'center' },
     cancel: { width: 54, height: 44, alignItems: 'center', justifyContent: 'center' }
 });
 
@@ -81,7 +77,7 @@ const SearchHeader = connect(state => ({}), bindActions({ searchRepo, openToast 
                     <View style={searchStyles.searchWrap}>
                         <TouchableOpacity
                             onPress={() => this.searchSubmit(searchText)}>
-                            <EvilIcons name={'search'} size={24} style={searchStyles.searchIcon}/>
+                            <Icon name={'search'} size={24} style={searchStyles.searchIcon} color={'#333333'}/>
                         </TouchableOpacity>
                         <TextInput
                             autoFocus={true}
@@ -97,7 +93,7 @@ const SearchHeader = connect(state => ({}), bindActions({ searchRepo, openToast 
                             searchText ? (
                                 <TouchableOpacity
                                     onPress={() => this.setState({ searchText: '' })}>
-                                    <EvilIcons size={22} name={'close-o'} style={{ marginRight: 8 }}/>
+                                    <Icon size={22} name={'close'} style={{ marginRight: 8 }}/>
                                 </TouchableOpacity>
                             ) : null
                         }
@@ -110,7 +106,6 @@ const SearchHeader = connect(state => ({}), bindActions({ searchRepo, openToast 
         }
     }
 );
-
 
 export default connect(({ searchInfo }) => ({
     repos: searchInfo.repos,
@@ -136,7 +131,7 @@ export default connect(({ searchInfo }) => ({
         renderSectionHeader = ({ section }) => { // 分段头
             let title, leftIconName, rightIconName, clear;
             const { recordOpen } = this.state;
-            const {resetSearch } = this.props;
+            const { resetSearch } = this.props;
 
             if (section.type === 'history') {
                 title = 'History';
@@ -155,12 +150,12 @@ export default connect(({ searchInfo }) => ({
             return (
                 <View style={[styles.sectionBase, styles.sectionWrap]}>
                     <View style={styles.sectionBase}>
-                        <EvilIcons name={leftIconName} size={28}/>
+                        <Icon name={leftIconName} size={28}/>
                         <Text style={{ marginRight: 12 }}>{title}</Text>
                     </View>
                     <TouchableOpacity onPress={clear}>
                         <View style={styles.sectionBase}>
-                            <MaterialCommunityIcons name={rightIconName} size={24}/>
+                            <Icon name={rightIconName} size={24}/>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -174,10 +169,10 @@ export default connect(({ searchInfo }) => ({
                                         onPress={() => this.reSearch(item)} key={`h-${index}`}>
                         <View style={styles.touchItem}>
                             <View style={styles.touchItemLeft}>
-                                <EvilIcons name={'search'} size={22} style={{ color: '#0366d6' }}/>
+                                <Icon name={'search'} size={22} color={'#0366d6'}/>
                                 <Text style={styles.touchItemText}>{item.name}</Text>
                             </View>
-                            <EvilIcons name={'redo'} size={24} style={{ marginRight: 2 }}/>
+                            <Icon name={'redo'} size={24} style={{ marginRight: 2 }}/>
                         </View>
                     </TouchableHighlight>
                 )
@@ -212,12 +207,12 @@ export default connect(({ searchInfo }) => ({
                     })}>
                     <View style={styles.repoItem}>
                         <View style={styles.touchItemLeft}>
-                            <Ionicons name={'ios-browsers-outline'} size={22}
-                                      style={{ color: '#0366d6', marginRight: 10 }}/>
+                            <Icon name={'ios-browsers-outline'} size={22} color={'#0366d6'}
+                                  style={{ marginRight: 10 }}/>
                             <Text style={styles.repoName}>{full_name}</Text>
                         </View>
                         <View style={styles.touchItemLeft}>
-                            <Octicons name={'star'} size={18} style={{ marginLeft: 6 }}/>
+                            <Icon name={'star'} size={18} style={{ marginLeft: 6 }}/>
                             <Text>{stargazers_count}</Text>
                         </View>
                         <View style={styles.repoDesc}><Text style={styles.repoDescText}>{description}</Text></View>

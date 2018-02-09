@@ -9,9 +9,7 @@ import {
     TouchableOpacity,
     TouchableHighlight,
 } from 'react-native'
-import Octicons from 'react-native-vector-icons/Octicons'
-
-import { Button, Loading, CList } from '../../components'
+import { Button, Loading, CList, Icon } from '../../components'
 import { repoContent, clearDir } from '../../reducers/repoReducer'
 import { getIssue, errIssue } from '../../reducers/issueReducer'
 import { bindActions, back } from '../../reducers/comReducer'
@@ -162,11 +160,9 @@ export default connect(({ nav, repoInfo, issueInfo }) => ({
                         : item.name === 'README.md'
                             ? navigation.navigate('Readme', { fullName: this.state.fullName, path, type })
                             : navigation.navigate('RepoFile', { fullName: this.state.fullName, path, type })}>
-                    <Octicons name={isDir ? 'file-directory' : 'file'} size={18}
-                              style={{ color: '#0366d6', opacity: .7 }}/>
-                    <Text style={styles.contentName}>
-                        {name}
-                    </Text>
+                    <Icon name={isDir ? 'file':'file-directory'} size={18} color={'#0366d6'}
+                          style={{ opacity: 0.7 }}/>
+                    <Text style={styles.contentName}>{name}</Text>
                 </TouchableOpacity>
             )
         };

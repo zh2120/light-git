@@ -1,25 +1,23 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
     View,
     Text,
     StyleSheet,
 } from 'react-native'
-import Feather from 'react-native-vector-icons/Feather'
-import Octicons from 'react-native-vector-icons/Octicons'
-import {Button, Loading, CList} from '../../components/index'
-import {bindActions} from '../../reducers/comReducer'
-import {getRepoList} from '../../reducers/userReducer'
+import { Button, Loading, CList, Icon } from '../../components/index'
+import { bindActions } from '../../reducers/comReducer'
+import { getRepoList } from '../../reducers/userReducer'
 
-export default connect(({ userInfo}) => ({
+export default connect(({ userInfo }) => ({
     publicPros: userInfo.public_repos,
     proList: userInfo.proList,
-}), bindActions({getRepoList}))(
+}), bindActions({ getRepoList }))(
     class extends Component {
-        static navigationOptions = ({headerTitle: 'Repositories'});
+        static navigationOptions = ({ headerTitle: 'Repositories' });
 
         componentDidMount() {
-            this.props.getRepoList({username: ''})
+            this.props.getRepoList({ username: '' })
         }
 
         /**
@@ -29,30 +27,26 @@ export default connect(({ userInfo}) => ({
          */
         IconProps = {
             size: 18,
-            style: {width: 32, marginVertical: 4, color: 'rgb(240,130,132)'}
+            color: 'rgb(240,130,132)',
+            style: { width: 32, marginVertical: 4 }
         };
-        renderProItem = ({item}) => {
-            const {full_name, name, description, language, stargazers_count, fork} = item;
-            const {navigation} = this.props;
+        renderProItem = ({ item }) => {
+            const { full_name, name, description, language, stargazers_count, fork } = item;
+            const { navigation } = this.props;
             const proItem = (
-                <View style={{flexDirection: 'row'}}>
-                    {
-                        fork
-                            ? <Octicons name={'repo-forked'} {...this.IconProps}/>
-                            : <Feather name={'codepen'} {...this.IconProps}/>
-                    }
-
+                <View style={{ flexDirection: 'row' }}>
+                    {<Icon name={fork ? 'fork' : 'codepen'} {...this.IconProps}/>}
                     <View>
-                        <Text style={{color: '#0366d6', fontSize: 16, marginBottom: 4}}>{name}</Text>
+                        <Text style={{ color: '#0366d6', fontSize: 16, marginBottom: 4 }}>{name}</Text>
                         {
                             description
-                                ? <Text style={{marginVertical: 8}}>{description}</Text>
+                                ? <Text style={{ marginVertical: 8 }}>{description}</Text>
                                 : null
                         }
-                        <View style={{flexDirection: 'row', marginVertical: 4}}>
+                        <View style={{ flexDirection: 'row', marginVertical: 4 }}>
                             {
                                 language
-                                    ? <Text style={{color: '#333', marginRight: 12}}>{language}</Text>
+                                    ? <Text style={{ color: '#333', marginRight: 12 }}>{language}</Text>
                                     : null
                             }
                             <Text>{' 🌟 ' + stargazers_count}</Text>
@@ -72,7 +66,7 @@ export default connect(({ userInfo}) => ({
         };
 
         render() {
-            const {proList} = this.props;
+            const { proList } = this.props;
             if (!proList) {
                 return <Loading/>
             }

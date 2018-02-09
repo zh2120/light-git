@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage'
 import rootReducer from './reducers'
 import rootEpic from './epics'
 import api from './utils/api'
+import { navigation } from './views'
 
 const epicMiddleware = createEpicMiddleware(rootEpic, {
     dependencies: { get: api.get, put: api.put, post: api.post, patch: api.patch, delete: api.delete }
@@ -21,7 +22,7 @@ export default (initialState) => {
     const composeEnhancers = typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
         ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
         : compose;
-    const middleWares = [epicMiddleware];
+    const middleWares = [epicMiddleware, navigation];
     const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(...middleWares)));
     const persistor = persistStore(store);
 

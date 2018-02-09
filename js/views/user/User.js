@@ -1,23 +1,19 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native'
-import Feather from 'react-native-vector-icons/Feather'
-import { Button, CAlert } from '../../components'
+import { Button, CAlert, Icon } from '../../components'
 import { bindActions, reset } from '../../reducers/comReducer'
 import { deleteAuth } from '../../reducers/userReducer'
 
-const UserRow = (props) => {
-    const { title, text, iconName } = props;
-    return (
+const UserRow = ({ title, text, iconName }) =>(
+    <View style={styles.rowWrap}>
+        <Icon name={iconName} size={18}/>
         <View style={styles.rowWrap}>
-            <Feather name={iconName} size={18}/>
-            <View style={styles.rowWrap}>
-                <Text style={styles.loginText}>{title}</Text>
-                <Text style={styles.loginText}>{text}</Text>
-            </View>
+            <Text style={styles.loginText}>{title}</Text>
+            <Text style={styles.loginText}>{text}</Text>
         </View>
-    )
-};
+    </View>
+);
 
 export default connect(({ userInfo, userSignInfo, starInfo }) => ({
     user: userInfo.user,
@@ -98,7 +94,7 @@ export default connect(({ userInfo, userSignInfo, starInfo }) => ({
                         <Button content={<UserRow title={'Followers'} text={followers} iconName={'users'}/>}
                                 onPress={() => {
                                 }} style={styles.rowBox}/>
-                        <Button content={<UserRow title={'Following'} text={following} iconName={'user-check'}/>}
+                        <Button content={<UserRow title={'Following'} text={following} iconName={'follower'}/>}
                                 onPress={() => {
                                 }} style={styles.rowBox}/>
                     </View>

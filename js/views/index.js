@@ -4,6 +4,7 @@ import { Easing, Animated, BackHandler, NetInfo } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import { connect } from "react-redux";
 
+import { createReactNavigationReduxMiddleware, createReduxBoundAddListener } from 'react-navigation-redux-helpers';
 import { Home, Search, SignIn, SignUp, User } from './user/'
 import { RepoHome, Readme, RepoDir, RepoIssues, RepoFile, UserProList } from './repos/'
 import { StarsList } from './activity/'
@@ -90,7 +91,51 @@ export const Navigator = StackNavigator(MainRouters, {
     ...transitions
 });
 
-export default connect(({ nav, userSignInfo }) => ({ nav: nav, auth: userSignInfo.auth }))(
+const init = 'Home';
+
+const initialState = (routerName) =>
+    Navigator.router.getStateForAction(Navigator.router.getActionForPathAndParams(routerName));
+
+export const navReducer = (state = initialState(init), action) => {
+    switch (action.type) {
+        case 'Navigation/NAVIGATE':
+            const { routes } = state;
+
+            if (action.routeName !== 'RepoDir' && routes[routes.length - 1].routeName === action.routeName) return state;
+
+            return Navigator.router.getStateForAction(action, state);
+        case 'Navigation/BACK':
+            if (action.routeName) {
+                // 寻找栈里，已经存在的场景索引
+                const i = state.routes.findIndex(item => item.routeName === action.routeName);
+
+                // 返回从栈底到指定的路由
+                return { index: i, routes: state.routes.slice(0, i + 1) }
+            }
+            // 返回上一层
+            if (state.index > 0) return { index: state.index - 1, routes: state.routes.slice(0, state.index) };
+            return initialState(init);
+
+        case 'Navigation/SET_PARAMS':
+            const nextRoutes = state.routes.map((item) => {
+                if (item.key === action.key) { // 对当前页面，设置参数
+                    return { ...item, params: { ...item.params, ...action.params } }
+                }
+                return item
+            });
+            return { ...state, routes: nextRoutes };
+        case 'Navigation/RESET':
+            return { ...Navigator.router.getStateForAction(action) };
+
+        default:
+            return state
+    }
+};
+
+export const navigation = createReactNavigationReduxMiddleware("root", state => state.nav);
+const addListener = createReduxBoundAddListener("root");
+
+export default connect(({ nav, userSignInfo }) => ({ nav, auth: userSignInfo.auth }))(
     class extends PureComponent {
 
         componentWillMount() {
@@ -110,7 +155,7 @@ export default connect(({ nav, userSignInfo }) => ({ nav: nav, auth: userSignInf
 
         componentWillUnmount() {
             BackHandler.removeEventListener("hardwareBackPress", this.onBackPress);
-            NetInfo.removeEventListener('connectionChange', () => null);
+            NetInfo.removeEventListener('connectionChange', this.connectivityChange);
         }
 
         connectivityChange = () => this.props.dispatch(putError('网络似乎出现了异常'));
@@ -128,7 +173,7 @@ export default connect(({ nav, userSignInfo }) => ({ nav: nav, auth: userSignInf
         render() {
             const { dispatch, nav } = this.props;
 
-            return <Navigator navigation={addNavigationHelpers({ dispatch, state: nav })}/>
+            return <Navigator navigation={addNavigationHelpers({ dispatch, state: nav, addListener })}/>
         }
     }
 );

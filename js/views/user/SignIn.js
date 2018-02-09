@@ -6,8 +6,7 @@ import {
     StyleSheet,
 } from 'react-native'
 import { connect } from 'react-redux'
-import Octicons from 'react-native-vector-icons/Octicons';
-import { CButton, Button, CLoading } from '../../components/'
+import { CButton, Button, CLoading, Icon } from '../../components/'
 import { userSignIn, userSignAccept } from '../../reducers/userReducer'
 import { bindActions, reset } from '../../reducers/comReducer'
 
@@ -74,7 +73,7 @@ export default connect(({ userSignInfo }) => ({
             // 如果登录中，延迟过高，中途用户退出，登录状态还没有重置，再次打开App 无法登录，需要遮掩层，无法操作
             return (
                 <View style={styles.container}>
-                    <Octicons name={'mark-github'} size={60} style={{ marginBottom: 24 }}/>
+                    <Icon name={'github'} size={60} style={{ marginBottom: 24 }}/>
                     <TextInput
                         value={account}
                         placeholder="UserName or Email"
