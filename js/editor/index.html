@@ -23,7 +23,7 @@
         position: absolute;
     }
     </style>
-    <script src="http://wechatfe.github.io/vconsole/lib/vconsole.min.js?v=3.0.0.0"></script>
+    <!--<script src="http://wechatfe.github.io/vconsole/lib/vconsole.min.js?v=3.0.0.0"></script>-->
     <script src="ace.js"></script>
     <script src="ext-language_tools.js"></script>
     <script src="theme-monokai.js"></script>
@@ -31,15 +31,15 @@
 <body>
 <div id="edit"></div>
 <script>
-    var vConsole = new VConsole();
+//    var vConsole = new VConsole();
     (function () {
         document.addEventListener('message', function (e) {
             const data = JSON.parse(e.data);
-            console.log(data)
+//            console.log(data)
             let timer = setTimeout(function () {
 
                 if (data.cmd === 'code') {
-                    console.log(data)
+//                    console.log(data)
                     complierEditer(data.code)
                 }
                 clearTimeout(timer)
