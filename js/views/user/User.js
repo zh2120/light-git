@@ -7,7 +7,7 @@ import { deleteAuth } from '../../reducers/userReducer'
 
 const UserRow = ({ title, text, iconName }) =>(
     <View style={styles.rowWrap}>
-        <Icon name={iconName} size={18} fill={"#333333"}/>
+        <Icon name={iconName} size={18}/>
         <View style={styles.rowWrap}>
             <Text style={styles.loginText}>{title}</Text>
             <Text style={styles.loginText}>{text}</Text>
@@ -86,7 +86,7 @@ export default connect(({ userInfo, userSignInfo, starInfo }) => ({
                         <Button
                             content={<UserRow title={'Repositories'} text={public_repos} iconName={'package'}/>}
                             onPress={() => navigation.navigate('UserProList')} style={styles.rowBox}/>
-                        <Button content={<UserRow title={'Stared'} text={count} iconName={'star'}/>}
+                        <Button content={<UserRow title={'Stared'} text={count} iconName={'stared'}/>}
                                 onPress={() => navigation.navigate('StarsList')} style={styles.rowBox}/>
                         <Button content={<UserRow title={'My gists'} text={public_gists} iconName={'list'}/>}
                                 onPress={() => {
