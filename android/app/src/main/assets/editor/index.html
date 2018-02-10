@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <meta http-equiv="cache-control" content="private">
+    <style>html, body {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+
+    #edit {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+    }
+    </style>
+    <!--<script src="http://wechatfe.github.io/vconsole/lib/vconsole.min.js?v=3.0.0.0"></script>-->
+    <script src="ace.js"></script>
+    <script src="ext-language_tools.js"></script>
+    <script src="theme-monokai.js"></script>
+</head>
+<body>
+<div id="edit"></div>
+<script>
+//    var vConsole = new VConsole();
+    (function () {
+        document.addEventListener('message', function (e) {
+            const data = JSON.parse(e.data);
+//            console.log(data)
+            let timer = setTimeout(function () {
+
+                if (data.cmd === 'code') {
+//                    console.log(data)
+                    complierEditer(data.code)
+                }
+                clearTimeout(timer)
+            }, 100)
+        });
+        function complierEditer(code, mode) {
+            ace.require("ace/ext/language_tools");
+            const editor = ace.edit("edit");
+            editor.$blockScrolling = Infinity;
+            editor.setFontSize(14);
+            editor.session.setMode("ace/mode/javascript");
+//                editor.setOptions({
+//                    enableBasicAutocompletion: true,
+//                    enableSnippets: true,
+//                    enableLiveAutocompletion: true
+//                });
+
+            editor.setTheme("ace/theme/monokai");
+            editor.setValue(code);
+            editor.setReadOnly(true)
+        }
+
+        complierEditer()
+    })()
+</script>
+</body>
+</html>

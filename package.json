@@ -7,7 +7,7 @@
 		"install-and": "cd android && ./gradlew installRelease",
 		"code-push-and": "code-push release-react LightG android --t 1.3.0 --dev false --d Production --m true",
 		"test": "jest",
-		"cp-editor": "cp js/editor android/app/src/main/assets",
+		"cp-editor": "cp -r js/editor android/app/src/main/assets",
 		"build-svg": "node js/scripts/getSvg"
 	},
 	"dependencies": {
