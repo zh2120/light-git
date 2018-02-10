@@ -46,9 +46,8 @@ export default connect(({ userSignInfo }) => ({
             return true;
         }
 
-        async componentWillUnmount() {
+        componentWillUnmount() {
             // todo 网络延迟较高的情况，用户退出当前页，应该取消获取授权
-            await CLoading.close();
         }
 
         account = (account) => this.setState({ account: String(account) });

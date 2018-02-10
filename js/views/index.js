@@ -3,14 +3,13 @@ import { StackNavigator, NavigationActions, addNavigationHelpers } from 'react-n
 import { Easing, Animated, BackHandler, NetInfo } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import { connect } from "react-redux";
-
 import { createReactNavigationReduxMiddleware, createReduxBoundAddListener } from 'react-navigation-redux-helpers';
 import { Home, Search, SignIn, SignUp, User } from './user/'
 import { RepoHome, Readme, RepoDir, RepoIssues, RepoFile, UserProList } from './repos/'
 import { StarsList } from './activity/'
 import { getCheckedAuth } from "../reducers/userReducer";
 import { putError } from "../reducers/comReducer";
-
+import { CAlert, CLoading } from '../components'
 const navigationEnhancer = ({ navigation, navigationOptions, screenProps }) => {
     const defaultHeaderStyle = {
         height: 72,
@@ -166,6 +165,8 @@ export default connect(({ nav, userSignInfo }) => ({ nav, auth: userSignInfo.aut
             if (nav.index === 0) {
                 return false;
             }
+            CAlert.close();
+            CLoading.close();
             dispatch(NavigationActions.back());
             return true;
         };
