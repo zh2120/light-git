@@ -7,7 +7,7 @@ import { deleteAuth } from '../../reducers/userReducer'
 
 const UserRow = ({ title, text, iconName }) =>(
     <View style={styles.rowWrap}>
-        <Icon name={iconName} size={18}/>
+        <Icon name={iconName} size={18} fill={"#333333"}/>
         <View style={styles.rowWrap}>
             <Text style={styles.loginText}>{title}</Text>
             <Text style={styles.loginText}>{text}</Text>

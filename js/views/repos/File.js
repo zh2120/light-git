@@ -54,8 +54,7 @@ export default connect(({repoInfo}) => ({file: repoInfo.file}), bindActions({
             // console.log('render')
             if (isEmpty(file)) return <Loading/>;
             const source = ios ? require('../../editor/index.html') : {
-                html: 'index.html',
-                baseUrl: 'file:///android_asset/editor/'
+                uri: 'file:///android_asset/editor/index.html'
             };
             return (
                 <WebView

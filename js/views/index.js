@@ -107,7 +107,8 @@ export const navReducer = (state = initialState(init), action) => {
             if (action.routeName) {
                 // 寻找栈里，已经存在的场景索引
                 const i = state.routes.findIndex(item => item.routeName === action.routeName);
-
+                CAlert.close();
+                CLoading.close();
                 // 返回从栈底到指定的路由
                 return { index: i, routes: state.routes.slice(0, i + 1) }
             }
@@ -165,8 +166,6 @@ export default connect(({ nav, userSignInfo }) => ({ nav, auth: userSignInfo.aut
             if (nav.index === 0) {
                 return false;
             }
-            CAlert.close();
-            CLoading.close();
             dispatch(NavigationActions.back());
             return true;
         };
@@ -178,12 +177,3 @@ export default connect(({ nav, userSignInfo }) => ({ nav, auth: userSignInfo.aut
         }
     }
 );
-
-
-
-
-
-
-
-
-
