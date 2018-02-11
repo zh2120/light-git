@@ -2,9 +2,9 @@ import React from 'react';
 import AppWrapper from 'react-native-root-wrapper'
 import CToast from './CToast'
 
-export default class {
-    constructor(text) {
-        this.instance = null;
+export default {
+    instance: null,
+    toast(text) {
         if (!this.instance) {
             (new AppWrapper(<CToast
                 ref={re => (this.instance = re)}/>)).subScribe(() => this.instance.open(text))
@@ -12,4 +12,5 @@ export default class {
             this.instance.open(text)
         }
     }
+
 }
