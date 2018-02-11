@@ -60,10 +60,9 @@ const transitions = {
             easing: Easing.out(Easing.poly(4)),
         },
         screenInterpolator: sceneProps => {
-            const { layout, position, scene, progress } = sceneProps;
+            const { layout, position, scene } = sceneProps;
             const { index } = scene;
             const width = layout.initWidth;
-            console.log('scene -> ', scene)
             const translateX = position.interpolate({
                 inputRange: [index - 1, index, index + 1],
                 outputRange: [width, 0, 0],
