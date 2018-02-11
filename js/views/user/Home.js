@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#333'
     },
     alignCenter: {
+        marginLeft: 4,
         flexDirection: 'row',
         alignItems: 'center',
     },

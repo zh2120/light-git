@@ -66,6 +66,7 @@ export default connect(({ starInfo }) => ({
                         onPress={() => this.navigate('RepoHome', {
                             fullName: full_name,
                             name: name,
+                            stared: true,
                             desc: description
                         })}/>
             )

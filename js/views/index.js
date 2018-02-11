@@ -105,17 +105,20 @@ export const navReducer = (state = initialState(init), action) => {
 
             return Navigator.router.getStateForAction(action, state);
         case 'Navigation/BACK':
-            if (action.routeName) {
+            CAlert.close();
+            CLoading.close();
+            const nextState = Navigator.router.getStateForAction(action, state);
+            // console.log(nextState)
+            // if (action.routeName) {
                 // 寻找栈里，已经存在的场景索引
-                const i = state.routes.findIndex(item => item.routeName === action.routeName);
-                CAlert.close();
-                CLoading.close();
+                // const i = state.routes.findIndex(item => item.routeName === action.routeName);
                 // 返回从栈底到指定的路由
-                return { index: i, routes: state.routes.slice(0, i + 1) }
-            }
+                // return { index: i, routes: state.routes.slice(0, i + 1) }
+            // }
             // 返回上一层
-            if (state.index > 0) return { index: state.index - 1, routes: state.routes.slice(0, state.index) };
-            return initialState(init);
+            // if (state.index > 0) return { index: state.index - 1, routes: state.routes.slice(0, state.index) };
+            // return initialState(init);
+            return nextState || state;
 
         case 'Navigation/SET_PARAMS':
             const nextRoutes = state.routes.map((item) => {
