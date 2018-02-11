@@ -36,8 +36,8 @@ export default connect(({ userInfo, userSignInfo, eventsInfo }) => ({
         static navigationOptions = { header: null };
 
         componentDidMount() {
-            const { user, events } = this.props;
-            if (user) {
+            const { auth, events, user } = this.props;
+            if (auth && user) {
                 events(user.login)
             }
         }
@@ -45,7 +45,7 @@ export default connect(({ userInfo, userSignInfo, eventsInfo }) => ({
         shouldComponentUpdate(nextProps) {
             const { user } = this.props;
             if (!user && nextProps.user) {
-                nextProps.events(user.login)
+                nextProps.events(nextProps.user.login)
             }
             return true
         }
