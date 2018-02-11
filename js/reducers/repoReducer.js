@@ -15,9 +15,9 @@ export const RepoTypes = {
  * 请求仓库内容
  * @param url 仓库地址
  */
-export const repoContent = (url) => ({
+export const repoContent = ({fullName, type}) => ({
     type: RepoTypes.REPO_HOME,
-    payload: { url }
+    payload: { fullName, type }
 });
 
 /**

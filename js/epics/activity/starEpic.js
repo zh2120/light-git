@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/Rx'
-import { putError } from '../../reducers/comReducer';
-import { actTypes, starCount, errStarCount, stars, errStars } from '../../reducers/activityReducer'
+import { actTypes, starCount, errStarCount, stars, errStars, stared, unstared } from '../../reducers/activityReducer'
 
+const err = '网不好，等哈再试';
 export const starCountEpic = (action$, { getState }, { get }) => action$.ofType(actTypes.GET_STAR_COUNT)
     .switchMap(({ payload }) => {
         const { username } = payload;
@@ -12,9 +12,12 @@ export const starCountEpic = (action$, { getState }, { get }) => action$.ofType(
         const headers = { "Authorization": `token ${getState().userSignInfo.auth.token}` };
 
         return get(url, headers).map(({ xhr }) => {
-            const number = xhr.getResponseHeader('LINK').split('&')[ 2 ].match(/\d+/g); //匹配最后的分页数
-            return starCount(number[ number.length - 1 ])
-        }).catch(e => Observable.of(putError('计数错误')).startWith(errStarCount()))
+            const number = xhr.getResponseHeader('LINK').split('&')[2].match(/\d+/g); //匹配最后的分页数
+            return starCount(number[number.length - 1])
+        }).catch(e => {
+            toast(err);
+            return Observable.of(errStarCount())
+        })
 
     });
 
@@ -29,8 +32,23 @@ export const starsEpic = (action$, { getState }, { get }) => action$.ofType(actT
 
         return get(url, headers).map(({ response }) => stars(response))
             .catch(e => {
-                console.log(e)
-                return Observable.of(putError('获取失败')).startWith(errStars())
+                toast(err);
+                return Observable.of(errStars())
             })
 
     });
+
+export const staringEpic = (action$, { getState }, { get }) => action$.ofType(actTypes.STARING)
+    .mergeMap(({ payload }) => {
+        console.log('payload -> ', payload);
+        const { ownerRepo } = payload;
+        let url = `/user/starred/${ownerRepo}`;
+        const headers = { "Authorization": `token ${getState().userSignInfo.auth.token}` };
+        return get(url, headers).map(({ status }) => stared())
+            .catch(e => {
+                console.log(e);
+                return Observable.of(unstared())
+            })
+    });
+
+

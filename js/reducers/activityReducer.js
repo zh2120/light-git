@@ -1,10 +1,14 @@
 export const actTypes = {
-    GET_STAR_COUNT: 'GET_STAR_COUNT',
+    STARS: 'STARS',
+    STARING: 'STARING',
+    STARED: 'STARED',
+    UNSTAR: 'UNSTAR',
+    RESET_STAR: 'RESET_STAR',
+    ERR_STARS: 'ERR_STARS',
+    GET_STARS: 'GET_STARS',
     STAR_COUNT: 'STAR_COUNT',
     ERR_STAR_COUNT: 'ERR_STAR_COUNT',
-    GET_STARS: 'GET_STARS',
-    STARS: 'STARS',
-    ERR_STARS: 'ERR_STARS'
+    GET_STAR_COUNT: 'GET_STAR_COUNT'
 };
 
 /**
@@ -31,6 +35,11 @@ export const stars = (starsList) => ({ type: actTypes.STARS, payload: { stars: s
 
 export const errStars = () => ({ type: actTypes.ERR_STARS });
 
+export const staring = (ownerRepo) => ({ type: actTypes.STARING, payload: { ownerRepo } });
+export const stared = () => ({ type: actTypes.STARED});
+export const unstared = () => ({ type: actTypes.UNSTAR});
+export const resetStar = () => ({ type: actTypes.RESET_STAR});
+
 /**
  *
  * @param state count 星星总数
@@ -38,8 +47,13 @@ export const errStars = () => ({ type: actTypes.ERR_STARS });
  * @param payload
  * @returns {*}
  */
-export default (state = { count: 0, stars: null }, { type, payload }) => {
+const initStar = { count: 0, stars: null, stared: false };
+export default (state = initStar, { type, payload }) => {
     switch (type) {
+        case actTypes.STARED:
+            return { ...state, stared: true };
+        case actTypes.RESET_STAR:
+            return { ...state, stared: false };
         case actTypes.STAR_COUNT:
             return { ...state, count: payload.count };
         case actTypes.ERR_STAR_COUNT:
@@ -47,7 +61,7 @@ export default (state = { count: 0, stars: null }, { type, payload }) => {
 
         case actTypes.STARS:
             if (state.stars) {
-                return { ...state, stars: [ ...state.stars, ...payload.stars ] };
+                return { ...state, stars: [...state.stars, ...payload.stars] };
             }
             return { ...state, stars: payload.stars };
 

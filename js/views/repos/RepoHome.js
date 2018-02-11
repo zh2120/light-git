@@ -13,6 +13,7 @@ import { Button, Loading, CList, Icon } from '../../components'
 import { repoContent, clearDir } from '../../reducers/repoReducer'
 import { getIssue, errIssue } from '../../reducers/issueReducer'
 import { bindActions, back } from '../../reducers/comReducer'
+import { stared, unstared, resetStar } from '../../reducers/activityReducer'
 
 const pr = 'PR';
 const wiki = 'Wiki';
@@ -20,15 +21,16 @@ const Code = 'contents';
 const Issues = 'issues';
 const Insights = 'insights';
 
-export default connect(({ nav, repoInfo, issueInfo }) => ({
+export default connect(({ nav, repoInfo, issueInfo, starInfo }) => ({
     nav: nav,
+    staredState: starInfo.stared,
     dirs: repoInfo.dirs,
     readme: repoInfo.readme,
     content: repoInfo.content,
     codeRefreshing: repoInfo.getting,
     issuesData: issueInfo.issues,
     issueRefreshing: issueInfo.getting
-}), bindActions({ repoContent, clearDir, back, getIssue, errIssue }))(
+}), bindActions({ repoContent, clearDir, back, getIssue, errIssue, unstared, resetStar }))(
     class extends PureComponent {
         static navigationOptions = ({ navigation }) => {
             const { params } = navigation.state;
@@ -58,8 +60,8 @@ export default connect(({ nav, repoInfo, issueInfo }) => ({
 
         componentDidMount() {
             const { fullName } = this.state;
-
             if (fullName) {
+                // console.log(fullName);
                 this.getNavContent(fullName, Code)
             }
         }
@@ -67,10 +69,12 @@ export default connect(({ nav, repoInfo, issueInfo }) => ({
         // todo， 如果出现错误信息，返回上一页
 
         componentWillUnmount() {
+            const { clearDir, errIssue, resetStar } = this.props;
             // 清理仓库主页
-            this.props.clearDir();
+            clearDir();
             // 清理仓库的问题数据
-            this.props.errIssue()
+            errIssue();
+            resetStar();
         }
 
         /**
@@ -86,7 +90,7 @@ export default connect(({ nav, repoInfo, issueInfo }) => ({
 
             switch (type) {
                 case Code:
-                    press = repoContent;
+                    press = () => repoContent({ fullName, type });
                     break;
                 case Issues:
                     press = getIssue;
@@ -204,11 +208,26 @@ export default connect(({ nav, repoInfo, issueInfo }) => ({
 
             switch (navName) {
                 case Code:
-                    const { content, codeRefreshing, navigation } = this.props;
+                    const { content, codeRefreshing, navigation, staredState, unstared } = this.props;
                     // todo 分支选择
                     header = () => {
                         if (navigation.state.params.desc) {
-                            return <Text style={styles.descText}>{navigation.state.params.desc}</Text>
+                            return (
+                                <View style={styles.starWrap}>
+                                    <View style={{ flex: 1 }}><Text
+                                        style={styles.descText}>{navigation.state.params.desc}</Text></View>
+                                    <Button content={<Text>{staredState ? 'unstar' : 'star'}</Text>}
+                                            icon={<Icon name={'stared'} size={16}/>}
+                                            onPress={() => {
+                                            }}
+                                            style={{
+                                                paddingVertical: 2,
+                                                paddingHorizontal: 4,
+                                                borderWidth: StyleSheet.hairlineWidth,
+                                                borderRadius: 2
+                                            }}/>
+                                </View>
+                            )
                         }
                         return null
                     };
@@ -223,7 +242,7 @@ export default connect(({ nav, repoInfo, issueInfo }) => ({
                     refreshing = issueRefreshing;
             }
 
-            if (!data) return <View style={{ height: dp(250) }}><Loading/></View>;
+            if (!data) return <Loading/>;
             return (
                 <CList
                     data={data}
@@ -246,8 +265,9 @@ export default connect(({ nav, repoInfo, issueInfo }) => ({
 const styles = {
     wrap: { flex: 1, backgroundColor: '#ffffff' },
     starWrap: {
-        flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-        marginVertical: 12
+        flexDirection: 'row', alignItems: 'center',
+        marginHorizontal: 12,
+        borderBottomWidth: 1
     },
     starButton: {
         borderRadius: 2,

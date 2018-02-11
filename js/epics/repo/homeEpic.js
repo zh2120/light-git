@@ -7,7 +7,7 @@ import {
     getRepoContent,
     getRepoContentDenied,
 } from '../../reducers/repoReducer';
-import { putError } from '../../reducers/comReducer';
+import { staring } from '../../reducers/activityReducer';
 import { Observable } from 'rxjs/Rx'
 
 export const repoListEpic = () => {
@@ -17,9 +17,10 @@ export const repoListEpic = () => {
 // 请求主仓库目录内容
 export const repoContentEpic = (action$, { getState, dispatch }, { get }) => action$.ofType(RepoTypes.REPO_HOME)
     .switchMap(({ payload }) => {
-        const { url } = payload;
+        const { fullName, type, ref = 'master'  } = payload;
+        let url = '/repos/' + fullName + `/${type}` + getParams({ ref, page: 1 });
         const { auth } = getState().userSignInfo;
-        let headers = {};
+        let headers = null;
         if (auth) {
             headers = { "Authorization": `token ${auth.token}` };
         }
@@ -39,9 +40,10 @@ export const repoContentEpic = (action$, { getState, dispatch }, { get }) => act
                     return getRepoContent(content)
                 }
             })
+            .concat(Observable.of(staring(fullName)))
             .catch(e => {
-                return Observable.of(putError('获取仓库内容,网络状况不佳，请稍后在试'))
-                    .startWith(getRepoContentDenied())
+                toast('网络状况不佳');
+                return Observable.of(getRepoContentDenied())
             })
     });
 
@@ -82,7 +84,7 @@ export const repoFileEpic = (action$, { getState, dispatch }, { get }) => action
                     // todo 自述文件的缺失，错误处理
                     message = '作者有点懒，仓库没有找到README...'
                 }
-                return Observable.of(putError(message))
-                    .startWith(getFileDenied())
+                toast(message);
+                return Observable.of(getFileDenied())
             })
     });

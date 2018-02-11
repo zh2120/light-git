@@ -1,5 +1,4 @@
 import { SearchTypes, searchRepoResult, resetSearch } from '../../reducers/searchReducer';
-import { putError } from '../../reducers/comReducer';
 import { Observable } from 'rxjs/Rx'
 
 // todo 清空搜索结果

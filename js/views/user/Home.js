@@ -85,27 +85,24 @@ export default connect(({ userInfo, userSignInfo }) => ({
 )
 
 
-const
-    styles = StyleSheet.create({
-        wrap: {
-            flex: 1,
-            backgroundColor: 'transparent'
-        },
-        header: {
-            position: 'relative',
-            paddingTop: 24,
-            justifyContent: 'space-around',
-            height: 70,
-            backgroundColor: '#333'
-        },
-        alignCenter: {
-            flexDirection: 'row',
-            alignItems: 'center',
-        },
-        logoRow: {
-            height: 36,
-            justifyContent: 'space-between',
-        }
-    });
-
-
+const styles = StyleSheet.create({
+    wrap: {
+        flex: 1,
+        backgroundColor: 'transparent'
+    },
+    header: {
+        position: 'relative',
+        paddingTop: 24,
+        justifyContent: 'space-around',
+        height: 70,
+        backgroundColor: '#333'
+    },
+    alignCenter: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    logoRow: {
+        height: 36,
+        justifyContent: 'space-between',
+    }
+});
