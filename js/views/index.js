@@ -10,6 +10,7 @@ import { StarsList } from './activity/'
 import { getCheckedAuth } from "../reducers/userReducer";
 import { putError } from "../reducers/comReducer";
 import { CAlert, CLoading } from '../components'
+
 const navigationEnhancer = ({ navigation, navigationOptions, screenProps }) => {
     const defaultHeaderStyle = {
         height: 72,
@@ -62,6 +63,7 @@ const transitions = {
             const { layout, position, scene, progress } = sceneProps;
             const { index } = scene;
             const width = layout.initWidth;
+            console.log('scene -> ', scene)
             const translateX = position.interpolate({
                 inputRange: [index - 1, index, index + 1],
                 outputRange: [width, 0, 0],
@@ -73,8 +75,8 @@ const transitions = {
             });
 
             const opacity = position.interpolate({
-                inputRange: [index - 1, index, index + 0.999, index + 1],
-                outputRange: [0, 1, 0.3, 0],
+                inputRange: [index - 1, index, index + 1],
+                outputRange: [0.7, 1, 0.95],
             });
 
             return { opacity, transform: [{ translateX }, { scale }] };
