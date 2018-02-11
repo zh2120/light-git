@@ -70,8 +70,8 @@ export default connect(({ userInfo, userSignInfo }) => ({
                         <View style={[styles.logoRow, styles.alignCenter]}>
                             <View style={styles.alignCenter}>
                                 <Icons name={'github3'} onPress={() => toast('点我是没有用滴😊')}/>
-                                <Icons name={'star'} onPress={() => this.go('StarsList')}/>
                                 <Icons name={'repo'} onPress={() => this.go('UserProList')}/>
+                                <Icons name={'star'} onPress={() => this.go('StarsList')}/>
                                 <Icons name={'search_white'} onPress={() => this.go('Search')}/>
                             </View>
 
