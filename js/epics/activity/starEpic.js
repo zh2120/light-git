@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs/Rx'
-import { actTypes, starCount, errStarCount, stars, errStars, stared, unstared } from '../../reducers/activityReducer'
+import { actTypes, starCount, errStarCount, stars, errStars, stared, resetStar } from '../../reducers/activityReducer'
 
 const err = '网不好，等哈再试';
 export const starCountEpic = (action$, { getState }, { get }) => action$.ofType(actTypes.GET_STAR_COUNT)
@@ -38,17 +38,28 @@ export const starsEpic = (action$, { getState }, { get }) => action$.ofType(actT
 
     });
 
-export const staringEpic = (action$, { getState }, { get }) => action$.ofType(actTypes.STARING)
+export const staringEpic = (action$, { getState }, ajax) => action$.ofType(actTypes.STARING)
     .mergeMap(({ payload }) => {
-        console.log('payload -> ', payload);
-        const { ownerRepo } = payload;
-        let url = `/user/starred/${ownerRepo}`;
-        const headers = { "Authorization": `token ${getState().userSignInfo.auth.token}` };
-        return get(url, headers).map(({ status }) => stared())
-            .catch(e => {
-                console.log(e);
-                return Observable.of(unstared())
+        const { ownerRepo, method } = payload;
+        let url = `/user/starred/${ownerRepo}`, request;
+        let headers = { "Authorization": `Basic ${getState().userSignInfo.basic}` };
+        if (method === 'get') request = ajax.get(url, headers);
+        if (method === 'put') {
+            headers = { ...headers, "Content-Length": 0 };
+            request = ajax.put(url, null, headers);
+        }
+        if (method === 'delete') request = ajax.delete(url, headers);
+
+        return request.map(() => {
+            if (method === 'delete') return resetStar();
+            return stared()
+        })
+            .catch(({ status }) => {
+                if (status !== 404) toast('网不好');
+
+                return Observable.of(resetStar())
             })
     });
+
 
 

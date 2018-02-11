@@ -40,7 +40,7 @@ export const repoContentEpic = (action$, { getState, dispatch }, { get }) => act
                     return getRepoContent(content)
                 }
             })
-            .concat(Observable.of(staring(fullName)))
+            .concat(Observable.of(staring(fullName, 'get')))
             .catch(e => {
                 toast('网络状况不佳');
                 return Observable.of(getRepoContentDenied())

@@ -13,7 +13,7 @@ import { Button, Loading, CList, Icon } from '../../components'
 import { repoContent, clearDir } from '../../reducers/repoReducer'
 import { getIssue, errIssue } from '../../reducers/issueReducer'
 import { bindActions, back } from '../../reducers/comReducer'
-import { stared, unstared, resetStar } from '../../reducers/activityReducer'
+import { staring, resetStar } from '../../reducers/activityReducer'
 
 const pr = 'PR';
 const wiki = 'Wiki';
@@ -30,7 +30,7 @@ export default connect(({ nav, repoInfo, issueInfo, starInfo }) => ({
     codeRefreshing: repoInfo.getting,
     issuesData: issueInfo.issues,
     issueRefreshing: issueInfo.getting
-}), bindActions({ repoContent, clearDir, back, getIssue, errIssue, unstared, resetStar }))(
+}), bindActions({ repoContent, clearDir, back, getIssue, errIssue, staring, resetStar }))(
     class extends PureComponent {
         static navigationOptions = ({ navigation }) => {
             const { params } = navigation.state;
@@ -203,12 +203,12 @@ export default connect(({ nav, repoInfo, issueInfo, starInfo }) => ({
          * @returns {XML}
          */
         renderNavContainer = () => {
-            const { navName } = this.state;
+            const { navName, fullName } = this.state;
             let data, header = null, renderItem = () => null, refreshing = false;
 
             switch (navName) {
                 case Code:
-                    const { content, codeRefreshing, navigation, staredState, unstared } = this.props;
+                    const { content, codeRefreshing, navigation, staredState, resetStar, staring } = this.props;
                     // todo 分支选择
                     header = () => {
                         if (navigation.state.params.desc) {
@@ -218,8 +218,7 @@ export default connect(({ nav, repoInfo, issueInfo, starInfo }) => ({
                                         style={styles.descText}>{navigation.state.params.desc}</Text></View>
                                     <Button content={<Text>{staredState ? 'unstar' : 'star'}</Text>}
                                             icon={<Icon name={'stared'} size={16}/>}
-                                            onPress={() => {
-                                            }}
+                                            onPress={() => staring(fullName, staredState ? 'delete' : 'put')}
                                             style={{
                                                 paddingVertical: 2,
                                                 paddingHorizontal: 4,

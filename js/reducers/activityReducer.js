@@ -2,7 +2,6 @@ export const actTypes = {
     STARS: 'STARS',
     STARING: 'STARING',
     STARED: 'STARED',
-    UNSTAR: 'UNSTAR',
     RESET_STAR: 'RESET_STAR',
     ERR_STARS: 'ERR_STARS',
     GET_STARS: 'GET_STARS',
@@ -35,10 +34,9 @@ export const stars = (starsList) => ({ type: actTypes.STARS, payload: { stars: s
 
 export const errStars = () => ({ type: actTypes.ERR_STARS });
 
-export const staring = (ownerRepo) => ({ type: actTypes.STARING, payload: { ownerRepo } });
-export const stared = () => ({ type: actTypes.STARED});
-export const unstared = () => ({ type: actTypes.UNSTAR});
-export const resetStar = () => ({ type: actTypes.RESET_STAR});
+export const staring = (ownerRepo, method) => ({ type: actTypes.STARING, payload: { ownerRepo, method } });
+export const stared = () => ({ type: actTypes.STARED });
+export const resetStar = () => ({ type: actTypes.RESET_STAR });
 
 /**
  *
