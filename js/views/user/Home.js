@@ -1,17 +1,19 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { openToast, bindActions, reset } from '../../reducers/comReducer'
 import { searchRepo } from '../../reducers/searchReducer'
 import { userSignAccept } from '../../reducers/userReducer'
 import { getStarCount } from '../../reducers/activityReducer'
+import { events } from '../../reducers/events'
 import {
     View,
+    Text,
     Image,
     StyleSheet,
     TouchableOpacity,
-    TouchableHighlight,
+    TouchableHighlight
 } from 'react-native'
-import { Icon, } from '../../components';
+import { Icon, CList } from '../../components';
 
 const underlayColor = 'rgba(100,100,100 ,0.1)';
 
@@ -24,26 +26,42 @@ const Icons = ({ name, onPress }) => {
     );
 };
 
-export default connect(({ userInfo, userSignInfo }) => ({
+export default connect(({ userInfo, userSignInfo, eventsInfo }) => ({
     user: userInfo.user,
     auth: userSignInfo.auth,
-    signed: userSignInfo.signed
-}), bindActions({ searchRepo, userSignAccept, openToast, reset, getStarCount }))(
-    class extends PureComponent {
+    signed: userSignInfo.signed,
+    eventsList: eventsInfo.events
+}), bindActions({ searchRepo, userSignAccept, openToast, reset, getStarCount, events }))(
+    class extends Component {
         static navigationOptions = { header: null };
+
+        componentDidMount() {
+            const { user, events } = this.props;
+            if (user) {
+                events(user.login)
+            }
+        }
+
+        shouldComponentUpdate(nextProps) {
+            const { user } = this.props;
+            if (!user && nextProps.user) {
+                nextProps.events(user.login)
+            }
+            return true
+        }
 
         renderUserInfo = () => {
             const { navigation, user, auth, getStarCount } = this.props;
             let onPress, avatar;
 
             if (auth && user) {
-                avatar = <Image source={{ uri: user.avatar_url }} style={{ width: 24, height: 24, marginRight: 16 }}/>;
+                avatar = <Image source={{ uri: user.avatar_url }} style={{ width: 24, height: 24 }}/>;
                 onPress = () => {
                     getStarCount(); // 获取用户星的总数
                     return navigation.navigate('User', { name: user.login })
                 };
             } else {
-                avatar = <Icon name={'user'} size={24} style={{ padding: 2, marginRight: 16 }}/>;
+                avatar = <Icon name={'user'} size={24} style={{ padding: 2 }}/>;
                 onPress = () => navigation.navigate('SignIn')
             }
 
@@ -63,6 +81,40 @@ export default connect(({ userInfo, userSignInfo }) => ({
             }
         };
 
+        eventsItem = ({ item }) => {
+            const { actor, repo, payload } = item;
+            return (
+                <View style={{ backgroundColor: '#fff', paddingVertical: 12, paddingHorizontal: 10 }}>
+                    <View style={styles.alignCenter}>
+                        <Image source={{ uri: actor.avatar_url }} style={{ width: 24, height: 24, marginRight: 12 }}/>
+                        <Text style={styles.text}>
+                            {actor.display_login}
+                            <Text style={{ color: '#555' }}>  {payload.action}  </Text>
+                            {repo.name}
+                        </Text>
+                    </View>
+                </View>
+            )
+        };
+
+        renderEvents = () => {
+            const { eventsList, signed } = this.props;
+            if (!signed) {
+                return (
+                    <View style={[styles.wrap, { alignItems: 'center', justifyContent: 'center' }]}>
+                        <Text>右上角登录，才能看到更多</Text>
+                    </View>
+                )
+            }
+            return (
+                <CList
+                    data={eventsList}
+                    style={{ flex: 1 }}
+                    contentContainerStyle={{ paddingTop: 10 }}
+                    renderItem={this.eventsItem}/>
+            )
+        };
+
         render() {
             return (
                 <View style={styles.wrap}>
@@ -78,6 +130,7 @@ export default connect(({ userInfo, userSignInfo }) => ({
                             {this.renderUserInfo()}
                         </View>
                     </View>
+                    {this.renderEvents()}
                 </View>
             )
         }
@@ -89,6 +142,10 @@ const styles = StyleSheet.create({
     wrap: {
         flex: 1,
         backgroundColor: 'transparent'
+    },
+    text: {
+        color: '#0366d6',
+        fontSize: 16
     },
     header: {
         position: 'relative',
@@ -103,6 +160,7 @@ const styles = StyleSheet.create({
     },
     logoRow: {
         height: 36,
+        marginRight: 16,
         justifyContent: 'space-between',
     }
 });

@@ -5,6 +5,8 @@ import searchInfo from './searchReducer'
 import { userInfo, userSignInfo } from './userReducer';
 import starInfo from './activityReducer'
 import { navReducer } from '../views'
+import eventsInfo from './events'
+
 export default {
     nav: navReducer,
     comInfo,
@@ -13,5 +15,6 @@ export default {
     issueInfo,
     searchInfo,
     userSignInfo,
-    starInfo
+    starInfo,
+    eventsInfo
 }

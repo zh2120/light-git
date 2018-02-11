@@ -47,7 +47,8 @@ export default connect(({ nav, repoInfo, issueInfo, starInfo }) => ({
             const { params } = props.navigation.state;
             this.state = {
                 navName: '',
-                fullName: params ? params.fullName : ''
+                fullName: params ? params.fullName : '',
+                stared: params ? params.stared : false,
             };
             this.navBtns = [
                 { name: Code },
@@ -203,12 +204,13 @@ export default connect(({ nav, repoInfo, issueInfo, starInfo }) => ({
          * @returns {XML}
          */
         renderNavContainer = () => {
-            const { navName, fullName } = this.state;
+            const { navName, fullName, stared } = this.state;
             let data, header = null, renderItem = () => null, refreshing = false;
 
             switch (navName) {
                 case Code:
-                    const { content, codeRefreshing, navigation, staredState, resetStar, staring } = this.props;
+                    const { content, codeRefreshing, navigation, staredState, staring } = this.props;
+                    let starred = stared || staredState;
                     // todo 分支选择
                     header = () => {
                         if (navigation.state.params.desc) {
@@ -216,9 +218,9 @@ export default connect(({ nav, repoInfo, issueInfo, starInfo }) => ({
                                 <View style={styles.starWrap}>
                                     <View style={{ flex: 1 }}><Text
                                         style={styles.descText}>{navigation.state.params.desc}</Text></View>
-                                    <Button content={<Text>{staredState ? 'unstar' : 'star'}</Text>}
+                                    <Button content={<Text>{starred ? 'unstar' : 'star'}</Text>}
                                             icon={<Icon name={'stared'} size={16}/>}
-                                            onPress={() => staring(fullName, staredState ? 'delete' : 'put')}
+                                            onPress={() => staring(fullName, starred ? 'delete' : 'put')}
                                             style={{
                                                 paddingVertical: 2,
                                                 paddingHorizontal: 4,

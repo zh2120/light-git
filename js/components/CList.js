@@ -21,7 +21,7 @@ export default class CList extends PureComponent {
                     height: dp(250),
                     justifyContent: 'center',
                     alignItems: 'center'
-                }}><Text>Welcome！</Text></View>
+                }}><Text style={{ color: '#333', fontSize: 16 }}>暂时还没的内容</Text></View>
         };
     }
 

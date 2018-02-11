@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, StyleSheet, WebView } from 'react-native'
+import { View, StyleSheet, WebView, Text } from 'react-native'
 import { openToast, bindActions } from '../../reducers/comReducer'
 import { fileContent, getFileDenied } from '../../reducers/repoReducer'
 import { html, md, Loading } from '../../components'
@@ -46,14 +46,19 @@ export default connect(({ repoInfo }) => ({ readme: repoInfo.readme }), bindActi
 
             if (!readme) return <Loading/>;
 
-            console.log('md(readme)', html(md(readme)));
+            // console.log('md(readme)', html(md(readme)));
 
             return (
-                <WebView
-                    style={styles.wrap}
-                    userAgent={'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.75 Safari/537.36'}
-                    source={{ html: html(md(readme)) }}/>
+                <View>
+                    <Text>正在开发</Text>
+                </View>
             )
+            // return (
+            //     <WebView
+            //         style={styles.wrap}
+            //         userAgent={'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.75 Safari/537.36'}
+            //         source={{ html: html(md(readme)) }}/>
+            // )
         }
     }
 )
